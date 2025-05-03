@@ -1,18 +1,12 @@
 import { registerApplication, start } from "single-spa";
+import { MODULES } from "./config";
 
-const reactModule = 'portfolio-react';
-const svelteModule = 'portfolio-svelte';
-
-registerApplication({
-    name: 'react',
-    app: () => import(/* @vite-ignore */ reactModule),
-    activeWhen: '/react'
-});
-
-registerApplication({
-    name: 'svelte',
-    app: () => import(/* @vite-ignore */ svelteModule),
-    activeWhen: '/svelte'
+Object.values(MODULES).forEach((module) => {
+    registerApplication({
+        name: module.name,
+        app: () => import(/* @vite-ignore */ module.module),
+        activeWhen: module.path
+    });
 });
 
 start();
