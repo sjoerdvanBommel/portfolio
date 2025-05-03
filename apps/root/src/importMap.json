@@ -1,0 +1,6 @@
+{
+    "imports": {
+        "portfolio-react": "http://localhost:3001/spa.js",
+        "portfolio-svelte": "http://localhost:3002/spa.js"
+    }
+}

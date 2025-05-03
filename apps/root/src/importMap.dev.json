@@ -1,0 +1,6 @@
+{
+    "imports": {
+        "portfolio-react": "http://localhost:3001/src/spa.tsx",
+        "portfolio-svelte": "http://localhost:3002/src/spa.ts"
+    }
+}
