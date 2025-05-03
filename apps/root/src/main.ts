@@ -1,7 +1,7 @@
 import { registerApplication, start } from "single-spa";
-import { MODULES } from "./config";
+import { APPS } from "./config";
 
-Object.values(MODULES).forEach((module) => {
+Object.values(APPS).forEach((module) => {
     registerApplication({
         name: module.name,
         app: () => import(/* @vite-ignore */ module.module),

@@ -1,4 +1,10 @@
-export const MODULES = {
+export const APPS = {
+    ROOT: {
+        name: 'root',
+        path: '/',
+        module: 'portfolio-root',
+        port: 3000
+    },
     REACT: {
         name: 'react',
         path: '/react',
