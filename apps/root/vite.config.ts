@@ -1,10 +1,9 @@
 import { defineConfig } from 'vite'
 import vitePluginSingleSpa from 'vite-plugin-single-spa';
-import { APPS } from './src/config';
 
 export default defineConfig({
   server: {
-    port: APPS.ROOT.port,
+    port: 3000,
   },
   plugins: [vitePluginSingleSpa({
     type: 'root',
