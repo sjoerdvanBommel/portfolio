@@ -1,6 +1,6 @@
 import singleSpaVue from 'single-spa-vue';
 import { createApp, h } from 'vue';
-import App from './App.vue';
+import App from './app.vue';
 
 let mountParcel: () => void | undefined;
 
