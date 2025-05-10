@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node --experimental-strip-types scripts/run-in-parallel.ts dev",
+    "dev": "node --experimental-strip-types scripts/run-in-parallel.ts dev apps",
+    "dev:packages": "node --experimental-strip-types scripts/run-in-parallel.ts dev packages",
     "build": "npm run build --workspace=@sjoerdvanbommel-packages/config --workspace=@sjoerdvanbommel-packages/react-components && npm run build --workspace=apps/** && node --experimental-strip-types scripts/copy-mife-outputs-to-root.ts",
     "lint": "eslint .",
     "format": "prettier --write .",

@@ -11,7 +11,14 @@ import { registerApplication, start } from 'single-spa';
 ].forEach((module) => {
   registerApplication({
     name: module.name,
-    app: () => import(/* @vite-ignore */ `@sjoerdvanbommel/${module.name}`),
+    app: ({ mountParcel }) =>
+      import(/* @vite-ignore */ `@sjoerdvanbommel/${module.name}`).then((m) => {
+        return {
+          bootstrap: m.bootstrap,
+          mount: (props) => m.mount({ ...props, name: module.name, mountParcel }),
+          unmount: m.unmount,
+        };
+      }),
     activeWhen: module.activeWhen,
     customProps: {
       domElementGetter: () => document.getElementById(`${module.name}-app`),
