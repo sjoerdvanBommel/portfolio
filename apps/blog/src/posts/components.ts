@@ -1,5 +1,5 @@
-import { Counter } from "../components/counter";
+import { Counter } from '../components/counter';
 
 export const components = {
-  Counter
-}
+  Counter,
+};

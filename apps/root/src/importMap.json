@@ -1,17 +1,17 @@
 {
-    "imports": {
-        "single-spa": "https://cdn.jsdelivr.net/npm/single-spa@6.0.3/lib/es2015/esm/single-spa.min.js",
-        "single-spa-react": "https://cdn.jsdelivr.net/npm/single-spa-react@6.0.2/lib/esm/single-spa-react.js",
-        "single-spa-vue": "https://cdn.jsdelivr.net/npm/single-spa-vue@3.0.1/dist/esm/single-spa-vue.js",
-        "react": "https://esm.sh/react@18.3.1/es2022/react.mjs",
-        "react/jsx-runtime": "https://esm.sh/react@18.3.1/es2022/jsx-runtime.mjs",
-        "react/jsx-dev-runtime": "https://esm.sh/react@18.3.1/es2022/jsx-dev-runtime.mjs",
-        "react-dom": "https://esm.sh/react-dom@18.3.1/es2022/react-dom.mjs",
-        "react-dom/client": "https://esm.sh/react-dom@18.3.1/es2022/react-dom.client.mjs",
-        "vue": "https://esm.sh/vue@3.5.13/dist/vue.esm-bundler.js",
-        "@sjoerdvanbommel/header": "/mife-files/header-spa.js",
-        "@sjoerdvanbommel/home": "/mife-files/home-spa.js",
-        "@sjoerdvanbommel/about": "/mife-files/about-spa.js",
-        "@sjoerdvanbommel/blog": "/mife-files/blog-spa.js"
-    }
+  "imports": {
+    "single-spa": "https://cdn.jsdelivr.net/npm/single-spa@6.0.3/lib/es2015/esm/single-spa.min.js",
+    "single-spa-react": "https://cdn.jsdelivr.net/npm/single-spa-react@6.0.2/lib/esm/single-spa-react.js",
+    "single-spa-vue": "https://cdn.jsdelivr.net/npm/single-spa-vue@3.0.1/dist/esm/single-spa-vue.js",
+    "react": "https://esm.sh/react@18.3.1/es2022/react.mjs",
+    "react/jsx-runtime": "https://esm.sh/react@18.3.1/es2022/jsx-runtime.mjs",
+    "react/jsx-dev-runtime": "https://esm.sh/react@18.3.1/es2022/jsx-dev-runtime.mjs",
+    "react-dom": "https://esm.sh/react-dom@18.3.1/es2022/react-dom.mjs",
+    "react-dom/client": "https://esm.sh/react-dom@18.3.1/es2022/react-dom.client.mjs",
+    "vue": "https://esm.sh/vue@3.5.13/dist/vue.esm-bundler.js",
+    "@sjoerdvanbommel/header": "/mife-files/header-spa.js",
+    "@sjoerdvanbommel/home": "/mife-files/home-spa.js",
+    "@sjoerdvanbommel/about": "/mife-files/about-spa.js",
+    "@sjoerdvanbommel/blog": "/mife-files/blog-spa.js"
+  }
 }

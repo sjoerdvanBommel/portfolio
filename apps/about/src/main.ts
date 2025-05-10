@@ -1,8 +1,8 @@
-import { mount } from 'svelte'
-import App from './App.svelte'
+import { mount } from 'svelte';
+import App from './App.svelte';
 
 const app = mount(App, {
   target: document.getElementById('single-spa:main')!,
-})
+});
 
-export default app
+export default app;
