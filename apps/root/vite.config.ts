@@ -3,8 +3,9 @@ import vitePluginSingleSpa from 'vite-plugin-single-spa';
 import { mergeConfig } from 'vite'
 import { viteConfigMife } from '@sjoerdvanbommel-packages/config'
 
-export default mergeConfig(viteConfigMife(3000), defineConfig({
-  publicDir: false,
+export default mergeConfig(viteConfigMife(3000, { isRoot: true }), defineConfig({
+  publicDir: '../../public',
+  
   plugins: [
     vitePluginSingleSpa({
       type: 'root',
@@ -14,4 +15,11 @@ export default mergeConfig(viteConfigMife(3000), defineConfig({
       },
     }),
   ],
+
+  build: {
+    emptyOutDir: true,
+    rollupOptions: {
+      external: ['single-spa']
+    },
+  },
 }))

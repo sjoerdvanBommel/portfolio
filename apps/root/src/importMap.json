@@ -1,6 +1,8 @@
 {
     "imports": {
-        "single-spa": "https://cdn.jsdelivr.net/npm/single-spa@5.9.5/lib/esm/single-spa.min.js",
+        "single-spa": "https://cdn.jsdelivr.net/npm/single-spa@6.0.3/lib/es2015/esm/single-spa.min.js",
+        "single-spa-react": "https://cdn.jsdelivr.net/npm/single-spa-react@6.0.2/lib/esm/single-spa-react.js",
+        "single-spa-vue": "https://cdn.jsdelivr.net/npm/single-spa-vue@3.0.1/dist/esm/single-spa-vue.js",
         "react": "https://esm.run/react@18.2.0",
         "react/jsx-runtime": "https://esm.run/react@18.2.0/jsx-runtime.js",
         "react-dom": "https://esm.run/react-dom@18.2.0",

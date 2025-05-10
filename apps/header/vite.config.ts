@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 
 dotenv.config({ path: ['../../.env', '.env'] })
 
-export default mergeConfig(viteConfigMife(3001), defineConfig({
+export default mergeConfig(viteConfigMife(3001, { isReact: true }), defineConfig({
   plugins: [
     react()
   ]

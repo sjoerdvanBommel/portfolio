@@ -4,27 +4,34 @@ import externalize from 'vite-plugin-externalize-dependencies';
 import { externalDependencies } from './external-dependencies.js';
 import vitePluginSingleSpa from 'vite-plugin-single-spa';
 
-export const viteConfigMife = (port, isRoot = false) => defineConfig({
+type Options = {
+  isRoot?: boolean,
+  isReact?: boolean
+}
+
+export const viteConfigMife = (port: number, { isRoot = false, isReact = false }: Options = {}) => defineConfig({
     server: {
       port,
         hmr: process.env.HMR === '1'
     },
+    preview: {
+      port,
+    },
     plugins: [
       tailwindcss(),
-      externalize({ externals: externalDependencies }),
-      ...(!isRoot ? [vitePluginSingleSpa(
+      ...(isRoot ? [] : [externalize({ externals: externalDependencies }), vitePluginSingleSpa(
         {
           type: 'mife',
           serverPort: port,
-          spaEntryPoints: ['src/main.tsx']
+          spaEntryPoints: [`src/spa${isReact ? '.tsx' : '.ts'}`]
         }
-      )] : []),
+      )]),
     ],
     publicDir: '../../public',
     build: {
       emptyOutDir: true,
       rollupOptions: {
-        external: externalDependencies,
+        external: isRoot ? [] : externalDependencies,
         output: {
           entryFileNames: '[name].js',
           chunkFileNames: '[name]-[hash].js',

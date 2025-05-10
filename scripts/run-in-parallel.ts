@@ -8,10 +8,19 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 /**
  * This script is written because npm does not support running multiple commands in parallel.
  * This is a workaround to run multiple commands in parallel using concurrently.
- * It reads all package.json files in the apps directory and runs the dev command for each app.
+ * It reads all package.json files in the apps directory and runs the specified command for each app.
  * It also colors the output for each app.
+ * 
+ * Usage: ts-node scripts/dev-script.ts <command>
+ * Example: ts-node scripts/dev-script.ts dev
+ * Example: ts-node scripts/dev-script.ts preview
  */
-async function generateDevCommand() {
+async function generateCommand(command: string) {
+    if (!command) {
+        console.error('Please provide a command to run (e.g., dev, preview)');
+        process.exit(1);
+    }
+
     const appsDir = join(__dirname, '..', 'apps');
     const apps = await readdir(appsDir);
     
@@ -36,13 +45,18 @@ async function generateDevCommand() {
         
         try {
             const packageJson = JSON.parse(await readFile(packageJsonPath, 'utf-8'));
-            if (packageJson.scripts?.dev) {
-                commands.push(`"npm run dev --workspace=apps/${app}"`);
+            if (packageJson.scripts?.[command]) {
+                commands.push(`"npm run ${command} --workspace=apps/${app}"`);
                 names.push(app);
             }
         } catch (error) {
             console.warn(`Could not read package.json for ${app}:`, error.message);
         }
+    }
+
+    if (commands.length === 0) {
+        console.error(`No apps found with the "${command}" script`);
+        process.exit(1);
     }
 
     const args = [
@@ -51,7 +65,7 @@ async function generateDevCommand() {
         '-c', colors.slice(0, names.length).join(',')
     ];
     
-    console.log('Running dev command:');
+    console.log(`Running ${command} command:`);
     console.log('concurrently', args.join(' '));
     
     // Execute the command using spawn
@@ -61,9 +75,10 @@ async function generateDevCommand() {
     });
     
     child.on('error', (error) => {
-        console.error('Failed to start dev servers:', error);
+        console.error(`Failed to start ${command} servers:`, error);
         process.exit(1);
     });
 }
 
-generateDevCommand().catch(console.error); 
+const command = process.argv[2];
+generateCommand(command).catch(console.error);

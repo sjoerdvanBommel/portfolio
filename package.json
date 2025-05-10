@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node --experimental-strip-types scripts/dev-script.ts",
-    "build": "tsc -b && vite build",
+    "dev": "node --experimental-strip-types scripts/run-in-parallel.ts dev",
+    "build": "npm run build --workspace=@sjoerdvanbommel-packages/config --workspace=@sjoerdvanbommel-packages/react-components && npm run build --workspace=apps/**",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "node --experimental-strip-types scripts/run-in-parallel.ts preview"
   },
   "dependencies": {
     "@sjoerdvanbommel-packages/config": "./packages/config",
