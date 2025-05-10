@@ -8,9 +8,6 @@
       "build": "tsc -b && vite build",
       "lint": "eslint .",
       "preview": "vite preview"
-    },
-    "dependencies": {
-      "@sjoerdvanbommel-packages/config": "file:../../packages/config"
     }
   }
   

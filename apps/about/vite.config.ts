@@ -1,25 +1,12 @@
-import { defineConfig } from 'vite'
-import { svelte } from '@sveltejs/vite-plugin-svelte'
-import vitePluginSingleSpa from 'vite-plugin-single-spa';
 import dotenv from 'dotenv'
-import tailwindcss from '@tailwindcss/vite';
-import { resolve } from 'path';
+import { viteConfigMife } from '@sjoerdvanbommel-packages/config'
+import { mergeConfig, defineConfig } from 'vite'
+import { svelte } from '@sveltejs/vite-plugin-svelte'
 
 dotenv.config({ path: ['../../.env', '.env'] })
 
-export default defineConfig({
-  server: {
-    port: 3004,
-    hmr: process.env.HMR === '1'
-  },
-  publicDir: resolve(__dirname, '../../public'),
-  plugins: [svelte(), 
-    tailwindcss(),
-    vitePluginSingleSpa(
-    {
-      type: 'mife',
-      serverPort: 3004,
-      spaEntryPoints: ['src/main.tsx']
-    }
-  )],
-})
+export default mergeConfig(viteConfigMife(3004), defineConfig({
+  plugins: [
+    svelte()
+  ]
+}))

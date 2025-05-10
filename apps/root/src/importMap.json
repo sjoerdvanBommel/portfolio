@@ -6,7 +6,6 @@
         "react-dom": "https://esm.run/react-dom@18.2.0",
         "react-dom/client": "https://esm.run/react-dom@18.2.0/client.js",
         "@sjoerdvanbommel/header": "http://localhost:3001/spa.js",
-        "@sjoerdvanbommel/react": "http://localhost:3002/spa.js",
         "@sjoerdvanbommel/home": "http://localhost:3003/spa.js",
         "@sjoerdvanbommel/about": "http://localhost:3004/spa.js",
         "@sjoerdvanbommel/blog": "http://localhost:3005/spa.js"

@@ -1,1 +1,2 @@
-export const externalDependencies = ['single-spa', 'single-spa-react', 'single-spa-vue']
+export * from './external-dependencies.js'
+export * from './vite-config.js'
