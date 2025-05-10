@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "@sjoerdvanbommel/react-components";
+import { Link } from "@sjoerdvanbommel-packages/react-components";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);

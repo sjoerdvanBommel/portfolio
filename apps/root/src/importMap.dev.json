@@ -1,5 +1,11 @@
 {
     "imports": {
+        "single-spa": "https://cdn.jsdelivr.net/npm/single-spa@6.0.3/lib/es2015/esm/single-spa.min.js",
+        "single-spa-react": "https://cdn.jsdelivr.net/npm/single-spa-react@6.0.2/lib/esm/single-spa-react.js",
+        "react": "https://cdn.jsdelivr.net/npm/react@18.2.0/index.js",
+        "react/jsx-dev-runtime": "https://cdn.jsdelivr.net/npm/react@18.2.0/cjs/react-jsx-dev-runtime.production.min.js",
+        "react-dom": "https://cdn.jsdelivr.net/npm/react-dom@18.2.0/index.js",
+        "react-dom/client": "https://cdn.jsdelivr.net/npm/react-dom@18.2.0/client.js",
         "@sjoerdvanbommel/header": "http://localhost:3001/src/spa.tsx",
         "@sjoerdvanbommel/react": "http://localhost:3002/src/spa.tsx",
         "@sjoerdvanbommel/home": "http://localhost:3003/src/spa.ts",

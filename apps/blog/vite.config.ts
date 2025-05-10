@@ -4,6 +4,8 @@ import vitePluginSingleSpa from 'vite-plugin-single-spa';
 import dotenv from 'dotenv'
 import tailwindcss from '@tailwindcss/vite';
 import { resolve } from 'path';
+import externalize from 'vite-plugin-externalize-dependencies';
+// import { externalDependencies } from '@sjoerdvanbommel-packages/config'
 
 dotenv.config({ path: ['../../.env', '.env'] })
 
@@ -20,5 +22,7 @@ export default defineConfig({
       serverPort: 3005,
       spaEntryPoints: ['src/main.tsx']
     }
-  )],
+  ),
+  // externalize({ externals: externalDependencies }),
+  ],
 })

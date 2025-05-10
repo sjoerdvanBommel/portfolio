@@ -1,5 +1,10 @@
 {
     "imports": {
+        "single-spa": "https://cdn.jsdelivr.net/npm/single-spa@5.9.5/lib/esm/single-spa.min.js",
+        "react": "https://esm.run/react@18.2.0",
+        "react/jsx-runtime": "https://esm.run/react@18.2.0/jsx-runtime.js",
+        "react-dom": "https://esm.run/react-dom@18.2.0",
+        "react-dom/client": "https://esm.run/react-dom@18.2.0/client.js",
         "@sjoerdvanbommel/header": "http://localhost:3001/spa.js",
         "@sjoerdvanbommel/react": "http://localhost:3002/spa.js",
         "@sjoerdvanbommel/home": "http://localhost:3003/spa.js",
