@@ -9,7 +9,7 @@ import { registerApplication, start } from "single-spa";
 ].forEach((module) => {
     registerApplication({
         name: module.name,
-        app: () => import(/* @vite-ignore */ `portfolio-${module.name}`),
+        app: () => import(/* @vite-ignore */ `@sjoerdvanbommel/${module.name}`),
         activeWhen: module.activeWhen,
         customProps: {
             domElementGetter: () => document.getElementById(`${module.name}-app`)

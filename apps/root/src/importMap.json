@@ -1,9 +1,9 @@
 {
     "imports": {
-        "portfolio-header": "http://localhost:3001/spa.js",
-        "portfolio-react": "http://localhost:3002/spa.js",
-        "portfolio-home": "http://localhost:3003/spa.js",
-        "portfolio-about": "http://localhost:3004/spa.js",
-        "portfolio-blog": "http://localhost:3005/spa.js"
+        "@sjoerdvanbommel/header": "http://localhost:3001/spa.js",
+        "@sjoerdvanbommel/react": "http://localhost:3002/spa.js",
+        "@sjoerdvanbommel/home": "http://localhost:3003/spa.js",
+        "@sjoerdvanbommel/about": "http://localhost:3004/spa.js",
+        "@sjoerdvanbommel/blog": "http://localhost:3005/spa.js"
     }
 }
