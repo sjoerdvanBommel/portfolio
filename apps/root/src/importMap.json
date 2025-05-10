@@ -8,6 +8,7 @@
         "react/jsx-dev-runtime": "https://esm.sh/react@18.3.1/jsx-dev-runtime",
         "react-dom": "https://esm.sh/react-dom@18.3.1/",
         "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+        "vue": "https://esm.sh/vue@3.5.13/dist/vue.esm-bundler.js",
         "@sjoerdvanbommel/header": "/mife-files/header-spa.js",
         "@sjoerdvanbommel/home": "/mife-files/home-spa.js",
         "@sjoerdvanbommel/about": "/mife-files/about-spa.js",
