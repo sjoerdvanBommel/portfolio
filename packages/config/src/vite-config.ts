@@ -3,6 +3,7 @@ import tailwindcss from '@tailwindcss/vite'
 import externalize from 'vite-plugin-externalize-dependencies';
 import { externalDependencies } from './external-dependencies.js';
 import vitePluginSingleSpa from 'vite-plugin-single-spa';
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 
 type Options = {
   isRoot?: boolean,
@@ -25,7 +26,7 @@ export const viteConfigMife = (port: number, { isRoot = false, isReact = false }
           serverPort: port,
           spaEntryPoints: [`src/spa${isReact ? '.tsx' : '.ts'}`]
         }
-      )]),
+      ), cssInjectedByJsPlugin()]),
     ],
     publicDir: '../../public',
     build: {

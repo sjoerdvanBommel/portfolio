@@ -7,9 +7,9 @@
         "react/jsx-runtime": "https://esm.run/react@18.2.0/jsx-runtime.js",
         "react-dom": "https://esm.run/react-dom@18.2.0",
         "react-dom/client": "https://esm.run/react-dom@18.2.0/client.js",
-        "@sjoerdvanbommel/header": "http://localhost:3001/spa.js",
-        "@sjoerdvanbommel/home": "http://localhost:3003/spa.js",
-        "@sjoerdvanbommel/about": "http://localhost:3004/spa.js",
-        "@sjoerdvanbommel/blog": "http://localhost:3005/spa.js"
+        "@sjoerdvanbommel/header": "http://localhost:3000/mife-files/header-spa.js",
+        "@sjoerdvanbommel/home": "http://localhost:3000/mife-files/home-spa.js",
+        "@sjoerdvanbommel/about": "http://localhost:3000/mife-files/about-spa.js",
+        "@sjoerdvanbommel/blog": "http://localhost:3000/mife-files/blog-spa.js"
     }
 }

@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "node --experimental-strip-types scripts/run-in-parallel.ts dev",
-    "build": "npm run build --workspace=@sjoerdvanbommel-packages/config --workspace=@sjoerdvanbommel-packages/react-components && npm run build --workspace=apps/**",
+    "build": "npm run build --workspace=@sjoerdvanbommel-packages/config --workspace=@sjoerdvanbommel-packages/react-components && npm run build --workspace=apps/** && node --experimental-strip-types scripts/copy-mife-outputs-to-root.ts",
     "lint": "eslint .",
-    "preview": "node --experimental-strip-types scripts/run-in-parallel.ts preview"
+    "preview": "npm run preview -w @sjoerdvanbommel/root"
   },
   "dependencies": {
     "@sjoerdvanbommel-packages/config": "./packages/config",
@@ -19,6 +19,7 @@
     "single-spa-layout": "^3.0.0",
     "single-spa-react": "^6.0.2",
     "tailwindcss": "^4.1.6",
+    "vite-plugin-css-injected-by-js": "^3.5.2",
     "vite-plugin-externalize-dependencies": "^1.0.1"
   },
   "devDependencies": {
