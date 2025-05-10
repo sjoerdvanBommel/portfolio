@@ -10,11 +10,17 @@
   </head>
   <body>
     <!-- mount point for micro-frontends -->
-    <div id="single-spa:main">
-      <div id="header-app"></div>
-      <div id="react-app"></div>
-      <div id="svelte-app"></div>
-    </div>
+    <div class="grid grid-cols-[1fr_minmax(0,theme('screens.lg'))_1fr]" id="single-spa:main">
+      <div class="col-start-2">
+        <div id="header-app"></div>
+        <main>
+          <div id="react-app"></div>
+          <div id="svelte-app"></div>
+          <div id="about-app"></div>
+          <div id="blog-app"></div>
+        </main>
+      </div>
+      </div>
 
     <script type="module" src="/src/main.ts"></script>
   </body>

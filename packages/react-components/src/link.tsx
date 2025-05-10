@@ -1,5 +1,6 @@
+import type { AnchorHTMLAttributes } from "react";
 import { navigateToUrl } from "single-spa";
 
-export const Link = ({ href, children }: { href: string; children: React.ReactNode }) => {
-  return <a href={href} onClick={navigateToUrl}>{children}</a>;
+export const Link = ({ children, ...rest }: AnchorHTMLAttributes<HTMLAnchorElement>) => {
+  return <a {...rest} onClick={navigateToUrl}>{children}</a>;
 };
