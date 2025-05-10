@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 import externalize from 'vite-plugin-externalize-dependencies';
-import { externalDependencies } from './external-dependencies.js';
+import { mifeExternalDependencies, rootExternalDependencies } from './external-dependencies.js';
 import vitePluginSingleSpa from 'vite-plugin-single-spa';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 
@@ -20,7 +20,8 @@ export const viteConfigMife = (port: number, { isRoot = false, isReact = false }
     },
     plugins: [
       tailwindcss(),
-      ...(isRoot ? [] : [externalize({ externals: externalDependencies }), vitePluginSingleSpa(
+      externalize({ externals: isRoot ? rootExternalDependencies : mifeExternalDependencies }),
+      ...(isRoot ? [] : [vitePluginSingleSpa(
         {
           type: 'mife',
           serverPort: port,
@@ -32,7 +33,7 @@ export const viteConfigMife = (port: number, { isRoot = false, isReact = false }
     build: {
       emptyOutDir: true,
       rollupOptions: {
-        external: isRoot ? [] : externalDependencies,
+        external: isRoot ? rootExternalDependencies : mifeExternalDependencies,
         output: {
           entryFileNames: '[name].js',
           chunkFileNames: '[name]-[hash].js',

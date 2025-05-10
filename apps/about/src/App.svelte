@@ -57,8 +57,8 @@
 <p>
   Complex projects where I get to migrate legacy codebases to modern solutions excite me.
   I've never had the opportunity to explore micro-frontends in my professional life, so I decided to
-  create this website using them. It uses Svelte for the about page, React for the header (yes, it is
-  its own micro-frontend) and blog page, and Vue for the home page.
+  create this website using them. It uses Svelte for the about page, React for the blog page and header (yes, it is
+  its own micro-frontend), and Vue for the home page.
   Overengineered? I don't think so, when exploring, learning and showcasing is the goal.
 </p>
 
