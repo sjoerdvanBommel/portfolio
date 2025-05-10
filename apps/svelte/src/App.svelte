@@ -3,7 +3,7 @@
 </script>
 
 <main>
-  <h2>Svelte</h2>
+  <h2 class="text-3xl text-orange-400 font-bold underline">SVELTE</h2>
 
   <a href="/" on:click|preventDefault={() => navigateToUrl('/')}>Go to root</a>
   <a href="/react" on:click|preventDefault={() => navigateToUrl('/react')}>Go to react</a>
