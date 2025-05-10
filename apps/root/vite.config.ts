@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import vitePluginSingleSpa from 'vite-plugin-single-spa';
 import { mergeConfig } from 'vite'
-import { viteConfigMife } from '@sjoerdvanbommel-packages/config'
+import { rootExternalDependencies, viteConfigMife } from '@sjoerdvanbommel-packages/config'
 
 export default mergeConfig(viteConfigMife(3000, { isRoot: true }), defineConfig({
   publicDir: '../../public',
@@ -19,7 +19,7 @@ export default mergeConfig(viteConfigMife(3000, { isRoot: true }), defineConfig(
   build: {
     emptyOutDir: true,
     rollupOptions: {
-      external: ['single-spa']
+      external: rootExternalDependencies
     },
   },
 }))
