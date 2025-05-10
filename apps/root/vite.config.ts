@@ -17,4 +17,10 @@ export default defineConfig({
       build: 'src/importMap.json'
     },
   })],
+  define: {
+    // enable hydration mismatch details in production build
+    __VUE_OPTIONS_API__: 'false',
+    __VUE_PROD_DEVTOOLS__: 'false',
+    __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'false'
+  }
 })

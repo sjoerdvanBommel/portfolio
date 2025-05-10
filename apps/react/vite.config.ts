@@ -18,7 +18,7 @@ export default defineConfig({
     {
       type: 'mife',
       serverPort: 3002,
-      spaEntryPoints: ['src/main.tsx']
+      spaEntryPoints: ['src/main.tsx'],
     }
   )],
 })
