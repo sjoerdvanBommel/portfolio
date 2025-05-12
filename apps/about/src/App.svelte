@@ -6,7 +6,7 @@
 </script>
 
 <h1 class="text-3xl mb-2">{name}</h1>
-<div class="text-gray-600 italic mb-4">{tagline}</div>
+<div class="text-subheading-color italic mb-4">{tagline}</div>
 <p>
   I'm a web developer focused on <em>high-quality</em> code, smooth migrations, and modern, scalable solutions.
   I've used many programming languages and tools, but have deep knowledge of the TypeScript ecosystem.
@@ -26,8 +26,8 @@
 <h2 class="text-2xl mt-8 mb-2">Skills & Interests</h2>
 <div class="flex flex-wrap gap-2 mt-4">
   {#each skills as skill}
-    <div class="bg-blue-50 px-3 py-1 rounded-lg text-sm">{skill}</div>
+    <div class="bg-blue-50 px-3 py-1 rounded-lg text-sm text-bg-color">{skill}</div>
   {/each}
 </div>
 
-<footer class="mt-8 font-bold text-gray-700">Available for freelance or collaborative projects — anywhere on the planet!</footer>
+<footer class="mt-8 font-bold">Available for freelance or collaborative projects — anywhere on the planet!</footer>

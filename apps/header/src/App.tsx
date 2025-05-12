@@ -1,5 +1,5 @@
-import { useState } from 'react';
 import { Link } from '@sjoerdvanbommel-packages/react-components';
+import { useState } from 'react';
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,7 +9,7 @@ function App() {
       <div className="flex-1 mx-auto py-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div className="flex items-center justify-between">
-            <Link href="/" className="text-2xl font-bold text-gray-900">
+            <Link href="/" className="text-2xl font-bold text-accent-color">
               Sjoerd van Bommel
             </Link>
 

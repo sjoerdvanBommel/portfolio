@@ -1,3 +1,24 @@
 @import 'tailwindcss' source('../../');
 
-/* bg: #242424 */
+@theme inline {
+  --color-bg-color: var(--bg-color);
+  --color-text-color: var(--text-color);
+  --color-accent-color: var(--accent-color);
+  --color-subheading-color: var(--subheading-color);
+}
+@layer base {
+  :root {
+    --bg-color: oklch(1 0 0);
+    --text-color: oklch(0 0 0);
+    --accent-color: oklch(21% 0.034 264.665);
+    --subheading-color: oklch(44.6% 0.03 256.802);
+  }
+
+  .dark,
+  .dark * {
+    --bg-color: oklch(0.26 0 0);
+    --text-color: oklch(1 0 0);
+    --accent-color: oklch(0.84 0.0074 257.2136);
+    --subheading-color: oklch(0.84 0.0074 257.2136);
+  }
+}
