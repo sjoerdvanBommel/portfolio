@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite';
-import vitePluginSingleSpa from 'vite-plugin-single-spa';
-import { mergeConfig } from 'vite';
 import { rootExternalDependencies, viteConfigMife } from '@sjoerdvanbommel-packages/config';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig, mergeConfig } from 'vite';
+import vitePluginSingleSpa from 'vite-plugin-single-spa';
 
 export default mergeConfig(
   viteConfigMife(3000, { isRoot: true }),
@@ -16,6 +16,7 @@ export default mergeConfig(
           build: 'src/importMap.json',
         },
       }),
+      tailwindcss(),
     ],
 
     build: {
