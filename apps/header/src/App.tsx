@@ -35,7 +35,7 @@ function App() {
                 <Link href="/about">About me</Link>
               </li>
               <li>
-                <Link href="/blog">Blog</Link>
+                <Link href="/blog/posts">Blog</Link>
               </li>
               <li>
                 <Link href="/contact">Contact</Link>

@@ -16,7 +16,7 @@
 
   .dark,
   .dark * {
-    --bg-color: oklch(0.26 0 0);
+    --bg-color: oklch(0.17 0 0);
     --text-color: oklch(1 0 0);
     --accent-color: oklch(0.84 0.0074 257.2136);
     --subheading-color: oklch(0.84 0.0074 257.2136);
