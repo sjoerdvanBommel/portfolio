@@ -6,19 +6,29 @@
   --color-accent-color: var(--accent-color);
   --color-subheading-color: var(--subheading-color);
 }
+
 @layer base {
   :root {
     --bg-color: oklch(1 0 0);
     --text-color: oklch(0 0 0);
     --accent-color: oklch(21% 0.034 264.665);
     --subheading-color: oklch(44.6% 0.03 256.802);
+    --font-display: 'Nunito', sans-serif;
+
+    font-size: 1.125rem;
   }
 
   .dark,
   .dark * {
-    --bg-color: oklch(0.17 0 0);
-    --text-color: oklch(1 0 0);
+    --bg-color: hsl(216deg 16.13% 6.08%);
+    --text-color: oklch(0.92 0 0);
     --accent-color: oklch(0.84 0.0074 257.2136);
     --subheading-color: oklch(0.84 0.0074 257.2136);
   }
+}
+
+ol,
+ul,
+menu {
+  @apply ml-6 my-2 list-disc;
 }

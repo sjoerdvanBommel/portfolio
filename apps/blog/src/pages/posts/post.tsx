@@ -8,5 +8,9 @@ export default function Post() {
     return null;
   }
 
-  return <MdxComponent slug={slug} />;
+  return (
+    <div className="max-w-2xl mx-auto font-display">
+      <MdxComponent slug={slug} />
+    </div>
+  );
 }

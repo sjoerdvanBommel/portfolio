@@ -3,8 +3,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { mountRootParcel } from 'single-spa';
+import { onMounted, ref } from 'vue';
 
 // Props
 const props = defineProps({
@@ -23,18 +23,11 @@ const props = defineProps({
 });
 
 const parcelContainer = ref(null);
-let parcelInstance = null;
 
 onMounted(() => {
-  parcelInstance = props.mountParcel(props.config, {
+  props.mountParcel(props.config, {
     domElement: parcelContainer.value,
     ...props.parcelProps,
   });
-});
-
-onBeforeUnmount(() => {
-  if (parcelInstance?.unmount) {
-    parcelInstance.unmount();
-  }
 });
 </script>

@@ -1,6 +1,10 @@
-import { Counter } from '../components/counter';
+import { Error } from '../components/mdx/error';
+import { H1, H2 } from '../components/mdx/h1';
+import InlineCode from '../components/mdx/inline-code';
 
 export const components = {
-  h1: ({ children }: { children: React.ReactNode }) => <h1 className="text-2xl font-bold">{children}</h1>,
-  Counter,
+  h1: H1,
+  h2: H2,
+  Error,
+  InlineCode,
 };

@@ -1,9 +1,40 @@
-# Title
+# TypeScript modules: a deep dive
 
-This text comes from an MDX file
+## Introduction
 
-<em>This text style is italicized</em>
+If you've been working with TypeScript for a while, you might recognise these scenarios: you are creating a new project and you try to import a TypeScript file:
 
-Custom component rendered from MDX:
+<Error>
+  Relative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or
+  'nodenext'. Did you mean './component.js'? ts(2835)
+</Error>
 
-<Counter></Counter>
+Or you try to import a package like react and receive:
+
+<Error>
+  Could not find a declaration file for module 'react'. '\<project\>/node_modules/react/index.js' implicitly has an 'any' type.
+  Try <InlineCode>npm i --save-dev @types/react</InlineCode> if it exists or add a new declaration (.d.ts) file containing <InlineCode>declare module 'react';</InlineCode> ts(7016)
+</Error>
+
+Or here's another one:
+
+<Error>SyntaxError: Cannot use import statement outside a module</Error>
+
+If you are here because you are trying to fix one of these errors, I have some bad and some good news for you. I will not tell you how to fix your specific problem.
+But I will tell you why the error occurs, so you can fix it yourself.
+
+<br />
+
+We will also dive into some more advanced topics and questions, like:
+
+- Why is a "modern" bundler like vite so much faster than an older bundler like webpack?
+- How does hot module replacement work?
+- Where are my compiled files when I run the dev server?
+
+<br />
+Above errors are all related to **modules**.
+<br />
+
+## Modules
+
+Modules are a way to organize your code. They are a way to split your code into smaller, more manageable pieces.
