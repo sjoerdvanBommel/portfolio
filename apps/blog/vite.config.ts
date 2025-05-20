@@ -1,8 +1,8 @@
+import mdx from '@mdx-js/rollup';
+import { viteConfigMife } from '@sjoerdvanbommel-packages/config';
+import react from '@vitejs/plugin-react';
 import dotenv from 'dotenv';
 import { defineConfig, mergeConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import { viteConfigMife } from '@sjoerdvanbommel-packages/config';
-import mdx from '@mdx-js/rollup';
 
 dotenv.config({ path: ['../../.env', '.env'] });
 

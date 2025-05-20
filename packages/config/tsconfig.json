@@ -7,6 +7,7 @@
     "skipLibCheck": true,
     "outDir": "./dist",
     "declaration": true,
+    "declarationMap": true,
 
     "moduleResolution": "NodeNext",
     "verbatimModuleSyntax": true,

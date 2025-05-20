@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { components } from './components';
+import { components } from '../components/mdx/components';
 
 interface MDXModule {
   default: React.ComponentType<{ components: typeof components }>;
@@ -10,7 +10,7 @@ export const MdxComponent = ({ slug }: { slug: string }) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    import(`./${slug}.mdx`)
+    import(`./${slug}/blog.mdx`)
       .then((module: MDXModule) => {
         setPost(() => module.default);
       })

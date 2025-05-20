@@ -1,3 +1,4 @@
+import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import externalize from 'vite-plugin-externalize-dependencies';
@@ -9,18 +10,22 @@ type Options = {
   isReact?: boolean;
 };
 
-export const viteConfigMife = (port: number, { isRoot = false, isReact = false }: Options = {}) =>
-  defineConfig({
+const isRunningSingleApp = process.env.RUNNING_SINGLE_APP === '1';
+
+export const viteConfigMife = (port: number, { isRoot = false, isReact = false }: Options = {}) => {
+  const externalDependencies = isRoot ? rootExternalDependencies : isRunningSingleApp ? [] : mifeExternalDependencies;
+
+  return defineConfig({
     server: {
       port,
-      hmr: process.env.HMR === '1',
+      hmr: isRunningSingleApp,
     },
     preview: {
       port,
     },
     plugins: [
       externalize({
-        externals: isRoot ? rootExternalDependencies : mifeExternalDependencies,
+        externals: externalDependencies,
       }),
       ...(isRoot
         ? []
@@ -32,12 +37,13 @@ export const viteConfigMife = (port: number, { isRoot = false, isReact = false }
             }),
           ]),
       cssInjectedByJsPlugin(),
+      ...(isRunningSingleApp ? [tailwindcss()] : []),
     ],
     publicDir: '../../public',
     build: {
       emptyOutDir: true,
       rollupOptions: {
-        external: isRoot ? rootExternalDependencies : mifeExternalDependencies,
+        external: externalDependencies,
         output: {
           entryFileNames: '[name].js',
           chunkFileNames: '[name]-[hash].js',
@@ -51,3 +57,4 @@ export const viteConfigMife = (port: number, { isRoot = false, isReact = false }
       __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'false',
     },
   });
+};

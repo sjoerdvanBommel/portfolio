@@ -1,5 +1,7 @@
 @import 'tailwindcss' source('../../');
 
+@plugin 'tailwind-scrollbar';
+
 @theme inline {
   --color-bg-color: var(--bg-color);
   --color-text-color: var(--text-color);
@@ -25,10 +27,10 @@
     --accent-color: oklch(0.84 0.0074 257.2136);
     --subheading-color: oklch(0.84 0.0074 257.2136);
   }
-}
 
-ol,
-ul,
-menu {
-  @apply ml-6 my-2 list-disc;
+  ol,
+  ul,
+  menu {
+    @apply ml-6 my-2 list-disc;
+  }
 }

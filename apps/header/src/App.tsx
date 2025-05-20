@@ -27,7 +27,7 @@ function App() {
           </div>
 
           <nav id="navigation" className={`${isOpen ? 'block' : 'hidden'} md:block mt-4 md:mt-0`}>
-            <ul className="flex flex-col md:flex-row gap-2 md:gap-8">
+            <ul className="flex flex-col md:flex-row gap-2 md:gap-8 list-none">
               <li>
                 <Link href="/">Home</Link>
               </li>
