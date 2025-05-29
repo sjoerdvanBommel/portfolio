@@ -17,7 +17,7 @@ export function TabsView({ files, selectedFile, onSelectFile }: TabsViewProps) {
           {getAllFiles(files).map((file) => (
             <button
               key={file.fullPath}
-              className={`cursor-pointer px-4 py-2 text-sm font-medium whitespace-nowrap border-b-2 ${
+              className={`cursor-pointer mx-2 px-2 py-2 text-sm font-medium whitespace-nowrap border-b-2 ${
                 selectedFile?.name === file.name
                   ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'

@@ -5,8 +5,11 @@
 @theme inline {
   --color-bg-color: var(--bg-color);
   --color-text-color: var(--text-color);
+  --color-primary: var(--primary-color);
   --color-accent-color: var(--accent-color);
-  --color-subheading-color: var(--subheading-color);
+  --color-subheading: var(--subheading-color);
+  --color-subtle: var(--subtle);
+  --color-subtle-hover: var(--subtle-hover);
 }
 
 @layer base {
@@ -14,7 +17,11 @@
     --bg-color: oklch(1 0 0);
     --text-color: oklch(0 0 0);
     --accent-color: oklch(21% 0.034 264.665);
-    --subheading-color: oklch(44.6% 0.03 256.802);
+    --primary-color: oklch(21% 0.034 264.665);
+    --subtle: oklch(92.8% 0.006 264.531);
+    --subtle-text: oklch(92.8% 0.006 264.531);
+    --subtle-hover: oklch(87.2% 0.01 258.338);
+    --subheading-color: oklch(37.3% 0.034 259.733);
     --font-display: 'Nunito', sans-serif;
 
     font-size: 1.125rem;
@@ -25,7 +32,11 @@
     --bg-color: hsl(216deg 16.13% 6.08%);
     --text-color: oklch(0.92 0 0);
     --accent-color: oklch(0.84 0.0074 257.2136);
-    --subheading-color: oklch(0.84 0.0074 257.2136);
+    --primary-color: oklch(0.84 0.0074 257.2136);
+    --subtle: oklch(27.8% 0.033 256.848);
+    --subtle-text: oklch(70.7% 0.022 261.325);
+    --subtle-hover: oklch(37.3% 0.034 259.733);
+    --subheading-color: oklch(70.7% 0.022 261.325);
   }
 
   ol,

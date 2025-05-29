@@ -9,7 +9,7 @@ import { TabsView } from './tabs-view';
 // When a constant is passed for files, this will extract the file names as a union type
 type ExtractFileNames<T extends FileStructure[]> = T[number]['name'];
 
-interface CodeBlockProps<T extends FileStructure[]> {
+export interface CodeBlockProps<T extends FileStructure[]> {
   files: T;
   initialFile?: ExtractFileNames<T>;
   mode?: 'split' | 'tabs' | 'sidebar';
@@ -44,7 +44,7 @@ export function CodeBlock<T extends FileStructure[]>({ files, initialFile, mode 
       />
     ),
     tabs: <TabsView files={files} selectedFile={selectedFile} onSelectFile={setSelectedFile} />,
-    split: <SplitView files={files} selectedFile={selectedFile} onSelectFile={setSelectedFile} />,
+    split: <SplitView files={files} />,
   };
 
   return (

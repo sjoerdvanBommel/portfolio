@@ -1,3 +1,5 @@
+import { FileCode2Icon, FileIcon, FileJson2Icon, FileTextIcon, ScrollTextIcon, SquareChevronRight } from 'lucide-react';
+import { getLanguageFromFilename } from '../../../utils/code-block/get-language-from-filename';
 import { FileStructure } from '../../../utils/code-block/types';
 import { CodeDisplay } from './code-display';
 
@@ -6,13 +8,39 @@ interface CodeColumnProps {
   isLast?: boolean;
 }
 
+function getFileIcon(language: string) {
+  switch (language) {
+    case 'typescript':
+    case 'javascript':
+      return <ScrollTextIcon className="w-4 h-4" />;
+    case 'jsx':
+    case 'tsx':
+      return <FileCode2Icon className="w-4 h-4" />;
+    case 'json':
+      return <FileJson2Icon className="w-4 h-4" />;
+    case 'markdown':
+    case 'mdx':
+      return <FileTextIcon className="w-4 h-4" />;
+    case 'bash':
+      return <SquareChevronRight className="w-4 h-4" />;
+    default:
+      return <FileIcon className="w-4 h-4" />;
+  }
+}
+
 function CodeColumn({ file, isLast }: CodeColumnProps) {
+  const language = getLanguageFromFilename(file.name);
+  const borderStyle = isLast ? '' : 'border-r border-gray-800';
+
   return (
     <div className="flex flex-col">
-      <div className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
-        <div className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300">{file.name}</div>
+      <div className={`border-b border-gray-800 bg-gray-900/50 ${borderStyle}`}>
+        <div className="w-fit mx-2 px-2 py-2 text-sm font-medium text-blue-400 flex items-center gap-2 border-b-2 border-blue-500">
+          {getFileIcon(language)}
+          {file.name}
+        </div>
       </div>
-      <div className={`flex-1 ${!isLast ? 'border-r border-gray-200 dark:border-gray-700' : ''}`}>
+      <div className={`flex-1 ${borderStyle}`}>
         <CodeDisplay selectedFile={file} />
       </div>
     </div>
@@ -29,7 +57,7 @@ export function SplitView({ files }: SplitViewProps) {
   }
 
   return (
-    <div className="flex-1 overflow-hidden grid grid-cols-2">
+    <div className="flex-1 overflow-hidden grid grid-cols-2 rounded-lg">
       {files.map((file, index) => (
         <CodeColumn key={file.name} file={file} isLast={index === files.length - 1} />
       ))}

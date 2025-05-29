@@ -1,12 +1,194 @@
-import { files } from './constants';
+import { quiz1, timelineItems } from './constants.tsx';
 
-# TypeScript modules: a deep dive
+# JavaScript modules: a deep dive
 
 ## Introduction
 
-Let's kick off with a question. What does this command do?
+Let's kick off with a question.
 
-<CodeBlock files={files} mode="split" />
+<CodeQuiz {...quiz1} mode="tabs" />
+
+If you know exactly why this is the output, congratulations! You probably have a pretty good understanding
+of TypeScript. But even for those people, I'd say: give this blog post a try.
+I am certain you will learn something new.
+
+<br />
+
+## What is a module?
+
+Before we dive in, let's get some things straight.
+
+People tend to be scared when they hear the word "module",
+because of the complexity of the module **system** in JavaScript.
+But a module itself is just a _self-contained_ piece of code.
+It does not rely on anything outside of it.
+
+<CodeBlock
+  files={[
+    {
+      name: 'add.ts',
+      content: 'const add = (a: number, b: number) => a + b;',
+    },
+    {
+      name: 'calculator.ts',
+      content: `class Calculator {
+    add(a: number, b: number) {
+      return a + b;
+    }
+  }`,
+    },
+  ]}
+></CodeBlock>
+
+But now what if I want to use the `add` function from `add.ts` in `calculator.ts`?
+Without a module system, I would have to come up with my own solution, like copy-pasting
+the `add` function into `calculator.ts`. But that would become a mess very quickly.
+
+<br />
+
+Let's go back in time to understand why modules exist and why we ended up in this situation.
+
+<br />
+
+<Timeline>
+  <TimelineEntry title="JavaScript is born" emoji="👶" date={new Date("1995-01-01")}>
+      JavaScript, or LiveScript at the time, was created at Netscape Communications by Brendan Eich in 1995.
+      It was initially created to be a scripting language for their own browser, Netscape Navigator.
+
+      <img src="/img/netscape-navigator.webp" alt="Netscape Navigator" className="my-4" />
+
+      The language was in no way designed to be a general-purpose language for both client and server.
+      It contained notable performance and security issues and did not have any module system.
+      But people used JavaScript because other browsers started to support it as well.
+      There was no real alternative.
+
+      But if there is no module system, then how would you organize your code?
+
+  </TimelineEntry>
+
+<TimelineEntry title="Node.js" date={new Date('2009-01-01')}>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+</TimelineEntry>
+
+  <TimelineEntry title="ES6 Modules" date={new Date("2015-01-01")}>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+    <p>JavaScript gets native module support with ES6</p>
+  </TimelineEntry>
+</Timeline>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
 
 If you've been working with TypeScript for a while, you might recognise these scenarios: you are creating a new project and you try to import a TypeScript file:
 
