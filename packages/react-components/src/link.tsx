@@ -1,10 +1,22 @@
 import type { AnchorHTMLAttributes } from 'react';
+import { Link as ReactRouterLink, useInRouterContext } from 'react-router-dom';
 import { navigateToUrl } from 'single-spa';
 
-export const Link = ({ children, className, ...rest }: AnchorHTMLAttributes<HTMLAnchorElement>) => {
+export const Link = ({ children, className: classNameParam, ...rest }: AnchorHTMLAttributes<HTMLAnchorElement>) => {
+  const isInReactRouter = useInRouterContext();
+  const className = `cursor-pointer ${classNameParam}`;
+
+  if (isInReactRouter) {
+    return (
+      <ReactRouterLink className={className} {...rest} to={rest.href!}>
+        {children}
+      </ReactRouterLink>
+    );
+  }
+
   return (
     <a
-      className={`cursor-pointer ${className}`}
+      className={className}
       {...rest}
       onClick={(e) => {
         e.preventDefault();

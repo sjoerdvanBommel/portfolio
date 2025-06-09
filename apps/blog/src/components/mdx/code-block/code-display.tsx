@@ -1,7 +1,7 @@
+import { transformerNotationHighlight } from '@shikijs/transformers';
 import ShikiCodeBlock from 'react-shiki';
 import { getLanguageFromFilename } from '../../../utils/code-block/get-language-from-filename';
 import { FileStructure } from '../../../utils/code-block/types';
-
 interface CodeDisplayProps {
   selectedFile: FileStructure | null;
 }
@@ -14,8 +14,9 @@ export function CodeDisplay({ selectedFile }: CodeDisplayProps) {
           <ShikiCodeBlock
             language={getLanguageFromFilename(selectedFile.name)}
             theme="github-dark"
-            className="[&_.shiki]:!rounded-none [&_.shiki]:!bg-transparent"
+            className="[&_.shiki]:!rounded-none [&_.shiki]:!bg-transparent [&_.highlighted]:bg-subtle [&_.highlighted]:w-[calc(100%+3rem)] [&_.highlighted]:inline-block [&_.highlighted]:-mx-6 [&_.highlighted]:px-6 [&_code]:block [&_code]:w-fit [&_code]:min-w-full"
             showLanguage={false}
+            transformers={[transformerNotationHighlight()]}
           >
             {selectedFile.content}
           </ShikiCodeBlock>

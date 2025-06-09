@@ -13,23 +13,25 @@
     "clean": "rm -rf **/dist && rm -rf **/node_modules && rm -rf dist && rm -rf node_modules"
   },
   "dependencies": {
-    "@sjoerdvanbommel-packages/config": "workspace:*",
+    "@sjoerdvanbommel-packages/config": "./packages/config",
     "@tailwindcss/vite": "^4.1.6",
     "import": "^0.0.6",
     "lucide-react": "^0.511.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router": "^7.6.0",
+    "react-router-dom": "^7.6.2",
     "single-spa": "^6.0.3",
     "single-spa-layout": "^3.0.0",
     "single-spa-react": "^6.0.2",
-    "tailwindcss": "^4.1.6",
     "tailwind-scrollbar": "^4.0.2",
+    "tailwindcss": "^4.1.6",
     "vite-plugin-css-injected-by-js": "^3.5.2",
     "vite-plugin-externalize-dependencies": "^1.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.22.0",
+    "@shikijs/transformers": "^3.6.0",
     "@types/node": "^22.15.3",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",

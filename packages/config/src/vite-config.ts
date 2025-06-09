@@ -14,7 +14,6 @@ export const viteConfig = (port: number, { isRoot = false, isReact = false }: Op
   const isRunningSingleApp = process.env.VITE_RUNNING_SINGLE_APP === '1';
   const externalDependencies = isRoot ? rootExternalDependencies : isRunningSingleApp ? [] : mifeExternalDependencies;
 
-  console.log(isRunningSingleApp, externalDependencies);
   const plugins = [
     externalize({
       externals: externalDependencies,
@@ -32,7 +31,7 @@ export const viteConfig = (port: number, { isRoot = false, isReact = false }: Op
     );
   }
 
-  if (isRoot || !isRunningSingleApp) {
+  if (isRoot || isRunningSingleApp) {
     plugins.push(tailwindcss());
   }
 

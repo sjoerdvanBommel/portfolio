@@ -1,6 +1,6 @@
 import { quiz1, timelineItems } from './constants.tsx';
 
-# JavaScript modules: a deep dive
+# JavaScript & TypeScript modules: a deep dive
 
 ## Introduction
 
@@ -8,11 +8,9 @@ Let's kick off with a question.
 
 <CodeQuiz {...quiz1} mode="tabs" />
 
-If you know the reason why this is the output, congratulations! You probably have a pretty good understanding
+If you knew the reason why this is the correct answer, congratulations! You probably have a pretty good understanding
 of modules and TypeScript. But even for those people, I'd say: give this blog post a try.
 I am certain you will learn something new.
-
-<br />
 
 ## What is a module?
 
@@ -46,7 +44,7 @@ the `add` function into `calculator.ts`. But that would become a mess very quick
 
 <br />
 
-Let's go back in time to understand why modules exist and why we ended up in this situation.
+Let's go back in time to understand why module systems exist and why we ended up in this complex situation.
 
 <br />
 
@@ -58,17 +56,74 @@ Let's go back in time to understand why modules exist and why we ended up in thi
       <img src="/img/netscape-navigator.webp" alt="Netscape Navigator" className="my-4" />
 
       The language was in no way designed to be a general-purpose language for both client and server.
-      It contained notable performance and security issues and did not have any module system.
-      But people used JavaScript because other browsers started to support it as well.
+      It contained notable performance and security issues and _did not have any module system_.
+      People used JavaScript because other browsers started to support it as well.
       There was no real alternative.
+      <br />
+      But if there is no module system and copy-pasting is not a scalable option, then how would you organize your code?
+      Because JavaScript only ran in the browser back then, one possible solution was to create multiple script tags in the HTML file:
 
-      But if there is no module system, then how would you organize your code?
+      <CodeBlock
+        files={[
+          {
+            name: 'index.html',
+            content: `<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Script Order Example</title>
+  </head>
+  <body>
+    <div id="userProfile">Loading user data...</div>
+
+    <script src="api.js"></script>
+    <script src="ui.js"></script>
+    <script src="main.js"></script>
+
+  </body>
+</html>`,
+          },
+          {
+            name: 'api.js',
+            content: `function fetchUserData() {
+
+// In real code, this would be an actual XMLHttpRequest
+// (fetch didn't exist back then)
+return {
+name: "John Doe",
+email: "john@example.com"
+};
+}`,
+          },
+          {
+            name: 'ui.js',
+            content: `function updateUserProfile() {
+const userData = fetchUserData();
+const profileDiv = document.getElementById('userProfile');
+profileDiv.innerHTML = \`
+
+<h2>\${userData.name}</h2>
+<p>\${userData.email}</p>
+\`;
+}`,
+          },
+          {
+            name: 'main.js',
+            content: `// Try to update the profile as soon as the page loads
+updateUserProfile();`,
+          },
+        ]}
+      ></CodeBlock>
+
+      In this example, we have a user profile section that starts with "Loading user data...". The `api.js` file defines a function to fetch user data, `ui.js` defines a function to update the profile with this data, and `main.js` tries to use this function immediately. If we load the scripts in the wrong order, we'll get errors because:
+      - `main.js` tries to use `updateUserProfile()` before it's defined
+      - `ui.js` tries to use `fetchUserData()` before it's defined
+
+      This is why the order of script tags is important - they are executed in the order they appear in the HTML, and dependencies need to be loaded before they're used.
 
   </TimelineEntry>
 
 <TimelineEntry title="Node.js" date={new Date('2009-01-01')}>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
   <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
   <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
   <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>

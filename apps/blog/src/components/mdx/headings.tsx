@@ -3,5 +3,5 @@ export const H1 = ({ children }: { children: React.ReactNode }) => (
 );
 
 export const H2 = ({ children }: { children: React.ReactNode }) => (
-  <h2 className="text-xl font-bold my-2">{children}</h2>
+  <h2 className="text-xl font-bold my-4">{children}</h2>
 );
