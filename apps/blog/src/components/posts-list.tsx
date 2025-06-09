@@ -4,10 +4,9 @@ import { Brain, Code, Eye, FileType, Layers, Palette, Server } from 'lucide-reac
 const blogPosts = [
   {
     id: 1,
-    title: 'TSConfig: What is this file?',
-    slug: 'tsconfig-what-is-this-file',
-    description:
-      'You have probably used Typescript before and are familiar with the tsconfig.json file. But do you really understand how it works and what impact all its options have?',
+    title: 'JavaScript & TypeScript modules: a deep dive',
+    slug: 'javascript-typescript-modules-a-deep-dive',
+    description: `JavaScript and TypeScript modules have been complex for a long time. Let's dive deep in a simplified, interactive way.`,
     views: 2,
     category: 'TypeScript',
     rating: 4.5,

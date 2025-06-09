@@ -4,6 +4,7 @@ interface FileStructure {
 }
 
 export function findFirstFileWithContent(fileList: FileStructure[]): FileStructure | null {
+  console.log(fileList);
   for (const file of fileList) {
     if (typeof file.content === 'string') {
       return file;

@@ -1,25 +1,35 @@
 @plugin 'tailwind-scrollbar';
 
 @theme inline {
-  --color-bg-color: var(--bg-color);
-  --color-text-color: var(--text-color);
-  --color-primary: var(--primary-color);
-  --color-accent-color: var(--accent-color);
-  --color-subheading: var(--subheading-color);
+  --color-bg-color: var(--bg);
+  --color-text-color: var(--text);
+  --color-primary: var(--primary);
+  --color-accent-color: var(--accent);
+  --color-subheading: var(--subheading);
+  --color-success-color: var(--success-color);
+  --color-success-bg: var(--success-bg);
+  --color-error-color: var(--error-color);
+  --color-error-bg: var(--error-bg);
   --color-subtle: var(--subtle);
   --color-subtle-hover: var(--subtle-hover);
+  --color-code-highlight: var(--code-highlight);
 }
 
 @layer base {
   :root {
-    --bg-color: oklch(1 0 0);
-    --text-color: oklch(0 0 0);
-    --accent-color: oklch(21% 0.034 264.665);
-    --primary-color: oklch(21% 0.034 264.665);
+    --bg: oklch(1 0 0);
+    --text: oklch(0 0 0);
+    --accent: oklch(21% 0.034 264.665);
+    --primary: oklch(21% 0.034 264.665);
     --subtle: oklch(92.8% 0.006 264.531);
     --subtle-text: oklch(92.8% 0.006 264.531);
     --subtle-hover: oklch(87.2% 0.01 258.338);
-    --subheading-color: oklch(37.3% 0.034 259.733);
+    --subheading: oklch(37.3% 0.034 259.733);
+    --success-color: oklch(65% 0.15 142);
+    --success-bg: oklch(0.23 0.05 153.33);
+    --error-color: oklch(90% 0.15 142);
+    --error-bg: oklch(90% 0.15 142);
+    --code-highlight: oklch(0.22 0.05 31.33);
     --font-display: 'Nunito', sans-serif;
 
     font-size: 1.125rem;
@@ -27,14 +37,19 @@
 
   .dark,
   .dark * {
-    --bg-color: hsl(216deg 16.13% 6.08%);
-    --text-color: oklch(0.92 0 0);
-    --accent-color: oklch(0.84 0.0074 257.2136);
-    --primary-color: oklch(0.84 0.0074 257.2136);
+    --bg: hsl(216deg 16.13% 6.08%);
+    --text: oklch(0.92 0 0);
+    --accent: oklch(0.84 0.0074 257.2136);
+    --primary: oklch(0.84 0.0074 257.2136);
     --subtle: oklch(27.8% 0.033 256.848);
     --subtle-text: oklch(70.7% 0.022 261.325);
     --subtle-hover: oklch(37.3% 0.034 259.733);
-    --subheading-color: oklch(70.7% 0.022 261.325);
+    --subheading: oklch(70.7% 0.022 261.325);
+    --success-color: oklch(63% 0.15 142);
+    --success-bg: oklch(0.23 0.05 153.33);
+    --error-color: oklch(0.56 0.21 32.65);
+    --error-bg: oklch(0.22 0.05 31.33);
+    --code-highlight: oklch(0.23 0.02 280.6);
   }
 
   ol,

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { FileStructure } from '../../../utils/code-block/types';
 import { CodeBlock, CodeBlockProps } from '../code-block/code-block';
 
 export type Answer = {
@@ -8,13 +7,13 @@ export type Answer = {
   isCorrect: boolean;
 };
 
-export type CodeQuizProps = CodeBlockProps<FileStructure[]> & {
+export type CodeQuizProps = CodeBlockProps & {
   question: React.ReactNode;
   answers: Answer[];
   explanation: React.ReactNode;
 };
 
-export function CodeQuiz({ files, question, answers, explanation, initialFile, mode }: CodeQuizProps) {
+export function CodeQuiz({ example, question, answers, explanation, initialFile, mode }: CodeQuizProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
 
   const selectedAnswerData = selectedAnswer ? answers.find((answer) => answer.id === selectedAnswer) : null;
@@ -23,7 +22,7 @@ export function CodeQuiz({ files, question, answers, explanation, initialFile, m
     <div className="space-y-4 my-8">
       <div className="text-lg font-medium text-center">{question}</div>
 
-      <CodeBlock files={files} initialFile={initialFile} mode={mode} />
+      <CodeBlock example={example} initialFile={initialFile} mode={mode} />
 
       <div className="space-y-2">
         {answers.map((answer) => (

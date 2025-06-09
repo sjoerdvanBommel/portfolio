@@ -6,7 +6,7 @@ import { quiz1, timelineItems } from './constants.tsx';
 
 Let's kick off with a question.
 
-<CodeQuiz {...quiz1} mode="tabs" />
+<CodeQuiz example="javascript-typescript-modules-a-deep-dive/1-simple-tsc-quiz" {...quiz1} mode="tabs" />
 
 If you knew the reason why this is the correct answer, congratulations! You probably have a pretty good understanding
 of modules and TypeScript. But even for those people, I'd say: give this blog post a try.
@@ -19,22 +19,7 @@ because of the complexity of the module **system** in JavaScript.
 But a module itself is just a _self-contained_ piece of code.
 It does not rely on anything outside of it. Here are some examples of modules:
 
-<CodeBlock
-  files={[
-    {
-      name: 'add.ts',
-      content: 'const add = (a: number, b: number) => a + b;',
-    },
-    {
-      name: 'calculator.ts',
-      content: `class Calculator {
-    add(a: number, b: number) {
-      return a + b;
-    }
-  }`,
-    },
-  ]}
-></CodeBlock>
+<CodeBlock example="javascript-typescript-modules-a-deep-dive/2-simple-modules" />
 
 But what if I want to use the `add` function from `add.ts` in `calculator.ts`?
 This is where terms like `import`, `export` and `require` come into play. But these terms are not part of a module. This is instead part of the module _system_.
@@ -61,66 +46,51 @@ Let's go back in time to understand why module systems exist and why we ended up
       There was no real alternative.
       <br />
       But if there is no module system and copy-pasting is not a scalable option, then how would you organize your code?
-      Because JavaScript only ran in the browser back then, one possible solution was to create multiple script tags in the HTML file:
+      Because JavaScript only ran in the browser back then, one possible solution was to include multiple `<script>` tags in the HTML file:
 
       <CodeBlock
-        files={[
-          {
-            name: 'index.html',
-            content: `<!DOCTYPE html>
+        example="javascript-typescript-modules-a-deep-dive/3-multiple-script-tags"
+        initialFile="index.html"
+      />
 
-<html>
-  <head>
-    <title>Script Order Example</title>
-  </head>
-  <body>
-    <div id="userProfile">Loading user data...</div>
+      In this example, we have a user profile section that starts with "Loading user data...".
+      The `api.js` file defines a function to fetch user data, `ui.js` defines a function to update the profile with this data, and `main.js` tries to execute this function immediately.
+      <br />
+      This looks somewhat like a self-made module system (although it is not). It comes with several drawbacks, with some of the most important ones being:
+      1. The scripts are loaded in the order they appear in the HTML file. If we'd load `main.js` first, we'd get errors because `updateUserProfile()` is not defined yet.
+      2. There is no explicit dependency management. Just from looking at `main.js`, there is no way to tell if it will work or not,
+      because it depends on other files which are not explicitly referred to here. Tooling like ESLint or going to the source code of another script won't work either because of this reason.
+      3. We might create naming conflicts in the global scope when we load multiple scripts which define the same variable.
 
-    <script src="api.js"></script>
-    <script src="ui.js"></script>
-    <script src="main.js"></script>
+      <br />
+      There was no direct solution for the first two problems. However, they managed to limit the pollution
+      of the global scope using a technique called "Immediately Invoked Function Expression" (IIFE).
+      Since a function creates its own scope, they figured that they could use a function to create a new scope for each script.
+      This way, variables and functions defined in one script would not be accessible in another:
 
-  </body>
-</html>`,
-          },
-          {
-            name: 'api.js',
-            content: `function fetchUserData() {
+      <CodeBlock
+        example="javascript-typescript-modules-a-deep-dive/4-variables-in-functions"
+      />
 
-// In real code, this would be an actual XMLHttpRequest
-// (fetch didn't exist back then)
-return {
-name: "John Doe",
-email: "john@example.com"
-};
-}`,
-          },
-          {
-            name: 'ui.js',
-            content: `function updateUserProfile() {
-const userData = fetchUserData();
-const profileDiv = document.getElementById('userProfile');
-profileDiv.innerHTML = \`
+      However, because these files are now only defining functions, nothing will get executed.
+      To fix this, we need to call the functions immediately when creating them (hence the name "Immediately Invoked Function Expression").
+      By converting the function to an expression using parentheses, we can call it immediately and remove the function name:
 
-<h2>\${userData.name}</h2>
-<p>\${userData.email}</p>
-\`;
-}`,
-          },
-          {
-            name: 'main.js',
-            content: `// Try to update the profile as soon as the page loads
-updateUserProfile();`,
-          },
-        ]}
-      ></CodeBlock>
+      <CodeBlock
+        example="javascript-typescript-modules-a-deep-dive/5-iife"
+      />
 
-      In this example, we have a user profile section that starts with "Loading user data...". The `api.js` file defines a function to fetch user data, `ui.js` defines a function to update the profile with this data, and `main.js` tries to use this function immediately. If we load the scripts in the wrong order, we'll get errors because:
-      - `main.js` tries to use `updateUserProfile()` before it's defined
-      - `ui.js` tries to use `fetchUserData()` before it's defined
+      Now that all variables and functions are defined inside of this global function scope, we can decide ourselves what should be "exported" and what shouldn't,
+      by returning the exports from the function:
 
-      This is why the order of script tags is important - they are executed in the order they appear in the HTML, and dependencies need to be loaded before they're used.
+      <CodeBlock
+        example="javascript-typescript-modules-a-deep-dive/6-assign-to-global"
+      />
 
+<br />
+This is definitely an improvement, but it only partially solves the problem. Other problems like the order of execution
+are still present as well. Hopefully, it is clear why this is not a good long-term solution for such a big programming language as
+JavaScript.
   </TimelineEntry>
 
 <TimelineEntry title="Node.js" date={new Date('2009-01-01')}>

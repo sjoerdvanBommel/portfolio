@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { examples } from '../../../posts/examples';
 import { findFileByName } from '../../../utils/code-block/find-file-by-name';
 import { findFirstFileWithContent } from '../../../utils/code-block/find-first-file-with-content';
 import { FileStructure } from '../../../utils/code-block/types';
@@ -6,16 +7,14 @@ import { SidebarView } from './sidebar-view';
 import { SplitView } from './split-view';
 import { TabsView } from './tabs-view';
 
-// When a constant is passed for files, this will extract the file names as a union type
-type ExtractFileNames<T extends FileStructure[]> = T[number]['name'];
-
-export interface CodeBlockProps<T extends FileStructure[]> {
-  files: T;
-  initialFile?: ExtractFileNames<T>;
+export interface CodeBlockProps {
+  example: string;
+  initialFile?: string;
   mode?: 'split' | 'tabs' | 'sidebar';
 }
 
-export function CodeBlock<T extends FileStructure[]>({ files, initialFile, mode = 'tabs' }: CodeBlockProps<T>) {
+export function CodeBlock({ example, initialFile, mode = 'tabs' }: CodeBlockProps) {
+  const files = examples[example];
   const [selectedFile, setSelectedFile] = useState<FileStructure | null>(
     initialFile ? findFileByName(files, initialFile) : findFirstFileWithContent(files),
   );
@@ -48,7 +47,7 @@ export function CodeBlock<T extends FileStructure[]>({ files, initialFile, mode 
   };
 
   return (
-    <div className="my-4 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden flex flex-col md:flex-row w-full bg-white dark:bg-gray-950 shadow-sm">
+    <div className="mt-4 mb-8 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden flex flex-col md:flex-row w-full bg-white dark:bg-gray-950 shadow-sm">
       {modeToComponent[mode]}
     </div>
   );
