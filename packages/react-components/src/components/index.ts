@@ -1,2 +1,2 @@
-export * from './letters.js';
-export * from './star-rating.js';
+export * from './letters';
+export * from './star-rating';

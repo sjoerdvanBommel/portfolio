@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import type { AppProps } from 'single-spa';
 import singleSpaReact from 'single-spa-react';
-import { Letters } from '../components/index.js';
+import { Letters } from '../components/index';
 
 type LettersProps = {
   letters: string[];

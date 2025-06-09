@@ -1,12 +1,12 @@
-import dotenv from 'dotenv';
-import { viteConfigMife } from '@sjoerdvanbommel-packages/config';
-import { mergeConfig, defineConfig } from 'vite';
+import { viteConfig } from '@sjoerdvanbommel-packages/config';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
+import dotenv from 'dotenv';
+import { defineConfig, mergeConfig } from 'vite';
 
 dotenv.config({ path: ['../../.env', '.env'] });
 
 export default mergeConfig(
-  viteConfigMife(3004),
+  viteConfig(3004),
   defineConfig({
     plugins: [svelte()],
   }),

@@ -9,7 +9,7 @@ export type Answer = {
 };
 
 export type CodeQuizProps = CodeBlockProps<FileStructure[]> & {
-  question: string;
+  question: React.ReactNode;
   answers: Answer[];
   explanation: React.ReactNode;
 };

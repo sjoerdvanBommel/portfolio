@@ -3,13 +3,12 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2022",
     "lib": ["ES2023"],
-    "module": "NodeNext",
     "skipLibCheck": true,
     "outDir": "./dist",
     "declaration": true,
     "declarationMap": true,
 
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "bundler",
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
 

@@ -4,13 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --configLoader runner",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@sjoerdvanbommel-packages/react-components": "../../packages/react-components",
+    "@sjoerdvanbommel-packages/react-components": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

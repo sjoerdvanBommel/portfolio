@@ -1,10 +1,12 @@
-import { rootExternalDependencies, viteConfigMife } from '@sjoerdvanbommel-packages/config';
+import { rootExternalDependencies, viteConfig } from '@sjoerdvanbommel-packages/config';
 import tailwindcss from '@tailwindcss/vite';
-import { defineConfig, mergeConfig } from 'vite';
+import { defineConfig, loadEnv, mergeConfig } from 'vite';
 import vitePluginSingleSpa from 'vite-plugin-single-spa';
 
+loadEnv(process.env.NODE_ENV!, process.cwd(), '');
+
 export default mergeConfig(
-  viteConfigMife(3000, { isRoot: true }),
+  viteConfig(3000, { isRoot: true }),
   defineConfig({
     publicDir: '../../public',
 

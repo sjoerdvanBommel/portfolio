@@ -1,4 +1,5 @@
 import { CodeQuizProps } from '../../components/mdx/code-quiz/code-quiz';
+import { InlineCode } from '../../components/mdx/inline-code';
 
 export const timelineItems = [
   {
@@ -10,7 +11,11 @@ export const timelineItems = [
 ];
 
 export const quiz1: CodeQuizProps = {
-  question: 'What happens when you run bash.sh?',
+  question: (
+    <span>
+      What happens when you run <InlineCode>tsc index.ts</InlineCode>?
+    </span>
+  ),
   explanation:
     'When running this command, the TypeScript compiler will run against the passed file(s). Because there is no `tsconfig.json` file, the compiler will use its default settings. For example, it will output a JavaScript file called `index.js` in the same folder as the TypeScript file, because this is the default output directory. Later in this blog we will explore why tsc outputs CommonJS instead of ES modules.',
   answers: [
@@ -36,10 +41,6 @@ export const quiz1: CodeQuizProps = {
     },
   ],
   files: [
-    {
-      name: 'bash.sh',
-      content: `tsc index.ts`,
-    },
     {
       name: 'index.ts',
       content: `export const hello = 'world';`,

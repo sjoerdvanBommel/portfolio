@@ -5,7 +5,7 @@
   "type": "module",
   "main": "src/main.ts",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --configLoader runner",
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"

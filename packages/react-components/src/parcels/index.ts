@@ -1,1 +1,1 @@
-export * as Letters from './letters.js';
+export * as Letters from './letters';

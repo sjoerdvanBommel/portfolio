@@ -1,12 +1,12 @@
-import dotenv from 'dotenv';
-import { viteConfigMife } from '@sjoerdvanbommel-packages/config';
-import { mergeConfig, defineConfig } from 'vite';
+import { viteConfig } from '@sjoerdvanbommel-packages/config';
 import react from '@vitejs/plugin-react';
+import dotenv from 'dotenv';
+import { defineConfig, mergeConfig } from 'vite';
 
 dotenv.config({ path: ['../../.env', '.env'] });
 
 export default mergeConfig(
-  viteConfigMife(3001, { isReact: true }),
+  viteConfig(3001, { isReact: true }),
   defineConfig({
     plugins: [react()],
   }),

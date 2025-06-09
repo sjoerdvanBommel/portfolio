@@ -13,7 +13,7 @@
     "clean": "rm -rf **/dist && rm -rf **/node_modules && rm -rf dist && rm -rf node_modules"
   },
   "dependencies": {
-    "@sjoerdvanbommel-packages/config": "./packages/config",
+    "@sjoerdvanbommel-packages/config": "workspace:*",
     "@tailwindcss/vite": "^4.1.6",
     "import": "^0.0.6",
     "lucide-react": "^0.511.0",

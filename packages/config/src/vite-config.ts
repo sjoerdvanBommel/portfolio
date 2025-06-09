@@ -3,17 +3,38 @@ import { defineConfig } from 'vite';
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
 import externalize from 'vite-plugin-externalize-dependencies';
 import vitePluginSingleSpa from 'vite-plugin-single-spa';
-import { mifeExternalDependencies, rootExternalDependencies } from './external-dependencies.js';
+import { mifeExternalDependencies, rootExternalDependencies } from './external-dependencies';
 
 type Options = {
   isRoot?: boolean;
   isReact?: boolean;
 };
 
-const isRunningSingleApp = process.env.RUNNING_SINGLE_APP === '1';
-
-export const viteConfigMife = (port: number, { isRoot = false, isReact = false }: Options = {}) => {
+export const viteConfig = (port: number, { isRoot = false, isReact = false }: Options = {}) => {
+  const isRunningSingleApp = process.env.VITE_RUNNING_SINGLE_APP === '1';
   const externalDependencies = isRoot ? rootExternalDependencies : isRunningSingleApp ? [] : mifeExternalDependencies;
+
+  console.log(isRunningSingleApp, externalDependencies);
+  const plugins = [
+    externalize({
+      externals: externalDependencies,
+    }),
+    cssInjectedByJsPlugin(),
+  ];
+
+  if (isRoot || !isRunningSingleApp) {
+    plugins.push(
+      vitePluginSingleSpa({
+        type: 'mife',
+        serverPort: port,
+        spaEntryPoints: [`src/spa${isReact ? '.tsx' : '.ts'}`],
+      }),
+    );
+  }
+
+  if (isRoot || !isRunningSingleApp) {
+    plugins.push(tailwindcss());
+  }
 
   return defineConfig({
     server: {
@@ -23,22 +44,7 @@ export const viteConfigMife = (port: number, { isRoot = false, isReact = false }
     preview: {
       port,
     },
-    plugins: [
-      externalize({
-        externals: externalDependencies,
-      }),
-      ...(isRoot
-        ? []
-        : [
-            vitePluginSingleSpa({
-              type: 'mife',
-              serverPort: port,
-              spaEntryPoints: [`src/spa${isReact ? '.tsx' : '.ts'}`],
-            }),
-          ]),
-      cssInjectedByJsPlugin(),
-      ...(isRunningSingleApp ? [tailwindcss()] : []),
-    ],
+    plugins,
     publicDir: '../../public',
     build: {
       emptyOutDir: true,
