@@ -10,7 +10,7 @@ import { TabsView } from './tabs-view';
 export interface CodeBlockProps {
   example: string;
   initialFile?: string;
-  mode?: 'split' | 'tabs' | 'sidebar';
+  mode?: 'split' | 'tabs' | 'sidebar' | 'no-tabs';
 }
 
 export function CodeBlock({ example, initialFile, mode = 'tabs' }: CodeBlockProps) {
@@ -44,6 +44,7 @@ export function CodeBlock({ example, initialFile, mode = 'tabs' }: CodeBlockProp
     ),
     tabs: <TabsView files={files} selectedFile={selectedFile} onSelectFile={setSelectedFile} />,
     split: <SplitView files={files} />,
+    'no-tabs': <TabsView files={files} selectedFile={selectedFile} onSelectFile={setSelectedFile} showTabs={false} />,
   };
 
   return (

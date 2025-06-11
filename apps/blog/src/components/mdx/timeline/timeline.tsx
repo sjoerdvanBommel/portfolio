@@ -9,7 +9,7 @@ interface TimelineEntryProps {
   emoji?: string;
 }
 
-export const TimelineEntry: React.FC<TimelineEntryProps> = ({ title, children, date, isLast, emoji = '⚡' }) => {
+export const TimelineEntry: React.FC<TimelineEntryProps> = ({ title, children, date, isLast, emoji, icon }) => {
   const formattedDate = date.toLocaleDateString('en-US', {
     year: 'numeric',
   });
@@ -39,9 +39,9 @@ export const TimelineEntry: React.FC<TimelineEntryProps> = ({ title, children, d
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="relative -top-1.5 flex items-center justify-center text-xl"
+          className={`relative flex items-center justify-center text-xl ${icon ? '-top-0.5' : '-top-1.5'}`}
         >
-          {emoji}
+          {emoji ?? (icon ? <img src={icon} alt={title} className="w-5 h-5 align-middle" /> : '⚡')}
         </motion.div>
         {/* Vertical line */}
         {!isLast && (
@@ -50,7 +50,7 @@ export const TimelineEntry: React.FC<TimelineEntryProps> = ({ title, children, d
             whileInView={{ opacity: 1, height: 'calc(100% - 1rem)' }}
             viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="absolute top-4 my-4 left-1/2 -translate-x-1/2 w-0.5 text-accent-color"
+            className="absolute top-4 my-4 left-1/2 -translate-x-1/2 w-0.5 text-subtle-hover"
             style={{
               backgroundImage: 'repeating-linear-gradient(to bottom, currentColor 0 0.6rem, transparent 0.6rem 1.2rem)',
             }}
@@ -64,7 +64,7 @@ export const TimelineEntry: React.FC<TimelineEntryProps> = ({ title, children, d
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-100px' }}
         transition={{ duration: 0.5, delay: 0.7 }}
-        className="text-lg font-semibold mb-4"
+        className="text-xl font-semibold mb-4"
       >
         {title}
       </motion.h2>

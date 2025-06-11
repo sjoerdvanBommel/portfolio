@@ -4,6 +4,7 @@
   --color-bg-color: var(--bg);
   --color-text-color: var(--text);
   --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
   --color-accent-color: var(--accent);
   --color-subheading: var(--subheading);
   --color-success-color: var(--success-color);
@@ -20,7 +21,8 @@
     --bg: oklch(1 0 0);
     --text: oklch(0 0 0);
     --accent: oklch(21% 0.034 264.665);
-    --primary: oklch(21% 0.034 264.665);
+    --primary: oklch(0.67 0.17 50.14);
+    --primary-hover: oklch(0.54 0.16 47.63);
     --subtle: oklch(92.8% 0.006 264.531);
     --subtle-text: oklch(92.8% 0.006 264.531);
     --subtle-hover: oklch(87.2% 0.01 258.338);
@@ -40,7 +42,9 @@
     --bg: hsl(216deg 16.13% 6.08%);
     --text: oklch(0.92 0 0);
     --accent: oklch(0.84 0.0074 257.2136);
-    --primary: oklch(0.84 0.0074 257.2136);
+    --primary: oklch(0.67 0.17 50.14);
+    --primary-hover: oklch(0.54 0.16 47.63);
+    --primary-border: oklch(0.54 0.16 47.63);
     --subtle: oklch(27.8% 0.033 256.848);
     --subtle-text: oklch(70.7% 0.022 261.325);
     --subtle-hover: oklch(37.3% 0.034 259.733);
@@ -56,5 +60,10 @@
   ul,
   menu {
     @apply ml-6 my-2 list-disc;
+  }
+
+  .dashed-border {
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='12' ry='12' stroke='%232d1e15' stroke-width='8' stroke-dasharray='6%2c 14' stroke-dashoffset='18' stroke-linecap='square'/%3e%3c/svg%3e");
+    border-radius: 12px;
   }
 }

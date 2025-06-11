@@ -6,7 +6,7 @@ import { quiz1, timelineItems } from './constants.tsx';
 
 Let's kick off with a question.
 
-<CodeQuiz example="javascript-typescript-modules-a-deep-dive/1-simple-tsc-quiz" {...quiz1} mode="tabs" />
+<CodeQuiz example="javascript-typescript-modules-a-deep-dive/examples/1-simple-tsc-quiz" {...quiz1} mode="tabs" />
 
 If you knew the reason why this is the correct answer, congratulations! You probably have a pretty good understanding
 of modules and TypeScript. But even for those people, I'd say: give this blog post a try.
@@ -19,7 +19,7 @@ because of the complexity of the module **system** in JavaScript.
 But a module itself is just a _self-contained_ piece of code.
 It does not rely on anything outside of it. Here are some examples of modules:
 
-<CodeBlock example="javascript-typescript-modules-a-deep-dive/2-simple-modules" />
+<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/2-simple-modules" />
 
 But what if I want to use the `add` function from `add.ts` in `calculator.ts`?
 This is where terms like `import`, `export` and `require` come into play. But these terms are not part of a module. This is instead part of the module _system_.
@@ -49,7 +49,7 @@ Let's go back in time to understand why module systems exist and why we ended up
       Because JavaScript only ran in the browser back then, one possible solution was to include multiple `<script>` tags in the HTML file:
 
       <CodeBlock
-        example="javascript-typescript-modules-a-deep-dive/3-multiple-script-tags"
+        example="javascript-typescript-modules-a-deep-dive/examples/3-multiple-script-tags"
         initialFile="index.html"
       />
 
@@ -69,7 +69,7 @@ Let's go back in time to understand why module systems exist and why we ended up
       This way, variables and functions defined in one script would not be accessible in another:
 
       <CodeBlock
-        example="javascript-typescript-modules-a-deep-dive/4-variables-in-functions"
+        example="javascript-typescript-modules-a-deep-dive/examples/4-variables-in-functions"
       />
 
       However, because these files are now only defining functions, nothing will get executed.
@@ -77,134 +77,102 @@ Let's go back in time to understand why module systems exist and why we ended up
       By converting the function to an expression using parentheses, we can call it immediately and remove the function name:
 
       <CodeBlock
-        example="javascript-typescript-modules-a-deep-dive/5-iife"
+        example="javascript-typescript-modules-a-deep-dive/examples/5-iife"
       />
 
-      Now that all variables and functions are defined inside of this global function scope, we can decide ourselves what should be "exported" and what shouldn't,
-      by returning the exports from the function:
+      Now that all variables and functions are defined inside of this global function scope,
+      we can make it _explicit_ what should be "imported" by passing the dependencies as arguments,
+      and we can decide ourselves what should be "exported" and what shouldn't
+      by returning the exports from the function. Let's update all files to use this new pattern:
 
       <CodeBlock
-        example="javascript-typescript-modules-a-deep-dive/6-assign-to-global"
+        example="javascript-typescript-modules-a-deep-dive/examples/6-assign-to-global"
       />
 
-<br />
 This is definitely an improvement, but it only partially solves the problem. Other problems like the order of execution
-are still present as well. Hopefully, it is clear why this is not a good long-term solution for such a big programming language as
+are still present, and there is no real standard in the language itself. In fact, other approaches were used as well, such as the namespace pattern, which I will not cover here.
+Hopefully, it is clear why no standardized module system is not a good long-term solution for such a big programming language as
 JavaScript.
+
   </TimelineEntry>
 
-<TimelineEntry title="Node.js" date={new Date('2009-01-01')}>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
-  <p>Ryan Dahl creates Node.js, bringing JavaScript to the server</p>
+<TimelineEntry title="CommonJS: the first standardized module system" emoji="💡" date={new Date('2009-03-03')}>
+  In the beginning of 2009, Kevin Dangoor brought together a group of developers who created a set of standards for connecting JavaScript files together.
+  This was the first step towards a _standardized_ module system, called CommonJS, using the `require` and `module.exports` keywords:
+
+<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/7-commonjs" mode="no-tabs" />
+
+However, CommonJS was meant to standardize the module ecosystem for JavaScript _outside of the browser_,
+so it did not take the constraints of a browser into account. For example, a `require()` call is synchronous, meaning it will first fully load the module and execute its code. If that code contained another
+`require()` call, it would first load that module and execute its code, and so on.
+If we would try to use this in the browser, it would create a chain of synchronous requests to fetch the modules from the server, which would block the main thread and make the browser unresponsive.
+
+<br />
+Try it out yourself! This button will pretend to execute a _synchronous_ `require()` call. Anything you or JavaScript
+tries to do (like updating the time) after clicking it will be blocked until the module is loaded.
+
+<MainThreadBlocker />
+
+You can imagine that, when someone first loads a website, they don't want to wait for a chain of these kind of modules to load.
+
+To prevent this, people often used a bundler like [Browserify](https://browserify.org/) or [Webpack](https://webpack.js.org/) to bundle all the modules into a single file.
+
 </TimelineEntry>
 
-  <TimelineEntry title="ES6 Modules" date={new Date("2015-01-01")}>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-    <p>JavaScript gets native module support with ES6</p>
-  </TimelineEntry>
-</Timeline>
+<TimelineEntry title="JavaScript in the backend" icon="/img/nodejs.png" date={new Date('2009-03-03')}>
+  Soon after CommonJS was created, Node.js was released. Node.js was created to run JavaScript in the backend,
+  and it was designed to use CommonJS as its module system. Because Node.js grew fast in popularity, CommonJS became the
+  de-facto standard for JavaScript modules, especially in the backend.
 
+<br />
+  And although there is a lot to tell about Node.js, I will keep the focus on module systems.
+</TimelineEntry>
+
+<TimelineEntry title="AMD: A CommonJS alternative for the browser" emoji="🌐" date={new Date('2011-03-03')}>
+  
+Because CommonJS was not designed for the browser, a new module system was needed.
+A colleague of Kevin, James Burke, created a new module system called **AMD**, or Asynchronous Module Definition.
+It was designed to be a CommonJS alternative for the browser.
+
+<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/8-amd" mode="no-tabs" />
+
+AMD is a bit different from CommonJS. Instead of using `require()` to load modules, it uses `define()` to define modules.
+The `define()` function takes a list of dependencies and a function as second parameter.
+What makes this second parameter unique is that it is executed only when all dependencies are loaded asynchronously.
+
+<br />
+
+But if `jquery` is only specified in a module that is not loaded yet, how would the browser know that it is a dependency?
+If it wouldn't know, the chain of requests would still have to be executed.
+
+<br />
+Well, this is actually still the case. However, because loading these modules now happens asynchronously, the main
+thread is not blocked, allowing the browser to continue rendering the page and remain responsive.
+
+<br />
+AMD became popular as module system for the browser. But it was not part of any official specification, like ECMAScript.
+This meant that the browser would not know how to load AMD modules. If you would try to load an AMD module in the
+browser, you would most likely receive an error:
+
+<Error>Uncaught ReferenceError: define is not defined</Error>
+
+To load AMD modules in the browser, you would need something called a "module loader", like [RequireJS](https://requirejs.org/).
+This will provide global functions like `require` and `define` that the browser can use to load AMD modules.
+Require.js had to be loaded synchronously though, to be able to recognize the `define` function and load the rest of the modules asynchronously.
+To prevent the loading of the require.js script from blocking the main thread and rendering the rest of the page,
+it was often placed at the bottom of the HTML document.
+
+<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/9-load-require-js" mode="no-tabs" />
+
+Remember that at this point in history, websites were less dependent on JavaScript. Just the HTML and CSS were often
+enough to display a page. The interactivity and fetched data could be added later, once the modules were loaded.
+
+</TimelineEntry>
+
+<TimelineEntry title="ES6 Modules" date={new Date('2015-01-01')}></TimelineEntry>
+
+</Timeline>
+{/* 
 <br />
 <br />
 <br />
@@ -251,3 +219,7 @@ Above errors are all related to **modules**.
 ## Modules
 
 Modules are a way to organize your code. They are a way to split your code into smaller, more manageable pieces.
+
+TODO:
+
+- Tree shaking in CJS \*/}

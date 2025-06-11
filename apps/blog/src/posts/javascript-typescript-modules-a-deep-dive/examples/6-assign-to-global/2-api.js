@@ -1,5 +1,5 @@
 // [!code ++]
-var ApiModule = (function () {
+var ApiModule = (function() {
   function fetchUserData() {
     // In real code, this would be an actual XMLHttpRequest
     // (fetch didn't exist back then)
@@ -11,6 +11,7 @@ var ApiModule = (function () {
   
   // [!code --]
 };
-  // [!code ++:2]
+// [!code word:return { fetchUserData }]
+// [!code ++:2]
   return { fetchUserData };
 })();

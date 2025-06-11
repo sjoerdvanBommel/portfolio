@@ -1,6 +1,6 @@
 import { FileStructure } from '../utils/code-block/types';
 
-const multipleScriptTags = import.meta.glob('./javascript-typescript-modules-a-deep-dive/*/*', {
+const multipleScriptTags = import.meta.glob('./javascript-typescript-modules-a-deep-dive/examples/*/*', {
   query: '?raw',
   import: 'default',
 });
@@ -12,6 +12,7 @@ export const examples = {
 async function convertToFileStructure(
   files: Record<string, () => Promise<string>>,
 ): Promise<Record<string, FileStructure[]>> {
+  console.log(files);
   const resolvedFiles = await Promise.all(
     Object.entries(files).map(async ([key, value]) => {
       const pathSegments = key.replace('./', '').split('/');
