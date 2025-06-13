@@ -1,56 +1,41 @@
 {
   "name": "portfolio",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "node --experimental-strip-types scripts/run-in-parallel.ts dev apps",
-    "dev:packages": "node --experimental-strip-types scripts/run-in-parallel.ts dev packages",
-    "build": "npm run build --workspace=@sjoerdvanbommel-packages/config --workspace=@sjoerdvanbommel-packages/react-components && npm run build --workspace=apps/** && node --experimental-strip-types scripts/copy-mife-outputs-to-root.ts",
-    "lint": "eslint .",
-    "format": "prettier --write .",
-    "preview": "npm run preview -w @sjoerdvanbommel/root",
-    "clean": "rm -rf **/dist && rm -rf **/node_modules && rm -rf dist && rm -rf node_modules"
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "format:fix": "prettier --write .",
+    "format": "prettier --check .",
+    "prepare": "husky"
   },
   "dependencies": {
-    "@sjoerdvanbommel-packages/config": "./packages/config",
-    "@tailwindcss/vite": "^4.1.6",
-    "import": "^0.0.6",
-    "lucide-react": "^0.511.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-router": "^7.6.0",
-    "react-router-dom": "^7.6.2",
-    "single-spa": "^6.0.3",
-    "single-spa-layout": "^3.0.0",
-    "single-spa-react": "^6.0.2",
-    "tailwind-scrollbar": "^4.0.2",
-    "tailwindcss": "^4.1.6",
-    "vite-plugin-css-injected-by-js": "^3.5.2",
-    "vite-plugin-externalize-dependencies": "^1.0.1"
+    "@radix-ui/themes": "^3.2.1",
+    "next": "15.3.3",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.22.0",
-    "@shikijs/transformers": "^3.6.0",
-    "@types/node": "^22.15.3",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "@vitejs/plugin-react": "^4.3.4",
-    "concurrently": "^9.1.2",
-    "dotenv": "^16.5.0",
-    "eslint": "^9.22.0",
+    "@eslint/eslintrc": "^3",
+    "@types/node": "^20",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.3",
     "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.19",
-    "globals": "^16.0.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.0",
     "prettier": "3.5.3",
-    "typescript": "~5.7.2",
-    "typescript-eslint": "^8.26.1",
-    "vite": "^6.3.1",
-    "vite-plugin-single-spa": "^1.0.0"
+    "typescript": "^5"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ]
+  "lint-staged": {
+    "**/*": [
+      "eslint --fix",
+      "npm run format:fix"
+    ]
+  }
 }
