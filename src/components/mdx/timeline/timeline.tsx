@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import React from 'react'
 
 interface TimelineEntryProps {
@@ -51,7 +52,8 @@ export const TimelineEntry: React.FC<TimelineEntryProps> = ({
           transition={{ duration: 0.5, delay: 0.3 }}
           className={`relative flex items-center justify-center text-xl ${icon ? '-top-0.5' : '-top-1.5'}`}
         >
-          {emoji ?? (icon ? <img src={icon} alt={title} className="w-5 h-5 align-middle" /> : '⚡')}
+          {emoji ??
+            (icon ? <Image src={icon} alt={title} className="w-5 h-5 align-middle" /> : '⚡')}
         </motion.div>
         {/* Vertical line */}
         {!isLast && (
