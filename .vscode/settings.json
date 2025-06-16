@@ -1,4 +1,5 @@
 {
+  "javascript.validate.enable": false, // To prevent errors in examples folders
   "editor.codeActionsOnSave": {
     "source.organizeImports": "explicit",
     "source.fixAll.eslint": "explicit"

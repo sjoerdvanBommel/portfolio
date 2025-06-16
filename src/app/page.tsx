@@ -1,5 +1,5 @@
+import { css } from '@/styled-system/css'
 import { Button, Flex, Text } from '@radix-ui/themes'
-import { css } from '../../styled-system/css'
 
 const textStyles = css({
   color: 'var(--orange-10)',

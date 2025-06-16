@@ -1,4 +1,4 @@
-import { css } from '../../../styled-system/css'
+import { css } from '@/styled-system/css'
 
 const colors = ['gray', 'orange', 'amber', 'yellow'] // slate can use gray as variable name
 const colorVariants = Array.from({ length: 12 }, (_, i) => i + 1)
