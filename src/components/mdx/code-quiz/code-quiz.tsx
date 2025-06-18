@@ -1,3 +1,5 @@
+import { SPACING } from '@/lib/mdx/styles/spacing'
+import { css } from '@/styled-system/css'
 import { CodeBlock, CodeBlockProps } from '../code-block/code-block'
 import { Quiz, QuizProps } from './quiz'
 
@@ -21,12 +23,24 @@ export function CodeQuiz({
   initialFile,
   mode,
 }: CodeQuizProps) {
+  const containerStyle = css({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: SPACING['4'],
+    marginTop: SPACING['8'],
+    marginBottom: SPACING['8'],
+  })
+
+  const questionStyle = css({
+    fontSize: 'lg',
+    fontWeight: 'medium',
+    textAlign: 'center',
+  })
+
   return (
-    <div className="space-y-4 my-8">
-      <div className="text-lg font-medium text-center">{question}</div>
-
+    <div className={containerStyle}>
+      <div className={questionStyle}>{question}</div>
       <CodeBlock example={example} initialFile={initialFile} mode={mode} />
-
       <Quiz answers={answers} explanation={explanation} />
     </div>
   )

@@ -1,0 +1,51 @@
+@layer reset, base, tokens, recipes, utilities;
+
+@import '@radix-ui/colors/slate.css';
+@import '@radix-ui/colors/slate-dark.css';
+@import '@radix-ui/colors/orange.css';
+@import '@radix-ui/colors/orange-dark.css';
+@import '@radix-ui/colors/amber.css';
+@import '@radix-ui/colors/amber-dark.css';
+@import '@radix-ui/colors/yellow.css';
+@import '@radix-ui/colors/yellow-dark.css';
+
+:root {
+  --primary-1: var(--orange-1);
+  --primary-2: var(--orange-2);
+  --primary-3: var(--orange-3);
+  --primary-4: var(--orange-4);
+  --primary-5: var(--orange-5);
+  --primary-6: var(--orange-6);
+  --primary-7: var(--orange-7);
+  --primary-8: var(--orange-8);
+  --primary-9: var(--orange-9);
+  --primary-10: var(--orange-10);
+  --primary-11: var(--orange-11);
+  --primary-12: var(--orange-12);
+
+  --secondary-1: var(--yellow-1);
+  --secondary-2: var(--yellow-2);
+  --secondary-3: var(--yellow-3);
+  --secondary-4: var(--yellow-4);
+  --secondary-5: var(--yellow-5);
+  --secondary-6: var(--yellow-6);
+  --secondary-7: var(--yellow-7);
+  --secondary-8: var(--yellow-8);
+  --secondary-9: var(--yellow-9);
+  --secondary-10: var(--yellow-10);
+  --secondary-11: var(--yellow-11);
+  --secondary-12: var(--yellow-12);
+
+  --accent-1: var(--amber-1);
+  --accent-2: var(--amber-2);
+  --accent-3: var(--amber-3);
+  --accent-4: var(--amber-4);
+  --accent-5: var(--amber-5);
+  --accent-6: var(--amber-6);
+  --accent-7: var(--amber-7);
+  --accent-8: var(--amber-8);
+  --accent-9: var(--amber-9);
+  --accent-10: var(--amber-10);
+  --accent-11: var(--amber-11);
+  --accent-12: var(--amber-12);
+}

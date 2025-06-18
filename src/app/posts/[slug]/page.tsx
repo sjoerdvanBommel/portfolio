@@ -2,9 +2,9 @@ import { getRecentPosts } from '@/lib/mdx/get-recent-posts'
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const { default: Post } = await import(`@/content/${slug}/page.mdx`)
+  const { default: Post, metadata } = await import(`@/content/${slug}/page.mdx`)
 
-  return <Post />
+  return <Post {...metadata} />
 }
 
 export async function generateStaticParams() {

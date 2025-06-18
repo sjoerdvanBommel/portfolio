@@ -1,5 +1,8 @@
 'use client'
 
+import { COLORS } from '@/lib/mdx/styles/colors'
+import { SPACING } from '@/lib/mdx/styles/spacing'
+import { css } from '@/styled-system/css'
 import { ReactNode, useState } from 'react'
 import { Answer } from './code-quiz'
 
@@ -14,24 +17,76 @@ export function Quiz({ answers, explanation }: QuizProps) {
     ? answers.find((answer) => answer.id === selectedAnswer)
     : null
 
+  // Panda CSS styles
+  const containerStyle = css({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: SPACING['2'],
+  })
+
+  // Use direct color values for blue and green since COLORS.blue and COLORS.green do not exist
+  const GREEN_500 = '#22c55e' // Tailwind green-500
+  const GREEN_50 = '#f0fdf4' // Tailwind green-50
+  const RED_500 = COLORS.red['6']
+  const RED_50 = COLORS.red['2']
+
+  // Helper to generate button style
+  function getButtonStyle(answer: Answer): string {
+    const isSelected = selectedAnswer === answer.id
+    const isCorrect = answer.isCorrect
+    return css({
+      width: '100%',
+      padding: SPACING['3'],
+      textAlign: 'left',
+      borderRadius: 'lg',
+      borderWidth: '1px',
+      transitionProperty: 'colors',
+      cursor: 'pointer',
+      borderColor: isSelected ? (isCorrect ? GREEN_500 : RED_500) : 'var(--subtle, var(--gray-3))',
+      background: isSelected ? (isCorrect ? GREEN_50 : RED_50) : undefined,
+      _hover: {
+        borderColor: isSelected ? (isCorrect ? GREEN_500 : RED_500) : COLORS.gray['3'],
+        _dark: {
+          borderColor: isSelected ? (isCorrect ? GREEN_500 : RED_500) : COLORS.gray['7'],
+          background: isSelected
+            ? isCorrect
+              ? 'rgba(22, 101, 52, 0.2)'
+              : 'rgba(153, 27, 27, 0.2)'
+            : undefined,
+        },
+      },
+    })
+  }
+
+  const resultContainer = css({
+    padding: SPACING['4'],
+    borderRadius: 'lg',
+    background: COLORS.gray['2'],
+    borderWidth: '1px',
+    borderColor: 'var(--subtle, var(--gray-3))',
+    _dark: { background: 'rgba(17, 24, 39, 0.5)' },
+  })
+
+  const resultTitle = (isCorrect?: boolean) =>
+    css({
+      fontWeight: 'medium',
+      marginBottom: SPACING['2'],
+      color: isCorrect ? GREEN_500 : RED_500,
+    })
+
+  const resultExplanation = css({
+    color: COLORS.gray['4'],
+    whiteSpace: 'pre-wrap',
+  })
+
   return (
     <>
-      <div className="space-y-2">
+      <div className={containerStyle}>
         {answers.map((answer) => (
           <button
             key={answer.id}
             onClick={() => setSelectedAnswer(answer.id)}
-            className={`w-full p-3 text-left rounded-lg border transition-colors cursor-pointer ${
-              selectedAnswer === answer.id
-                ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                : 'border-subtle hover:border-gray-300 dark:hover:border-gray-700'
-            } ${
-              selectedAnswer === answer.id
-                ? answer.isCorrect
-                  ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
-                  : 'border-red-500 bg-red-50 dark:bg-red-900/20'
-                : ''
-            }`}
+            className={getButtonStyle(answer)}
           >
             {answer.text}
           </button>
@@ -39,13 +94,11 @@ export function Quiz({ answers, explanation }: QuizProps) {
       </div>
 
       {selectedAnswer && (
-        <div className="p-4 rounded-lg bg-gray-50 dark:bg-gray-900/50 border border-subtle">
-          <div
-            className={`font-medium mb-2 ${selectedAnswerData?.isCorrect ? 'text-green-600' : 'text-red-600'}`}
-          >
+        <div className={resultContainer}>
+          <div className={resultTitle(selectedAnswerData?.isCorrect)}>
             {selectedAnswerData?.isCorrect ? 'Correct!' : 'Incorrect!'}
           </div>
-          <div className="text-gray-400 whitespace-pre-wrap">{explanation}</div>
+          <div className={resultExplanation}>{explanation}</div>
         </div>
       )}
     </>

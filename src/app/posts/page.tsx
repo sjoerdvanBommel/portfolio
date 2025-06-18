@@ -1,14 +1,25 @@
 import { getRecentPosts } from '@/lib/mdx/get-recent-posts'
+import { css } from '@/styled-system/css'
+import { Heading } from '@radix-ui/themes'
+import { gradientText } from '../styles/globals'
 
 export default async function Posts() {
   const files = await getRecentPosts()
+
   return (
-    <div>
-      {files.map((file) => (
-        <a key={file.slug} href={`/posts/${file.slug}`}>
-          {file.slug}
+    <>
+      <Heading className={`${gradientText} ${headingStyle}`} mt="8" mb="4">
+        Posts
+      </Heading>
+      {files.map(({ slug, metadata }) => (
+        <a key={slug} href={`/posts/${slug}`}>
+          {metadata.title}
         </a>
       ))}
-    </div>
+    </>
   )
 }
+
+const headingStyle = css({
+  marginTop: '4',
+})

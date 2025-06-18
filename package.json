@@ -25,6 +25,7 @@
     "glob": "^11.0.3",
     "lucide-react": "^0.515.0",
     "next": "15.3.3",
+    "radix-ui": "^1.4.2",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "react-shiki": "^0.7.1"

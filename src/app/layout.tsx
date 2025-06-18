@@ -1,8 +1,10 @@
+import Header from '@/components/header'
+import { css } from '@/styled-system/css'
 import { Theme } from '@radix-ui/themes'
 import '@radix-ui/themes/styles.css'
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
-import './globals.css'
+import './styles/globals.css'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -19,6 +21,21 @@ export const metadata: Metadata = {
   description: 'Sjoerd van Bommel described in code',
 }
 
+// Main layout based on https://www.joshwcomeau.com/css/full-bleed/
+const mainStyle = css({
+  backgroundColor: 'var(--background)',
+  display: 'grid',
+  gridTemplateColumns: '1fr min(42rem, 100%) 1fr',
+  marginInline: '1rem',
+  '& > *': {
+    gridColumn: '2',
+  },
+  '& .full-bleed': {
+    width: '100%',
+    gridColumn: '1 / 4',
+  },
+})
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -27,7 +44,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Theme>{children}</Theme>
+        <Theme appearance="dark" accentColor="orange">
+          <main className={mainStyle}>
+            <Header />
+            {children}
+          </main>
+          {/* <ThemePanel /> */}
+        </Theme>
       </body>
     </html>
   )
