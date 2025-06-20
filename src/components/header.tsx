@@ -48,7 +48,7 @@ export default function Header() {
     setTimeout(() => {
       setIsMobileMenuOpen(false)
       setIsClosing(false)
-    }, 200) // Match the transition duration
+    }, 300) // Match the transition duration
   }
 
   // Prevent body scroll when mobile menu is open
@@ -117,6 +117,7 @@ export default function Header() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={() => (pathname.startsWith(item.href) ? handleCloseMenu() : undefined)}
               className={`${mobileNavLinkStyle} ${pathname.startsWith(item.href) ? activeNavLinkStyle : ''} ${shouldAnimate ? 'animate' : ''}`}
               style={{
                 transitionDelay: `${index * 100}ms`,
@@ -134,8 +135,11 @@ export default function Header() {
 }
 
 const headingStyle = css({
-  fontSize: '2xl',
+  fontSize: 'xl',
   fontWeight: 'bold',
+  sm: {
+    fontSize: '2xl',
+  },
 })
 
 const headerStyle = css({
