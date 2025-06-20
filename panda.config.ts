@@ -12,7 +12,28 @@ export default defineConfig({
 
   // Useful for theme customization
   theme: {
-    extend: {},
+    extend: {
+      breakpoints: {
+        sm: '44rem',
+        md: '64rem',
+        lg: '80rem',
+        xl: '96rem',
+      },
+    },
+  },
+
+  staticCss: {
+    css: [
+      {
+        properties: {
+          background: [
+            'linear-gradient(to bottom right, var(--from, var(--primary-9)), var(--to, var(--secondary-11)))',
+          ],
+          backgroundClip: ['text'],
+          WebkitTextFillColor: ['transparent'],
+        },
+      },
+    ],
   },
 
   // The output directory for your css system

@@ -1,17 +1,68 @@
 'use client'
 
 import { css } from '@/styled-system/css'
+import { Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { NavigationMenu } from 'radix-ui'
+import { useEffect, useState } from 'react'
 
 export default function Header() {
   const pathname = usePathname()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [shouldAnimate, setShouldAnimate] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
 
   const navItems = [
     { label: 'Posts', href: '/posts' },
     { label: 'About me', href: '/about' },
   ]
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false)
+    setShouldAnimate(false)
+    setIsClosing(false)
+  }, [pathname])
+
+  // Handle animation timing when mobile menu opens
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      setIsClosing(false)
+      // Small delay to ensure the menu is visible before animating
+      const timer = setTimeout(() => {
+        setShouldAnimate(true)
+      }, 100)
+      return () => clearTimeout(timer)
+    } else {
+      setShouldAnimate(false)
+    }
+  }, [isMobileMenuOpen])
+
+  // Handle closing animation
+  const handleCloseMenu = () => {
+    setIsClosing(true)
+    setShouldAnimate(false)
+
+    // Wait for animation to complete before actually closing
+    setTimeout(() => {
+      setIsMobileMenuOpen(false)
+      setIsClosing(false)
+    }, 200) // Match the transition duration
+  }
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isMobileMenuOpen])
 
   return (
     <>
@@ -19,18 +70,64 @@ export default function Header() {
         <Link className={headingStyle} href="/">
           Sjoerd van Bommel
         </Link>
-        <NavigationMenu.Root>
+
+        {/* Desktop Navigation */}
+        <NavigationMenu.Root className={desktopNavStyle}>
           <NavigationMenu.List className={navigationMenuListStyle}>
             {navItems.map((item) => (
               <NavigationMenu.Item key={item.href}>
-                <NavigationMenu.Link active={pathname.startsWith(item.href)} href={item.href}>
+                <NavigationMenu.Link
+                  active={pathname.startsWith(item.href)}
+                  href={item.href}
+                  className={navigationMenuLinkStyle}
+                >
                   {item.label}
                 </NavigationMenu.Link>
               </NavigationMenu.Item>
             ))}
           </NavigationMenu.List>
         </NavigationMenu.Root>
+
+        {/* Mobile Menu Button */}
+        <button
+          className={mobileMenuButtonStyle}
+          onClick={() => (isMobileMenuOpen ? handleCloseMenu() : setIsMobileMenuOpen(true))}
+          aria-label="Toggle mobile menu"
+          aria-expanded={isMobileMenuOpen}
+        >
+          <div className={iconContainerStyle}>
+            <Menu
+              className={`${menuIconStyle} ${isMobileMenuOpen ? hiddenIconStyle : visibleIconStyle}`}
+              size={24}
+            />
+            <X
+              className={`${menuIconStyle} ${isMobileMenuOpen ? visibleIconStyle : hiddenIconStyle}`}
+              size={24}
+            />
+          </div>
+        </button>
       </header>
+
+      {/* Mobile Menu Overlay */}
+      <div
+        className={`${mobileMenuOverlayStyle} ${isMobileMenuOpen || isClosing ? mobileMenuOpenStyle : mobileMenuClosedStyle}`}
+      >
+        <nav className={mobileNavStyle}>
+          {navItems.map((item, index) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`${mobileNavLinkStyle} ${pathname.startsWith(item.href) ? activeNavLinkStyle : ''} ${shouldAnimate ? 'animate' : ''}`}
+              style={{
+                transitionDelay: `${index * 100}ms`,
+              }}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      </div>
+
       <div className={`${dividerStyle} full-bleed`} />
     </>
   )
@@ -45,11 +142,28 @@ const headerStyle = css({
   position: 'sticky',
   top: 0,
   width: '100%',
+  height: '4.5rem',
   zIndex: 2,
   backdropFilter: 'blur(4px)',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+})
+
+const desktopNavStyle = css({
+  display: 'none',
+  sm: {
+    display: 'block',
+  },
+})
+
+const navigationMenuLinkStyle = css({
+  padding: '1.5rem',
+  display: 'inline-block',
+  transition: 'all 0.2s ease',
+  '&[aria-current="page"]': {
+    color: 'var(--accent-11)',
+  },
 })
 
 const dividerStyle = css({
@@ -61,12 +175,98 @@ const navigationMenuListStyle = css({
   display: 'flex',
   justifyContent: 'flex-end',
   alignItems: 'center',
-  '& a': {
-    padding: '1.5rem',
-    display: 'inline-block',
-    '&[aria-current="page"]': {
-      color: `var(--accent-10)`,
-    },
+})
+
+const mobileMenuButtonStyle = css({
+  display: 'block',
+  cursor: 'pointer',
+  padding: '0.5rem',
+  borderRadius: '0.5rem',
+  transition: 'all 0.2s ease',
+  '&:hover': {
+    backgroundColor: 'var(--gray-3)',
   },
-  transform: 'translate(1.5rem)',
+  '&:focus': {
+    outline: '2px solid var(--accent-8)',
+    outlineOffset: '2px',
+  },
+  sm: {
+    display: 'none',
+  },
+})
+
+const iconContainerStyle = css({
+  position: 'relative',
+  width: '24px',
+  height: '24px',
+})
+
+const menuIconStyle = css({
+  position: 'absolute',
+  top: 0,
+  transition: 'all 0.3s ease',
+})
+
+const visibleIconStyle = css({
+  opacity: 1,
+  transform: 'rotate(0deg) scale(1)',
+})
+
+const hiddenIconStyle = css({
+  opacity: 0,
+  transform: 'rotate(90deg) scale(0.8)',
+})
+
+const mobileMenuOverlayStyle = css({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: 'var(--gray-1)',
+  backdropFilter: 'blur(8px)',
+  zIndex: 1,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  sm: {
+    display: 'none',
+  },
+})
+
+const mobileMenuOpenStyle = css({
+  opacity: 1,
+  visibility: 'visible',
+})
+
+const mobileMenuClosedStyle = css({
+  opacity: 0,
+  visibility: 'hidden',
+})
+
+const mobileNavStyle = css({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  gap: '2rem',
+})
+
+const mobileNavLinkStyle = css({
+  fontSize: '2rem',
+  fontWeight: '500',
+  padding: '1rem 2rem',
+  width: '100%',
+  textAlign: 'center',
+  transition: 'all 0.3s ease',
+  opacity: 0,
+  transform: 'translateY(20px)',
+  '&.animate': {
+    opacity: 1,
+    transform: 'translateY(0)',
+  },
+})
+
+const activeNavLinkStyle = css({
+  color: 'var(--accent-11)',
 })
