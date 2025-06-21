@@ -1,5 +1,16 @@
 import fs from 'fs/promises'
 
+export type Post = {
+  slug: string
+  metadata: {
+    title?: string
+    description?: string
+    date?: Date
+    readMoreText?: string
+  }
+  Post: React.ReactNode
+}
+
 export async function getRecentPosts() {
   const contentDir = 'src/content'
   const entries = await fs.readdir(contentDir, { withFileTypes: true })

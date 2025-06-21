@@ -25,13 +25,17 @@ export const metadata: Metadata = {
 const mainStyle = css({
   backgroundColor: 'var(--background)',
   display: 'grid',
+  alignContent: 'flex-start',
   gridTemplateColumns: '1fr min(42rem, 100%) 1fr',
-  marginInline: '1rem',
+  minHeight: 'calc(100dvh - var(--global-margin))',
+  marginInline: 'var(--global-margin)',
+  paddingBottom: 'var(--global-margin)',
   '& > *': {
     gridColumn: '2',
   },
   '& .full-bleed': {
-    width: '100%',
+    marginLeft: `calc(var(--global-margin) * -1)`,
+    width: `calc(100% + var(--global-margin) * 2)`,
     gridColumn: '1 / 4',
   },
 })

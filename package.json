@@ -21,6 +21,7 @@
     "@radix-ui/themes": "^3.2.1",
     "@shikijs/transformers": "^3.6.0",
     "@types/mdx": "^2.0.13",
+    "@uidotdev/usehooks": "^2.4.1",
     "framer-motion": "^12.18.1",
     "glob": "^11.0.3",
     "lucide-react": "^0.515.0",

@@ -1,4 +1,4 @@
-import { getRecentPosts } from '@/lib/mdx/get-recent-posts'
+import { getRecentPosts } from '@/lib/mdx/posts/get-recent-posts'
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params

@@ -46,4 +46,7 @@
   --accent-10: var(--amber-10);
   --accent-11: var(--amber-11);
   --accent-12: var(--amber-12);
+
+  --global-margin: 1rem;
+  --header-height: 4.5rem;
 }

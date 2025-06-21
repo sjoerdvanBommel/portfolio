@@ -19,6 +19,13 @@ export default defineConfig({
         lg: '80rem',
         xl: '96rem',
       },
+      keyframes: {
+        wave: {
+          '0%': { transform: 'rotate(0deg)' },
+          '50%': { transform: 'rotate(-40deg)' },
+          '100%': { transform: 'rotate(0deg)' },
+        },
+      },
     },
   },
 

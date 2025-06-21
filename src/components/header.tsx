@@ -1,6 +1,7 @@
 'use client'
 
-import { css } from '@/styled-system/css'
+import { iconButtonStyle } from '@/app/styles/globals'
+import { css, cx } from '@/styled-system/css'
 import { Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -14,6 +15,7 @@ export default function Header() {
   const [isClosing, setIsClosing] = useState(false)
 
   const navItems = [
+    { label: 'Home', href: '/' },
     { label: 'Posts', href: '/posts' },
     { label: 'About me', href: '/about' },
   ]
@@ -64,48 +66,54 @@ export default function Header() {
     }
   }, [isMobileMenuOpen])
 
+  // This will not catch all nested dynamic routes, but works for now
+  const isActivePath = (href: string) =>
+    pathname === href || (href.length > 1 && pathname.startsWith(href))
+
   return (
     <>
-      <header className={headerStyle}>
-        <Link className={headingStyle} href="/">
-          Sjoerd van Bommel
-        </Link>
+      <header className={`${headerStyle} full-bleed`}>
+        <div className={headerContentStyle}>
+          <Link className={headingStyle} href="/">
+            Sjoerd van Bommel
+          </Link>
 
-        {/* Desktop Navigation */}
-        <NavigationMenu.Root className={desktopNavStyle}>
-          <NavigationMenu.List className={navigationMenuListStyle}>
-            {navItems.map((item) => (
-              <NavigationMenu.Item key={item.href}>
-                <NavigationMenu.Link
-                  active={pathname.startsWith(item.href)}
-                  href={item.href}
-                  className={navigationMenuLinkStyle}
-                >
-                  {item.label}
-                </NavigationMenu.Link>
-              </NavigationMenu.Item>
-            ))}
-          </NavigationMenu.List>
-        </NavigationMenu.Root>
+          {/* Desktop Navigation */}
+          <NavigationMenu.Root className={desktopNavStyle}>
+            <NavigationMenu.List className={navigationMenuListStyle}>
+              {navItems.map((item) => (
+                <NavigationMenu.Item key={item.href}>
+                  <NavigationMenu.Link
+                    active={isActivePath(item.href)}
+                    href={item.href}
+                    className={navigationMenuLinkStyle}
+                  >
+                    {item.label}
+                  </NavigationMenu.Link>
+                </NavigationMenu.Item>
+              ))}
+            </NavigationMenu.List>
+          </NavigationMenu.Root>
 
-        {/* Mobile Menu Button */}
-        <button
-          className={mobileMenuButtonStyle}
-          onClick={() => (isMobileMenuOpen ? handleCloseMenu() : setIsMobileMenuOpen(true))}
-          aria-label="Toggle mobile menu"
-          aria-expanded={isMobileMenuOpen}
-        >
-          <div className={iconContainerStyle}>
-            <Menu
-              className={`${menuIconStyle} ${isMobileMenuOpen ? hiddenIconStyle : visibleIconStyle}`}
-              size={24}
-            />
-            <X
-              className={`${menuIconStyle} ${isMobileMenuOpen ? visibleIconStyle : hiddenIconStyle}`}
-              size={24}
-            />
-          </div>
-        </button>
+          {/* Mobile Menu Button */}
+          <button
+            className={cx(iconButtonStyle, mobileMenuButtonStyle)}
+            onClick={() => (isMobileMenuOpen ? handleCloseMenu() : setIsMobileMenuOpen(true))}
+            aria-label="Toggle mobile menu"
+            aria-expanded={isMobileMenuOpen}
+          >
+            <div className={iconContainerStyle}>
+              <Menu
+                className={`${menuIconStyle} ${isMobileMenuOpen ? hiddenIconStyle : visibleIconStyle}`}
+                size={24}
+              />
+              <X
+                className={`${menuIconStyle} ${isMobileMenuOpen ? visibleIconStyle : hiddenIconStyle}`}
+                size={24}
+              />
+            </div>
+          </button>
+        </div>
       </header>
 
       {/* Mobile Menu Overlay */}
@@ -117,8 +125,8 @@ export default function Header() {
             <Link
               key={item.href}
               href={item.href}
-              onClick={() => (pathname.startsWith(item.href) ? handleCloseMenu() : undefined)}
-              className={`${mobileNavLinkStyle} ${pathname.startsWith(item.href) ? activeNavLinkStyle : ''} ${shouldAnimate ? 'animate' : ''}`}
+              onClick={() => (isActivePath(item.href) ? handleCloseMenu() : undefined)}
+              className={`${mobileNavLinkStyle} ${isActivePath(item.href) ? activeNavLinkStyle : ''} ${shouldAnimate ? 'animate' : ''}`}
               style={{
                 transitionDelay: `${index * 100}ms`,
               }}
@@ -128,8 +136,6 @@ export default function Header() {
           ))}
         </nav>
       </div>
-
-      <div className={`${dividerStyle} full-bleed`} />
     </>
   )
 }
@@ -145,10 +151,17 @@ const headingStyle = css({
 const headerStyle = css({
   position: 'sticky',
   top: 0,
-  width: '100%',
-  height: '4.5rem',
+  height: 'var(--header-height)',
+  paddingInline: 'var(--global-margin)',
   zIndex: 2,
   backdropFilter: 'blur(4px)',
+  borderBottom: '1px solid var(--gray-3)',
+  display: 'grid',
+  gridTemplateColumns: '1fr min(42rem, 100%) 1fr',
+})
+
+const headerContentStyle = css({
+  gridColumn: '2',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -170,11 +183,6 @@ const navigationMenuLinkStyle = css({
   },
 })
 
-const dividerStyle = css({
-  height: '1px',
-  borderBottom: '1px solid var(--gray-3)',
-})
-
 const navigationMenuListStyle = css({
   display: 'flex',
   justifyContent: 'flex-end',
@@ -184,16 +192,6 @@ const navigationMenuListStyle = css({
 const mobileMenuButtonStyle = css({
   display: 'block',
   cursor: 'pointer',
-  padding: '0.5rem',
-  borderRadius: '0.5rem',
-  transition: 'all 0.2s ease',
-  '&:hover': {
-    backgroundColor: 'var(--gray-3)',
-  },
-  '&:focus': {
-    outline: '2px solid var(--accent-8)',
-    outlineOffset: '2px',
-  },
   sm: {
     display: 'none',
   },
