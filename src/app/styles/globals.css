@@ -50,3 +50,7 @@
   --global-margin: 1rem;
   --header-height: 4.5rem;
 }
+
+* {
+  text-wrap-style: auto;
+}

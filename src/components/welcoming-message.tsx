@@ -30,7 +30,7 @@ export default function WelcomingMessage({ children }: { children: React.ReactNo
       },
       {
         children: 'Thanks for visiting my site',
-        className: css({ fontSize: '4xl', fontWeight: 'bold' }),
+        className: css({ fontSize: '2xl', fontWeight: 'bold', sm: { fontSize: '4xl' } }),
       },
       {
         children,

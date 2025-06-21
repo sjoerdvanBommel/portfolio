@@ -2,16 +2,20 @@ import { ClientOnly } from '@/components/client-only'
 import HomeMainContent from '@/components/home-main-content'
 import WelcomingMessage from '@/components/welcoming-message'
 import { getRecentPosts } from '@/lib/mdx/posts/get-recent-posts'
+import { getYouTubeVideoByIds } from '@/lib/youtube/get-videos'
 import { css } from '@/styled-system/css'
 
+const recommendedVideoIds = ['2XqQDnFw4Ys', 'ALH_KQEkA24']
+
 export default async function Home() {
-  const firstPost = (await getRecentPosts())[0]
+  const recentPosts = (await getRecentPosts()).slice(0, 3)
+  const videos = (await getYouTubeVideoByIds(...recommendedVideoIds)) ?? []
 
   return (
     <div className={containerStyle}>
       <ClientOnly>
         <WelcomingMessage>
-          <HomeMainContent firstPost={firstPost} />
+          <HomeMainContent recentPosts={recentPosts} videos={videos} />
         </WelcomingMessage>
       </ClientOnly>
     </div>

@@ -1,15 +1,19 @@
 import { Post } from '@/lib/mdx/posts/get-recent-posts'
+import { YouTubeVideo } from '@/lib/youtube/get-videos'
 import { css } from '@/styled-system/css'
+import { ExternalLink } from 'lucide-react'
 import { Tooltip } from 'radix-ui'
 import { H1, H2 } from './headings'
 import { PostSection } from './post-section'
 import { ReloadHomeAnimationButton } from './reload-home-animation-button'
+import { YouTubeVideoSection } from './youtube-video-section'
 
 export type HomeMainContentProps = {
-  firstPost: Post
+  recentPosts: Post[]
+  videos?: YouTubeVideo[]
 }
 
-export default function HomeMainContent({ firstPost }: HomeMainContentProps) {
+export default function HomeMainContent({ recentPosts, videos }: HomeMainContentProps) {
   return (
     <div className={containerStyle}>
       <div className={topContainerStyle}>
@@ -30,29 +34,61 @@ export default function HomeMainContent({ firstPost }: HomeMainContentProps) {
         </Tooltip.Provider>
       </div>
 
-      <div>
-        <H2 className={subtitleStyle}>📚 Posts</H2>
-        <p className={descriptionStyle}>
-          I enjoy writing creative, interactive blog posts about complex software engineering topics
-        </p>
-        <PostSection post={firstPost} />
+      <div className={categoryContainerStyle}>
+        <div>
+          <H2 className={subtitleStyle}>📚 Posts</H2>
+          <p className={descriptionStyle}>
+            I enjoy writing creative, interactive blog posts about complex software engineering
+            topics
+          </p>
+        </div>
+        {recentPosts.map((post) => (
+          <PostSection key={post.slug} post={post} />
+        ))}
       </div>
 
-      <div>
-        <H2 className={subtitleStyle}>🎥 Videos</H2>
+      <div className={categoryContainerStyle}>
+        <div>
+          <div className={videosHeaderStyle}>
+            <H2 className={subtitleStyle}>🎥 Videos</H2>
+            <a
+              href={'https://www.youtube.com/channel/UC74yl2lsr6zF9RENwXrEkpw'}
+              className={channelLinkStyle}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Visit my channel <ExternalLink className={externalLinkStyle} />
+            </a>
+          </div>
+          <p className={descriptionStyle}>
+            I create educational content about web development. Have a look, it&apos;s free!
+          </p>
+        </div>
+        {videos?.map((video) => <YouTubeVideoSection key={video.id} video={video} />)}
       </div>
     </div>
   )
 }
 
+const categoryContainerStyle = css({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '8',
+})
+
+const videosHeaderStyle = css({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+})
+
 const descriptionStyle = css({
-  mb: '8',
   color: 'var(--gray-11)',
 })
 
 const subtitleStyle = css({
   fontSize: '1.5rem',
-  mb: 0,
+  my: 0,
 })
 
 const tooltipContentStyle = css({
@@ -76,4 +112,19 @@ const containerStyle = css({
   gap: '8',
   flexDirection: 'column',
   alignItems: 'flex-start',
+})
+
+const channelLinkStyle = css({
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '2',
+  color: 'var(--accent-11)',
+  _hover: {
+    color: 'var(--accent-12)',
+  },
+})
+
+const externalLinkStyle = css({
+  width: '1rem',
+  height: '1rem',
 })

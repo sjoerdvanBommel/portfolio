@@ -17,6 +17,7 @@ export default function Header() {
   const navItems = [
     { label: 'Home', href: '/' },
     { label: 'Posts', href: '/posts' },
+    { label: 'Videos', href: '/videos' },
     { label: 'About me', href: '/about' },
   ]
 
@@ -191,7 +192,6 @@ const navigationMenuListStyle = css({
 
 const mobileMenuButtonStyle = css({
   display: 'block',
-  cursor: 'pointer',
   sm: {
     display: 'none',
   },

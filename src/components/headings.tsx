@@ -9,6 +9,10 @@ export function H2(props: React.HTMLAttributes<HTMLHeadingElement>) {
   return <h2 {...props} className={`${subheadingStyle} ${props.className}`} />
 }
 
+export function H3(props: React.HTMLAttributes<HTMLHeadingElement>) {
+  return <h3 {...props} className={`${heading3Style} ${props.className}`} />
+}
+
 const headingStyle = css({
   my: '4',
   fontSize: 'xl',
@@ -19,4 +23,9 @@ const subheadingStyle = css({
   my: '2',
   fontSize: 'md',
   fontWeight: 'bold',
+})
+
+const heading3Style = css({
+  my: '2',
+  fontSize: 'md',
 })
