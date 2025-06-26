@@ -2,30 +2,85 @@
 
 import { getAllFiles } from '@/lib/mdx/code-block/get-all-files'
 import { FileStructure } from '@/lib/mdx/code-block/types'
+import { css } from '@/styled-system/css'
 import { CodeDisplay } from './code-display'
 
 interface TabsViewProps {
   files: FileStructure[]
   selectedFile: FileStructure | null
   onSelectFile: (file: FileStructure) => void
-  showTabs?: boolean
+  hideTabs?: boolean
 }
 
-export function TabsView({ files, selectedFile, onSelectFile, showTabs = true }: TabsViewProps) {
+const containerStyle = (showTabs: boolean) =>
+  css({
+    flex: '1',
+    overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
+    ...(showTabs ? {} : { py: '2' }),
+  })
+
+const tabsContainerStyle = css({
+  display: 'flex',
+  borderBottom: '1px solid',
+  borderColor: 'gray.200',
+  bg: 'gray.50',
+  overflowX: 'auto',
+  scrollbarWidth: 'thin',
+  scrollbarColor: 'gray.300 transparent',
+  _dark: {
+    borderColor: 'gray.800',
+    bg: 'gray.900',
+    scrollbarColor: 'gray.700 transparent',
+  },
+  _hover: {
+    scrollbarColor: 'gray.400 transparent',
+    _dark: {
+      scrollbarColor: 'gray.600 transparent',
+    },
+  },
+})
+
+const tabsWrapperStyle = css({
+  display: 'flex',
+  minWidth: '0',
+})
+
+const tabButtonStyle = (isSelected: boolean) =>
+  css({
+    cursor: 'pointer',
+    px: '4 ',
+    py: '2',
+    fontSize: 'sm',
+    fontWeight: 'medium',
+    whiteSpace: 'nowrap',
+    borderBottom: '2px solid',
+    ...(isSelected
+      ? {
+          borderColor: 'blue.500',
+          color: 'blue.500',
+        }
+      : {
+          borderColor: 'transparent',
+          color: 'gray.400',
+          _hover: {
+            color: 'gray.300',
+          },
+        }),
+  })
+
+export function TabsView({ files, selectedFile, onSelectFile, hideTabs = true }: TabsViewProps) {
   return (
-    <div className={`flex-1 overflow-hidden flex flex-col ${!showTabs && 'py-2'}`}>
+    <div className={containerStyle(hideTabs)}>
       {/* File tabs */}
-      {showTabs && (
-        <div className="flex border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700 scrollbar-track-transparent hover:scrollbar-thumb-gray-400 dark:hover:scrollbar-thumb-gray-600">
-          <div className="flex min-w-0">
+      {hideTabs && (
+        <div className={tabsContainerStyle}>
+          <div className={tabsWrapperStyle}>
             {getAllFiles(files).map((file) => (
               <button
                 key={file.fullPath}
-                className={`cursor-pointer mx-2 px-2 py-2 text-sm font-medium whitespace-nowrap border-b-2 ${
-                  selectedFile?.name === file.name
-                    ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-                }`}
+                className={tabButtonStyle(selectedFile?.name === file.name)}
                 onClick={() => onSelectFile(file)}
               >
                 {file.fullPath.replace(/^\//, '')}

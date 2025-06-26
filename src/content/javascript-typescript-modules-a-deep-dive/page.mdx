@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'The history and workings of JavaScript & TypeScript modules',
+  title: '5 lines of simple but complex JavaScript & TypeScript code',
   description:
     'Understanding module systems like CommonJS and ES modules, goes beyond understanding the syntax. Knowing the history and workings of these systems will help you understand why we are where we are today. It will help you resolve the complex module errors that even AI cannot fix 😉',
   readMoreText: "Let's travel through time",
@@ -9,260 +9,125 @@ export const metadata = {
 
 # {metadata.title}
 
-## Introduction
+In JavaScript and TypeScript, it is possible to write just a couple of lines of "simple" code which is so complex under the hood, that I decided to write this entire blog post about it.
 
-Let's kick off with a question.
+Let's start with the TypeScript code itself, containing a total of 5 lines, spread over 3 files:
 
-<CodeQuiz
-  example="javascript-typescript-modules-a-deep-dive/examples/1-simple-tsc-quiz"
-  question={
-    <span>
-      What happens when you run <InlineCode>tsc index.ts</InlineCode>?
-    </span>
-  }
-  explanation="When running this command, the TypeScript compiler will run against the passed file(s). Because there is no `tsconfig.json` file, the compiler will use its default settings. For example, it will output a JavaScript file called `index.js` in the same folder as the TypeScript file, because this is the default output directory. Later in this blog we will explore why tsc outputs CommonJS instead of ES modules."
-  answers={[
-    {
-      id: '1',
-      text: 'This produces a JavaScript ES module called `index.js` in a dist folder',
-      isCorrect: false,
-    },
-    {
-      id: '2',
-      text: 'This produces a JavaScript CommonJS module called `index.js`',
-      isCorrect: true,
-    },
-    {
-      id: '3',
-      text: 'This produces a JavaScript ES module called `index.js`',
-      isCorrect: false,
-    },
-    {
-      id: '4',
-      text: 'It will error because there is no tsconfig.json file',
-      isCorrect: false,
-    },
-  ]}
-  mode="tabs"
+<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/1-combining-cjs-and-esm" />
+
+Can you spot the complexity? ☝️
+
+In the `index.ts` file, we are importing the `add` function from the `add.ts` file.
+But to access the `A` and `B` constants, a `require` statement is used.
+This means we are trying to combine two different module systems: CommonJS and ES modules.
+
+_**Let's figure out in this blog if we can get this code to run.**_
+
+<Info>
+  Since node 24, it is possible to run TypeScript code directly without compiling it first. It does
+  so by stripping the type annotations from the code.
+</Info>
+
+<TerminalCommandRunner
+  command="node index.ts"
+  example="javascript-typescript-modules-a-deep-dive/examples/2-node-output"
 />
 
-If you knew the reason why this is the correct answer, congratulations! You probably have a pretty
-good understanding of modules and TypeScript. But even for those people, I'd say: give this blog
-post a try. I am certain you will learn something new.
+Apparently it is not able to find a file called `add`. That's correct: the file is called `add.ts`, not `add`.
+Importing with or without extension is a whole other topic on its own, but let's not get distracted ☁︎ Let's fix the issue instead!
 
-## What is a module?
+<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/3-correct-imports" />
 
-People tend to be scared when they hear the word "module",
-because of the complexity of the module **system** in JavaScript.
-But a module itself is just a _self-contained_ piece of code.
-It does not rely on anything outside of it. Here are some examples of modules:
-
-<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/2-simple-modules" />
-
-But what if I want to use the `add` function from `add.ts` in `calculator.ts`?
-This is where terms like `import`, `export` and `require` come into play. But these terms are not part of a module. This is instead part of the module _system_.
-
-Without a module system, I would have to come up with my own solution, like copy-pasting
-the `add` function into `calculator.ts`. But that would become a mess very quickly.
-
-<br />
-
-Let's go back in time to understand why module systems exist and why we ended up in this complex situation.
-
-<br />
-
-<Timeline>
-  <TimelineEntry title="JavaScript is born" emoji="👶" date={new Date("1995-01-01")}>
-      JavaScript, or LiveScript at the time, was created at Netscape Communications by Brendan Eich in 1995.
-      It was initially created to be a scripting language for their own browser, Netscape Navigator.
-
-      <img src="/img/netscape-navigator.webp" alt="Netscape Navigator" className="my-4" />
-
-      The language was in no way designed to be a general-purpose language for both client and server.
-      It contained notable performance and security issues and _did not have any module system_.
-      People used JavaScript because other browsers started to support it as well.
-      There was no real alternative.
-      <br />
-      But if there is no module system and copy-pasting is not a scalable option, then how would you organize your code?
-      Because JavaScript only ran in the browser back then, one possible solution was to include multiple `<script>` tags in the HTML file:
-
-      <CodeBlock
-        example="javascript-typescript-modules-a-deep-dive/examples/3-multiple-script-tags"
-        initialFile="index.html"
-      />
-
-      In this example, we have a user profile section that starts with "Loading user data...".
-      The `api.js` file defines a function to fetch user data, `ui.js` defines a function to update the profile with this data, and `main.js` tries to execute this function immediately.
-      <br />
-      This looks somewhat like a self-made module system (although it is not). It comes with several drawbacks, with some of the most important ones being:
-      1. The scripts are loaded in the order they appear in the HTML file. If we'd load `main.js` first, we'd get errors because `updateUserProfile()` is not defined yet.
-      2. There is no explicit dependency management. Just from looking at `main.js`, there is no way to tell if it will work or not,
-      because it depends on other files which are not explicitly referred to here. Tooling like ESLint or going to the source code of another script won't work either because of this reason.
-      3. We might create naming conflicts in the global scope when we load multiple scripts which define the same variable.
-
-      <br />
-      There was no direct solution for the first two problems. However, they managed to limit the pollution
-      of the global scope using a technique called "Immediately Invoked Function Expression" (IIFE).
-      Since a function creates its own scope, they figured that they could use a function to create a new scope for each script.
-      This way, variables and functions defined in one script would not be accessible in another:
-
-      <CodeBlock
-        example="javascript-typescript-modules-a-deep-dive/examples/4-variables-in-functions"
-      />
-
-      However, because these files are now only defining functions, nothing will get executed.
-      To fix this, we need to call the functions immediately when creating them (hence the name "Immediately Invoked Function Expression").
-      By converting the function to an expression using parentheses, we can call it immediately and remove the function name:
-
-      <CodeBlock
-        example="javascript-typescript-modules-a-deep-dive/examples/5-iife"
-      />
-
-      Now that all variables and functions are defined inside of this global function scope,
-      we can make it _explicit_ what should be "imported" by passing the dependencies as arguments,
-      and we can decide ourselves what should be "exported" and what shouldn't
-      by returning the exports from the function. Let's update all files to use this new pattern:
-
-      <CodeBlock
-        example="javascript-typescript-modules-a-deep-dive/examples/6-assign-to-global"
-      />
-
-This is definitely an improvement, but it only partially solves the problem. Other problems like the order of execution
-are still present, and there is no real standard in the language itself. In fact, other approaches were used as well, such as the namespace pattern, which I will not cover here.
-Hopefully, it is clear why no standardized module system is not a good long-term solution for such a big programming language as
-JavaScript.
-
-  </TimelineEntry>
-
-<TimelineEntry title="CommonJS: the first standardized module system" emoji="💡" date={new Date('2009-03-03')}>
-  In the beginning of 2009, Kevin Dangoor brought together a group of developers who created a set of standards for connecting JavaScript files together.
-  This was the first step towards a _standardized_ module system, called CommonJS, using the `require` and `module.exports` keywords:
-
-<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/7-commonjs" mode="no-tabs" />
-
-However, CommonJS was meant to standardize the module ecosystem for JavaScript _outside of the browser_,
-so it did not take the constraints of a browser into account. For example, a `require()` call is synchronous, meaning it will first fully load the module and execute its code. If that code contained another
-`require()` call, it would first load that module and execute its code, and so on.
-If we would try to use this in the browser, it would create a chain of synchronous requests to fetch the modules from the server, which would block the main thread and make the browser unresponsive.
-
-<br />
-Try it out yourself! This button will pretend to execute a _synchronous_ `require()` call. Anything
-you or JavaScript tries to do (like updating the time) after clicking it will be blocked until the
-module is loaded.
-
-<MainThreadBlocker />
-
-You can imagine that, when someone first loads a website, they don't want to wait for a chain of these kind of modules to load.
-
-To prevent this, people often used a bundler like [Browserify](https://browserify.org/) or [Webpack](https://webpack.js.org/) to bundle all the modules into a single file.
-
-</TimelineEntry>
-
-<TimelineEntry title="JavaScript in the backend" icon="/img/nodejs.png" date={new Date('2009-03-03')}>
-  Soon after CommonJS was created, Node.js was released. Node.js was created to run JavaScript in the backend,
-  and it was designed to use CommonJS as its module system. Because Node.js grew fast in popularity, CommonJS became the
-  de-facto standard for JavaScript modules, especially in the backend.
-
-<br />
-  And although there is a lot to tell about Node.js, I will keep the focus on module systems.
-</TimelineEntry>
-
-<TimelineEntry title="AMD: A CommonJS alternative for the browser" emoji="🌐" date={new Date('2011-03-03')}>
-  
-Because CommonJS was not designed for the browser, a new module system was needed.
-A colleague of Kevin, James Burke, created a new module system called **AMD**, or Asynchronous Module Definition.
-It was designed to be a CommonJS alternative for the browser.
-
-<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/8-amd" mode="no-tabs" />
-
-AMD is a bit different from CommonJS. Instead of using `require()` to load modules, it uses `define()` to define modules.
-The `define()` function takes a list of dependencies and a function as second parameter.
-What makes this second parameter unique is that it is executed only when all dependencies are loaded asynchronously.
-
-<br />
-
-But if `jquery` is only specified in a module that is not loaded yet, how would the browser know that it is a dependency?
-If it wouldn't know, the chain of requests would still have to be executed.
-
-<br />
-Well, this is actually still the case. However, because loading these modules now happens
-asynchronously, the main thread is not blocked, allowing the browser to continue rendering the page
-and remain responsive.
-
-<br />
-AMD became popular as module system for the browser. But it was not part of any official
-specification, like ECMAScript. This meant that the browser would not know how to load AMD modules.
-If you would try to load an AMD module in the browser, you would most likely receive an error:
-
-<Error>Uncaught ReferenceError: define is not defined</Error>
-
-To load AMD modules in the browser, you would need something called a "module loader", like [RequireJS](https://requirejs.org/).
-This will provide global functions like `require` and `define` that the browser can use to load AMD modules.
-Require.js had to be loaded synchronously though, to be able to recognize the `define` function and load the rest of the modules asynchronously.
-To prevent the loading of the require.js script from blocking the main thread and rendering the rest of the page,
-it was often placed at the bottom of the HTML document.
-
-<CodeBlock
-  example="javascript-typescript-modules-a-deep-dive/examples/9-load-require-js"
-  mode="no-tabs"
+<TerminalCommandRunner
+  command="node index.ts"
+  example="javascript-typescript-modules-a-deep-dive/examples/4-node-output"
 />
 
-Remember that at this point in history, websites were less dependent on JavaScript. Just the HTML and CSS were often
-enough to display a page. The interactivity and fetched data could be added later, once the modules were loaded.
+Looks like we have our answer: It does _not_ seem possible to combine `require` and `import` statements in the same TypeScript file.
 
-</TimelineEntry>
+...or is it? Let's continue our search.
 
-<TimelineEntry title="ES6 Modules" date={new Date('2015-01-01')} />
+<ColoredH2>Module Type Detection</ColoredH2>
 
-</Timeline>
-{/* 
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
+The error we got in our last run was quite clear:
 
-If you've been working with TypeScript for a while, you might recognise these scenarios: you are creating a new project and you try to import a TypeScript file:
+<Error>ReferenceError: require is not defined in ES module scope, you can use import instead</Error>
 
-<Error>
-  Relative import paths need explicit file extensions in ECMAScript imports when
-  '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './component.js'? ts(2835)
-</Error>
+So it should be quite straightforward to resolve it.
 
-Or you try to import a package like react and receive:
+<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/5-all-import" />
 
-<Error>
-  Could not find a declaration file for module 'react'. '\<project\>/node_modules/react/index.js' implicitly has an 'any' type.
-  Try <InlineCode>npm i --save-dev @types/react</InlineCode> if it exists or add a new declaration (.d.ts) file containing <InlineCode>declare module 'react';</InlineCode> ts(7016)
-</Error>
+<TerminalCommandRunner
+  command="node index.ts"
+  example="javascript-typescript-modules-a-deep-dive/examples/6-node-output"
+/>
 
-Or here's another one:
+That works! 🎉
 
-<Error>SyntaxError: Cannot use import statement outside a module</Error>
+It makes sense to use `import` statements here, because the other files were ES Modules as well, using `export` statements.
+But let's challenge this error message anyways. It said we were "in ES module scope". What does that mean?
+How does it know that? Is that the default scope for TypeScript?
+We can figure this out by changing all `import` statements to `require` statements:
 
-If you are here because you are trying to fix one of these errors, I have some bad and some good news for you. I will not tell you how to fix your specific problem.
-But I will tell you why the error occurs, so you can fix it yourself.
+<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/7-all-require" />
 
-<br />
+<TerminalCommandRunner
+  command="node index.ts"
+  example="javascript-typescript-modules-a-deep-dive/examples/6-node-output"
+/>
 
-We will also dive into some more advanced topics and questions, like:
+Guess what, that works too! 🤯 Notice that we are not just requiring another CommonJS module here. We are actually requiring an _ES module_!
+Under the hood, Node.js is behaving very similar to using a dynamic `import()` statement here, but instead it loads synchronously.
 
-- Why is a "modern" bundler like vite so much faster than an older bundler like webpack?
-- How does hot module replacement work?
-- Where are my compiled files when I run the dev server?
+<Note>
+  `require()`'ing ES modules is only supported since Node.js 22.0 using the <br />
+  `--no-experimental-require-module` flag, or since Node.js 22.12 without the flag.
+</Note>
 
-<br />
-Above errors are all related to **modules**.
-<br />
+Somehow, Node.js decided to treat the `index.ts` file as CommonJS module, and the `require`d modules as ES modules. This is the result of Node.js' _module type detection algorithm_.
+It is actually quite simple. It checks the following conditions in order:
 
-## Modules
+{/* TODO: Visualize this */}
 
-Modules are a way to organize your code. They are a way to split your code into smaller, more manageable pieces.
+1. Does the file have a `.mjs` (or `.mts`) extension? -> **ES module**
+2. Does the file have a `.cjs` (or `.cts`) extension? -> **CommonJS module**
+3. Does the closest `package.json` file have a `"type": "module"` field? -> **ES module**
+4. Does the closest `package.json` not contain `"type": "commonjs"` and does the module contain ES Module syntax (import/export)? -> **ES module**
+5. Otherwise -> **CommonJS module**
 
-TODO:
+{/* TODO: Create quiz or code editor to test knowledge */}
 
-- Tree shaking in CJS \*/}
+There is one caveat though: since the `require()` statement is synchronous, it is not possible to load ES Modules that use top-level `await` statements.
+This will throw a clear error:
+
+{/* TODO: Keep order of files but select 2nd file by default */}
+
+<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/9-top-level-await" />
+
+<TerminalCommandRunner
+  command="node index.ts"
+  example="javascript-typescript-modules-a-deep-dive/examples/10-node-output"
+/>
+
+As the error suggests, using `import()` instead of `require()` will fix the issue.
+
+<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/11-import-fix" />
+
+<TerminalCommandRunner
+  command="node index.ts"
+  example="javascript-typescript-modules-a-deep-dive/examples/6-node-output"
+/>
+
+Remember that we were initially trying to combine two different module systems in a single file?
+The above code example showcases another capability in Node.js related to that question!
+In this file, we are combining a `require` statement with an `import` statement.
+Not a regular `import` statement, but a dynamic one.
+It feels like we are getting closer to the answer, but unfortunately, this is all what's possible using plain Node.js.
+However! There is a tool that you get access to when you install TypeScript, that can help us with our problem.
+Let's see how that works.
+
+<ColoredH2>TypeScript Compiler</ColoredH2>
+
+{/* https://nodejs.org/api/modules.html#loading-ecmascript-modules-using-require */}
+
+To be continued...

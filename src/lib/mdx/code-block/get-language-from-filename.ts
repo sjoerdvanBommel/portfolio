@@ -20,6 +20,8 @@ export function getLanguageFromFilename(fileName: string): string {
       return 'markdown'
     case 'sh':
       return 'bash'
+    case 'ansi':
+      return 'ansi'
     default:
       return 'plaintext'
   }

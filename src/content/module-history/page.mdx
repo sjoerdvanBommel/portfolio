@@ -1,0 +1,248 @@
+export const metadata = {
+  title: 'Third blog',
+  description: 'A comprehensive exploration of the tsconfig.json file and its options.',
+  date: '2025-06-20',
+  tags: ['typescript', 'tsconfig.json', 'third blog'],
+}
+
+# Third blog
+
+TODO this page contains some old content.
+
+<Info>
+  In this blog, we will assume that we already ran `npm install` in the root of the project. I did
+  not want to include the generated `package-lock.json` and `node_modules`, because it would clutter
+  the example.
+</Info>
+
+But... If this is possible, then why are people so often sharing their frustrations about
+compatibility issues between CJS and ESM?
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+If you knew the reason why this is the correct answer, you probably have a better understanding of modules
+and TypeScript than most people. But even for those people, I'd say: give this blog post a try.
+I am confident that you will learn something new.
+
+## What is a module?
+
+People tend to be scared when they hear the word "module",
+because of the complexity of the module **system** in JavaScript.
+But a module itself is just a _self-contained_ piece of code.
+It does not rely on anything outside of it. Here are some examples of modules:
+
+{/* <CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/2-simple-modules" /> */}
+
+But what if I want to use the `add` function from `add.ts` in `calculator.ts`?
+This is where terms like `import`, `export` and `require` come into play. But these terms are not part of a module. This is instead part of the module _system_.
+
+Without a module system, I would have to come up with my own solution, like copy-pasting
+the `add` function into `calculator.ts`. But that would become a mess very quickly.
+
+<br />
+
+Let's go back in time to understand why module systems exist and why we ended up in this complex situation.
+
+<br />
+
+<Timeline>
+  <TimelineEntry title="JavaScript is born" emoji="👶" date={new Date("1995-01-01")}>
+      JavaScript, or LiveScript at the time, was created at Netscape Communications by Brendan Eich in 1995.
+      It was initially created to be a scripting language for their own browser, Netscape Navigator.
+
+      <img src="/img/netscape-navigator.webp" alt="Netscape Navigator" className="my-4" />
+
+      The language was in no way designed to be a general-purpose language for both client and server.
+      It contained notable performance and security issues and _did not have any module system_.
+      People used JavaScript because other browsers started to support it as well.
+      There was no real alternative.
+      <br />
+      But if there is no module system and copy-pasting is not a scalable option, then how would you organize your code?
+      Because JavaScript only ran in the browser back then, one possible solution was to include multiple `<script>` tags in the HTML file:
+
+      <CodeBlock
+        example="javascript-typescript-modules-a-deep-dive/examples/3-multiple-script-tags"
+        initialFile="index.html"
+      />
+
+      In this example, we have a user profile section that starts with "Loading user data...".
+      The `api.js` file defines a function to fetch user data, `ui.js` defines a function to update the profile with this data, and `main.js` tries to execute this function immediately.
+      <br />
+      This looks somewhat like a self-made module system (although it is not). It comes with several drawbacks, with some of the most important ones being:
+      1. The scripts are loaded in the order they appear in the HTML file. If we'd load `main.js` first, we'd get errors because `updateUserProfile()` is not defined yet.
+      2. There is no explicit dependency management. Just from looking at `main.js`, there is no way to tell if it will work or not,
+      because it depends on other files which are not explicitly referred to here. Tooling like ESLint or going to the source code of another script won't work either because of this reason.
+      3. We might create naming conflicts in the global scope when we load multiple scripts which define the same variable.
+
+      <br />
+      There was no direct solution for the first two problems. However, they managed to limit the pollution
+      of the global scope using a technique called "Immediately Invoked Function Expression" (IIFE).
+      Since a function creates its own scope, they figured that they could use a function to create a new scope for each script.
+      This way, variables and functions defined in one script would not be accessible in another:
+
+      <CodeBlock
+        example="javascript-typescript-modules-a-deep-dive/examples/4-variables-in-functions"
+      />
+
+      However, because these files are now only defining functions, nothing will get executed.
+      To fix this, we need to call the functions immediately when creating them (hence the name "Immediately Invoked Function Expression").
+      By converting the function to an expression using parentheses, we can call it immediately and remove the function name:
+
+      <CodeBlock
+        example="javascript-typescript-modules-a-deep-dive/examples/5-iife"
+      />
+
+      Now that all variables and functions are defined inside of this global function scope,
+      we can make it _explicit_ what should be "imported" by passing the dependencies as arguments,
+      and we can decide ourselves what should be "exported" and what shouldn't
+      by returning the exports from the function. Let's update all files to use this new pattern:
+
+      <CodeBlock
+        example="javascript-typescript-modules-a-deep-dive/examples/6-assign-to-global"
+      />
+
+This is definitely an improvement, but it only partially solves the problem. Other problems like the order of execution
+are still present, and there is no real standard in the language itself. In fact, other approaches were used as well, such as the namespace pattern, which I will not cover here.
+Hopefully, it is clear why no standardized module system is not a good long-term solution for such a big programming language as
+JavaScript.
+
+  </TimelineEntry>
+
+<TimelineEntry title="CommonJS: the first standardized module system" emoji="💡" date={new Date('2009-03-03')}>
+  In the beginning of 2009, Kevin Dangoor brought together a group of developers who created a set of standards for connecting JavaScript files together.
+  This was the first step towards a _standardized_ module system, called CommonJS, using the `require` and `module.exports` keywords:
+
+<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/7-commonjs" mode="no-tabs" />
+
+However, CommonJS was meant to standardize the module ecosystem for JavaScript _outside of the browser_,
+so it did not take the constraints of a browser into account. For example, a `require()` call is synchronous, meaning it will first fully load the module and execute its code. If that code contained another
+`require()` call, it would first load that module and execute its code, and so on.
+If we would try to use this in the browser, it would create a chain of synchronous requests to fetch the modules from the server, which would block the main thread and make the browser unresponsive.
+
+<br />
+Try it out yourself! This button will pretend to execute a _synchronous_ `require()` call. Anything
+you or JavaScript tries to do (like updating the time) after clicking it will be blocked until the
+module is loaded.
+
+<MainThreadBlocker />
+
+You can imagine that, when someone first loads a website, they don't want to wait for a chain of these kind of modules to load.
+
+To prevent this, people often used a bundler like [Browserify](https://browserify.org/) or [Webpack](https://webpack.js.org/) to bundle all the modules into a single file.
+
+</TimelineEntry>
+
+<TimelineEntry title="JavaScript in the backend" icon="/img/nodejs.png" date={new Date('2009-03-03')}>
+  Soon after CommonJS was created, Node.js was released. Node.js was created to run JavaScript in the backend,
+  and it was designed to use CommonJS as its module system. Because Node.js grew fast in popularity, CommonJS became the
+  de-facto standard for JavaScript modules, especially in the backend.
+
+<br />
+  And although there is a lot to tell about Node.js, I will keep the focus on module systems.
+</TimelineEntry>
+
+<TimelineEntry title="AMD: A CommonJS alternative for the browser" emoji="🌐" date={new Date('2011-03-03')}>
+  
+Because CommonJS was not designed for the browser, a new module system was needed.
+A colleague of Kevin, James Burke, created a new module system called **AMD**, or Asynchronous Module Definition.
+It was designed to be a CommonJS alternative for the browser.
+
+<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/8-amd" mode="no-tabs" />
+
+AMD is a bit different from CommonJS. Instead of using `require()` to load modules, it uses `define()` to define modules.
+The `define()` function takes a list of dependencies and a function as second parameter.
+What makes this second parameter unique is that it is executed only when all dependencies are loaded asynchronously.
+
+<br />
+
+But if `jquery` is only specified in a module that is not loaded yet, how would the browser know that it is a dependency?
+If it wouldn't know, the chain of requests would still have to be executed.
+
+<br />
+Well, this is actually still the case. However, because loading these modules now happens
+asynchronously, the main thread is not blocked, allowing the browser to continue rendering the page
+and remain responsive.
+
+<br />
+AMD became popular as module system for the browser. But it was not part of any official
+specification, like ECMAScript. This meant that the browser would not know how to load AMD modules.
+If you would try to load an AMD module in the browser, you would most likely receive an error:
+
+<Error>Uncaught ReferenceError: define is not defined</Error>
+
+To load AMD modules in the browser, you would need something called a "module loader", like [RequireJS](https://requirejs.org/).
+This will provide global functions like `require` and `define` that the browser can use to load AMD modules.
+Require.js had to be loaded synchronously though, to be able to recognize the `define` function and load the rest of the modules asynchronously.
+To prevent the loading of the require.js script from blocking the main thread and rendering the rest of the page,
+it was often placed at the bottom of the HTML document.
+
+<CodeBlock
+  example="javascript-typescript-modules-a-deep-dive/examples/9-load-require-js"
+  mode="no-tabs"
+/>
+
+Remember that at this point in history, websites were less dependent on JavaScript. Just the HTML and CSS were often
+enough to display a page. The interactivity and fetched data could be added later, once the modules were loaded.
+
+</TimelineEntry>
+
+<TimelineEntry title="ES6 Modules" date={new Date('2015-01-01')} />
+
+</Timeline>
+{/* 
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+If you've been working with TypeScript for a while, you might recognise these scenarios: you are creating a new project and you try to import a TypeScript file:
+
+<Error>
+  Relative import paths need explicit file extensions in ECMAScript imports when
+  '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './component.js'? ts(2835)
+</Error>
+
+Or you try to import a package like react and receive:
+
+<Error>
+  Could not find a declaration file for module 'react'. '\<project\>/node_modules/react/index.js' implicitly has an 'any' type.
+  Try <InlineCode>npm i --save-dev @types/react</InlineCode> if it exists or add a new declaration (.d.ts) file containing <InlineCode>declare module 'react';</InlineCode> ts(7016)
+</Error>
+
+Or here's another one:
+
+<Error>SyntaxError: Cannot use import statement outside a module</Error>
+
+If you are here because you are trying to fix one of these errors, I have some bad and some good news for you. I will not tell you how to fix your specific problem.
+But I will tell you why the error occurs, so you can fix it yourself.
+
+<br />
+
+We will also dive into some more advanced topics and questions, like:
+
+- Why is a "modern" bundler like vite so much faster than an older bundler like webpack?
+- How does hot module replacement work?
+- Where are my compiled files when I run the dev server?
+
+<br />
+Above errors are all related to **modules**.
+<br />
+
+## Modules
+
+Modules are a way to organize your code. They are a way to split your code into smaller, more manageable pieces.
+
+TODO:
+
+- Tree shaking in CJS \*/}

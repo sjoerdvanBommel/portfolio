@@ -30,7 +30,7 @@ export function CodeView({ files, initialFile, mode = 'tabs' }: CodeViewProps) {
         files={files}
         selectedFile={selectedFile}
         onSelectFile={setSelectedFile}
-        showTabs={false}
+        hideTabs={true}
       />
     ),
   }
