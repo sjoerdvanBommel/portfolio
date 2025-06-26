@@ -34,6 +34,16 @@ export default function HomeMainContent({ recentPosts, videos }: HomeMainContent
         </Tooltip.Provider>
       </div>
 
+      <p>Hey there! 👋 Thanks for visiting my website. My name is Sjoerd, nice to meet you!</p>
+
+      <p>
+        Nowadays, most questions about coding can be answered by AI. I have been using it myself for
+        years by now, and I&apos;ve learned that AI is less useful in complex scenarios. Since I do
+        not believe that AI will be able to resolve these complex issues any time soon, I decided to
+        instead make blog posts about them. On my website, I want to share content that is not just
+        about the answer, but about the process of finding the answer and truly understanding it.
+      </p>
+
       <div className={categoryContainerStyle}>
         <div>
           <H2 className={subtitleStyle}>📚 Posts</H2>
