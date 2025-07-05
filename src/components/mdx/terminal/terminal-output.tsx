@@ -2,54 +2,68 @@
 
 import { css } from '@/styled-system/css'
 import { PlayIcon, RotateCcwIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { CodeDisplay } from '../code-block/code-display'
+import { useState } from 'react'
+import { AnsiRenderer } from './ansi-renderer'
 
-interface TerminalOutputProps {
+type TerminalOutputProps = {
+  example: string
   command: string
-  output: string
   onRunningChange?: (running: boolean) => void
+  output?: string
 }
 
-export function TerminalOutput({ command, output, onRunningChange }: TerminalOutputProps) {
+export function TerminalOutput({ onRunningChange, command, output }: TerminalOutputProps) {
   const [isRunning, setIsRunning] = useState(false)
   const [displayedOutput, setDisplayedOutput] = useState('')
-  const [currentLineIndex, setCurrentLineIndex] = useState(0)
-  const [currentCharIndex, setCurrentCharIndex] = useState(0)
+  const [, setCurrentLineIndex] = useState(0)
+  const [, setCurrentCharIndex] = useState(0)
+  // const [outputStream, setOutputStream] = useState<ReadableStream | undefined>()
+  // const container = useWebContainer()
 
-  const outputLines = output.split('\n')
+  // useEffect(() => {
+  //   if (!container || output) return
+  //   ;(async () => {
+  //     const [mainCommand, ...args] = command.split(' ')
+  //     const output = await runCommand(container, mainCommand, args, {
+  //       cwd: example,
+  //     })
+  //     setOutputStream(output)
+  //   })()
+  // }, [container, command, example, output])
 
-  useEffect(() => {
-    if (!isRunning) return
+  // useEffect(() => {
+  //   if (!isRunning) return
 
-    const interval = setInterval(() => {
-      if (currentLineIndex >= outputLines.length) {
-        setIsRunning(false)
-        onRunningChange?.(false)
-        return
-      }
+  //   const outputLines = output?.split('\n') ?? []
 
-      const currentLine = outputLines[currentLineIndex]
-      let outputLine = currentLine
-      if (currentLine?.includes('[!code')) {
-        setDisplayedOutput((prev) => prev + currentLine + '\n')
-        setCurrentLineIndex((prev) => prev + 1)
-        outputLine = outputLines[currentLineIndex + 1]
-      }
+  //   const interval = setInterval(() => {
+  //     if (currentLineIndex >= outputLines.length) {
+  //       setIsRunning(false)
+  //       onRunningChange?.(false)
+  //       return
+  //     }
 
-      if (currentCharIndex < outputLine.length) {
-        setDisplayedOutput((prev) => prev + outputLine[currentCharIndex])
-        setCurrentCharIndex((prev) => prev + 1)
-      } else {
-        // Move to next line
-        setDisplayedOutput((prev) => prev + '\n')
-        setCurrentLineIndex((prev) => prev + 1)
-        setCurrentCharIndex(0)
-      }
-    }, 5) // Adjust speed as needed
+  //     const currentLine = outputLines[currentLineIndex]
+  //     let outputLine = currentLine
+  //     if (currentLine?.includes('[!code')) {
+  //       setDisplayedOutput((prev) => prev + currentLine + '\n')
+  //       setCurrentLineIndex((prev) => prev + 1)
+  //       outputLine = outputLines[currentLineIndex + 1]
+  //     }
 
-    return () => clearInterval(interval)
-  }, [isRunning, currentLineIndex, currentCharIndex, outputLines, onRunningChange])
+  //     if (currentCharIndex < outputLine.length) {
+  //       setDisplayedOutput((prev) => prev + outputLine[currentCharIndex])
+  //       setCurrentCharIndex((prev) => prev + 1)
+  //     } else {
+  //       // Move to next line
+  //       setDisplayedOutput((prev) => prev + '\n')
+  //       setCurrentLineIndex((prev) => prev + 1)
+  //       setCurrentCharIndex(0)
+  //     }
+  //   }, 5) // Adjust speed as needed
+
+  //   return () => clearInterval(interval)
+  // }, [isRunning, onRunningChange, output])
 
   const handleRun = () => {
     if (isRunning) return
@@ -74,22 +88,22 @@ export function TerminalOutput({ command, output, onRunningChange }: TerminalOut
         <div className={commandTextStyle}>
           <span className={promptStyle}>$ </span>
           {command}
-          {!displayedOutput && !isRunning && (
+          {/* {!outputStream && !output && <span>Loading...</span>} */}
+          {!displayedOutput && !isRunning && !!output && (
             <button onClick={handleRun} className={playButtonStyle} aria-label="Run output">
               <PlayIcon size={16} />
             </button>
           )}
         </div>
-        {displayedOutput && (
+        {output && (
           <div className={outputTextStyle}>
-            <CodeDisplay
-              selectedFile={{
-                name: 'output.ansi',
-                content: displayedOutput,
-              }}
-            />
+            {<AnsiRenderer output={output ?? 'This is fallback output'} />}
           </div>
         )}
+
+        {/* {outputStream && (
+          <div className={outputTextStyle}>{<AnsiRenderer stream={outputStream} />}</div>
+        )} */}
 
         {!isRunning && displayedOutput && (
           <button onClick={handleReset} className={controlButtonStyle} aria-label={'Reset output'}>

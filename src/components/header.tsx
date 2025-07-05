@@ -85,11 +85,11 @@ export default function Header() {
               {navItems.map((item) => (
                 <NavigationMenu.Item key={item.href}>
                   <NavigationMenu.Link
+                    asChild
                     active={isActivePath(item.href)}
-                    href={item.href}
                     className={navigationMenuLinkStyle}
                   >
-                    {item.label}
+                    <Link href={item.href}>{item.label}</Link>
                   </NavigationMenu.Link>
                 </NavigationMenu.Item>
               ))}

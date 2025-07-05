@@ -1,4 +1,5 @@
 import Header from '@/components/header'
+import { WebContainerPromiseProvider } from '@/components/providers/web-container-provider'
 import { css } from '@/styled-system/css'
 import { Theme } from '@radix-ui/themes'
 import '@radix-ui/themes/styles.css'
@@ -49,11 +50,13 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <Theme appearance="dark" accentColor="orange">
-          <main className={mainStyle}>
-            <Header />
-            {children}
-          </main>
-          {/* <ThemePanel /> */}
+          <WebContainerPromiseProvider>
+            <main className={mainStyle}>
+              <Header />
+              {children}
+            </main>
+            {/* <ThemePanel /> */}
+          </WebContainerPromiseProvider>
         </Theme>
       </body>
     </html>

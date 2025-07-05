@@ -30,7 +30,8 @@ _**Let's figure out in this blog if we can get this code to run.**_
 
 <TerminalCommandRunner
   command="node index.ts"
-  example="javascript-typescript-modules-a-deep-dive/examples/2-node-output"
+  example="1-combining-cjs-and-esm"
+  mockedOutputExample="javascript-typescript-modules-a-deep-dive/examples/2-node-output"
 />
 
 Apparently it is not able to find a file called `add`. That's correct: the file is called `add.ts`, not `add`.
@@ -40,7 +41,8 @@ Importing with or without extension is a whole other topic on its own, but let's
 
 <TerminalCommandRunner
   command="node index.ts"
-  example="javascript-typescript-modules-a-deep-dive/examples/4-node-output"
+  example="3-correct-imports"
+  mockedOutputExample="javascript-typescript-modules-a-deep-dive/examples/4-node-output"
 />
 
 Looks like we have our answer: It does _not_ seem possible to combine `require` and `import` statements in the same TypeScript file.
@@ -59,7 +61,8 @@ So it should be quite straightforward to resolve it.
 
 <TerminalCommandRunner
   command="node index.ts"
-  example="javascript-typescript-modules-a-deep-dive/examples/6-node-output"
+  example="5-all-import"
+  mockedOutputExample="javascript-typescript-modules-a-deep-dive/examples/6-node-output"
 />
 
 That works! 🎉
@@ -73,7 +76,8 @@ We can figure this out by changing all `import` statements to `require` statemen
 
 <TerminalCommandRunner
   command="node index.ts"
-  example="javascript-typescript-modules-a-deep-dive/examples/6-node-output"
+  example="7-all-require"
+  mockedOutputExample="javascript-typescript-modules-a-deep-dive/examples/6-node-output"
 />
 
 Guess what, that works too! 🤯 Notice that we are not just requiring another CommonJS module here. We are actually requiring an _ES module_!
@@ -106,7 +110,8 @@ This will throw a clear error:
 
 <TerminalCommandRunner
   command="node index.ts"
-  example="javascript-typescript-modules-a-deep-dive/examples/10-node-output"
+  example="9-top-level-await"
+  mockedOutputExample="javascript-typescript-modules-a-deep-dive/examples/10-node-output"
 />
 
 As the error suggests, using `import()` instead of `require()` will fix the issue.
@@ -115,19 +120,30 @@ As the error suggests, using `import()` instead of `require()` will fix the issu
 
 <TerminalCommandRunner
   command="node index.ts"
-  example="javascript-typescript-modules-a-deep-dive/examples/6-node-output"
+  example="11-import-fix"
+  mockedOutputExample="javascript-typescript-modules-a-deep-dive/examples/6-node-output"
 />
 
 Remember that we were initially trying to combine two different module systems in a single file?
 The above code example showcases another capability in Node.js related to that question!
 In this file, we are combining a `require` statement with an `import` statement.
-Not a regular `import` statement, but a dynamic one.
+Not a regular `import` statement, but a _dynamic_ one.
+The reason why this works is because `import()` is just another function call. It is valid JavaScript, no matter the module type.
+The difference is that `import()` is an _asynchronous_ function call that runs during _runtime_,
+while a regular `import` statement does not "run" at all.
+
+<Note>
+  The `import()` function is not available in the browser. It is only available in Node.js.
+</Note>
+
 It feels like we are getting closer to the answer, but unfortunately, this is all what's possible using plain Node.js.
 However! There is a tool that you get access to when you install TypeScript, that can help us with our problem.
 Let's see how that works.
 
 <ColoredH2>TypeScript Compiler</ColoredH2>
 
-{/* https://nodejs.org/api/modules.html#loading-ecmascript-modules-using-require */}
+<TerminalCommandRunner command="tsc index.ts constants.ts add.ts" example="12-tsc" />
 
 To be continued...
+
+{/* https://nodejs.org/api/modules.html#loading-ecmascript-modules-using-require */}

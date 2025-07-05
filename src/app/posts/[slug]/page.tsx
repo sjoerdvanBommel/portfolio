@@ -1,10 +1,18 @@
+import { WebContainerProvider } from '@/components/providers/web-container-provider'
 import { getRecentPosts } from '@/lib/mdx/posts/get-recent-posts'
+import { readExampleFilesRecursively } from '@/lib/mdx/read-example-files'
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const { default: Post, metadata } = await import(`@/content/${slug}/page.mdx`)
+  const { default: Post } = await import(`@/content/${slug}/page.mdx`)
 
-  return <Post {...metadata} />
+  const files = readExampleFilesRecursively(slug)
+
+  return (
+    <WebContainerProvider files={files} initCommand={['npm', 'i', 'typescript']}>
+      <Post />
+    </WebContainerProvider>
+  )
 }
 
 export async function generateStaticParams() {

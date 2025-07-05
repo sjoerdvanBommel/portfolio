@@ -1,21 +1,20 @@
-// [!code focus:1]
-
-node:internal/modules/esm/resolve:274
-    throw new ERR_MODULE_NOT_FOUND(
-          ^
-
-// [!code focus]
-Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/root/add' imported from /Users/root/index.ts
-    at finalizeResolution (node:internal/modules/esm/resolve:274:11)
-    at moduleResolve (node:internal/modules/esm/resolve:859:10)
-    at defaultResolve (node:internal/modules/esm/resolve:983:11)
-    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:801:12)
-    at #cachedDefaultResolve (node:internal/modules/esm/loader:725:25)
-    at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
-    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:309:38)
-    at #link (node:internal/modules/esm/module_job:201:49) {
-  code: 'ERR_MODULE_NOT_FOUND',
-  url: 'file:///Users/root/add'
-}
-
-Node.js v24.2.0
+[0m(node:8923) ExperimentalWarning: Type Stripping is an experimental feature and might change at any time[0m
+(Use `node --trace-warnings ...` to show where the warning was created)[0m
+node:internal/modules/esm/resolve:274[0m
+    throw new ERR_MODULE_NOT_FOUND([0m
+          ^[0m
+[0m
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/example/add' imported from /Users/example/index.ts[0m
+[0;90m    at finalizeResolution (node:internal/modules/esm/resolve:274:11)[0m[0m
+[0;90m    at moduleResolve (node:internal/modules/esm/resolve:859:10)[0m[0m
+[0;90m    at defaultResolve (node:internal/modules/esm/resolve:983:11)[0m[0m
+[0;90m    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:801:12)[0m[0m
+[0;90m    at #cachedDefaultResolve (node:internal/modules/esm/loader:725:25)[0m[0m
+[0;90m    at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)[0m[0m
+[0;90m    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:309:38)[0m[0m
+[0;90m    at #link (node:internal/modules/esm/module_job:201:49)[0m {[0m
+  code: [0;32m'ERR_MODULE_NOT_FOUND'[0m,[0m
+  url: [0;32m'file:///Users/example/add'[0m[0m
+}[0m
+[0m
+Node.js v24.2.0[0m

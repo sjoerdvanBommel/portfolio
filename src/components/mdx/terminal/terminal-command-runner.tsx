@@ -5,20 +5,28 @@ import { TerminalOutput } from './terminal-output'
 interface TerminalCommandRunnerProps {
   command: string
   example: string
+  mockedOutputExample?: string
 }
 
-export function TerminalCommandRunner({ command, example }: TerminalCommandRunnerProps) {
-  const fileName = 'output.ansi'
-  const output = readExampleFile(example, fileName)?.content
+export function TerminalCommandRunner({
+  command,
+  example,
+  mockedOutputExample,
+}: TerminalCommandRunnerProps) {
+  let output: string | undefined
+  if (mockedOutputExample) {
+    const fileName = 'output.ansi'
+    output = readExampleFile(mockedOutputExample, fileName)?.content
 
-  if (!output) {
-    console.warn(`Output file ${example}/${fileName} not found`)
-    return null
+    if (!output) {
+      console.warn(`Output file ${mockedOutputExample}/${fileName} not found`)
+      return null
+    }
   }
 
   return (
     <div className={containerStyle}>
-      <TerminalOutput command={command} output={output} />
+      <TerminalOutput command={command} example={example} output={output} />
     </div>
   )
 }
