@@ -88,6 +88,7 @@ export function WebContainerProvider({
         console.error('Failed to boot container:', error)
         isInitializingRef.current = false
       })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files, initCommand])
 
   return (
