@@ -1,8 +1,10 @@
 'use client'
 
+import { useWebContainer } from '@/components/providers/web-container-provider'
+import { runCommand, streamToString } from '@/lib/web-container'
 import { css } from '@/styled-system/css'
 import { PlayIcon, RotateCcwIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnsiRenderer } from './ansi-renderer'
 
 type TerminalOutputProps = {
@@ -12,24 +14,25 @@ type TerminalOutputProps = {
   output?: string
 }
 
-export function TerminalOutput({ onRunningChange, command, output }: TerminalOutputProps) {
+export function TerminalOutput({ example, onRunningChange, command, output }: TerminalOutputProps) {
   const [isRunning, setIsRunning] = useState(false)
   const [displayedOutput, setDisplayedOutput] = useState('')
   const [, setCurrentLineIndex] = useState(0)
   const [, setCurrentCharIndex] = useState(0)
-  // const [outputStream, setOutputStream] = useState<ReadableStream | undefined>()
-  // const container = useWebContainer()
+  const [finalOutput, setFinalOutput] = useState<string | undefined>(output)
+  const container = useWebContainer()
 
-  // useEffect(() => {
-  //   if (!container || output) return
-  //   ;(async () => {
-  //     const [mainCommand, ...args] = command.split(' ')
-  //     const output = await runCommand(container, mainCommand, args, {
-  //       cwd: example,
-  //     })
-  //     setOutputStream(output)
-  //   })()
-  // }, [container, command, example, output])
+  useEffect(() => {
+    if (!container || output) return
+    ;(async () => {
+      const [mainCommand, ...args] = command.split(' ')
+      const output = await runCommand(container, mainCommand, args, {
+        cwd: example,
+      })
+      const outputString = await streamToString(output)
+      setFinalOutput(outputString)
+    })()
+  }, [container, command, example, output])
 
   // useEffect(() => {
   //   if (!isRunning) return
@@ -95,9 +98,9 @@ export function TerminalOutput({ onRunningChange, command, output }: TerminalOut
             </button>
           )}
         </div>
-        {output && (
+        {finalOutput && (
           <div className={outputTextStyle}>
-            {<AnsiRenderer output={output ?? 'This is fallback output'} />}
+            {<AnsiRenderer output={finalOutput ?? 'This is fallback output'} />}
           </div>
         )}
 
