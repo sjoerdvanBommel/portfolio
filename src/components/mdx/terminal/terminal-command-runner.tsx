@@ -6,12 +6,14 @@ interface TerminalCommandRunnerProps {
   command: string
   example: string
   mockedOutputExample?: string
+  animationSpeed?: number
 }
 
 export function TerminalCommandRunner({
   command,
   example,
   mockedOutputExample,
+  animationSpeed,
 }: TerminalCommandRunnerProps) {
   let output: string | undefined
   if (mockedOutputExample) {
@@ -26,7 +28,12 @@ export function TerminalCommandRunner({
 
   return (
     <div className={containerStyle}>
-      <TerminalOutput command={command} example={example} output={output} />
+      <TerminalOutput
+        command={command}
+        example={example}
+        output={output}
+        animationSpeed={animationSpeed}
+      />
     </div>
   )
 }

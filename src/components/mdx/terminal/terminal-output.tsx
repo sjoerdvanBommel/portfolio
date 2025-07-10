@@ -2,88 +2,50 @@
 
 import { useWebContainer } from '@/components/providers/web-container-provider'
 import { runCommand, streamToString } from '@/lib/web-container'
-import { css } from '@/styled-system/css'
-import { PlayIcon, RotateCcwIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { css, cx } from '@/styled-system/css'
+import { FastForwardIcon, LoaderCircleIcon, PlayIcon, RotateCcwIcon } from 'lucide-react'
+import { useState } from 'react'
 import { AnsiRenderer } from './ansi-renderer'
 
 type TerminalOutputProps = {
   example: string
   command: string
-  onRunningChange?: (running: boolean) => void
   output?: string
+  animationSpeed?: number
 }
 
-export function TerminalOutput({ example, onRunningChange, command, output }: TerminalOutputProps) {
-  const [isRunning, setIsRunning] = useState(false)
+export function TerminalOutput({ example, command, output, animationSpeed }: TerminalOutputProps) {
   const [displayedOutput, setDisplayedOutput] = useState('')
-  const [, setCurrentLineIndex] = useState(0)
-  const [, setCurrentCharIndex] = useState(0)
-  const [finalOutput, setFinalOutput] = useState<string | undefined>(output)
+  const [animationEnded, setAnimationEnded] = useState(false)
   const container = useWebContainer()
 
-  useEffect(() => {
-    if (!container || output) return
+  const handleRun = () => {
+    if (displayedOutput || !container) return
+    if (output) {
+      setDisplayedOutput(output)
+      return
+    }
+
     ;(async () => {
       const [mainCommand, ...args] = command.split(' ')
-      const output = await runCommand(container, mainCommand, args, {
+      const commandOutput = await runCommand(container, mainCommand, args, {
         cwd: example,
       })
-      const outputString = await streamToString(output)
-      setFinalOutput(outputString)
+      const outputString = await streamToString(commandOutput)
+      setDisplayedOutput(outputString)
     })()
-  }, [container, command, example, output])
-
-  // useEffect(() => {
-  //   if (!isRunning) return
-
-  //   const outputLines = output?.split('\n') ?? []
-
-  //   const interval = setInterval(() => {
-  //     if (currentLineIndex >= outputLines.length) {
-  //       setIsRunning(false)
-  //       onRunningChange?.(false)
-  //       return
-  //     }
-
-  //     const currentLine = outputLines[currentLineIndex]
-  //     let outputLine = currentLine
-  //     if (currentLine?.includes('[!code')) {
-  //       setDisplayedOutput((prev) => prev + currentLine + '\n')
-  //       setCurrentLineIndex((prev) => prev + 1)
-  //       outputLine = outputLines[currentLineIndex + 1]
-  //     }
-
-  //     if (currentCharIndex < outputLine.length) {
-  //       setDisplayedOutput((prev) => prev + outputLine[currentCharIndex])
-  //       setCurrentCharIndex((prev) => prev + 1)
-  //     } else {
-  //       // Move to next line
-  //       setDisplayedOutput((prev) => prev + '\n')
-  //       setCurrentLineIndex((prev) => prev + 1)
-  //       setCurrentCharIndex(0)
-  //     }
-  //   }, 5) // Adjust speed as needed
-
-  //   return () => clearInterval(interval)
-  // }, [isRunning, onRunningChange, output])
-
-  const handleRun = () => {
-    if (isRunning) return
-    setIsRunning(true)
-    onRunningChange?.(true)
-    setDisplayedOutput('')
-    setCurrentLineIndex(0)
-    setCurrentCharIndex(0)
   }
 
   const handleReset = () => {
-    setIsRunning(false)
-    onRunningChange?.(false)
     setDisplayedOutput('')
-    setCurrentLineIndex(0)
-    setCurrentCharIndex(0)
+    setAnimationEnded(false)
   }
+
+  const handleAnimationEnd = () => {
+    setAnimationEnded(true)
+  }
+
+  const handleSkipAnimation = handleAnimationEnd
 
   return (
     <div className={outputContainerStyle}>
@@ -91,24 +53,40 @@ export function TerminalOutput({ example, onRunningChange, command, output }: Te
         <div className={commandTextStyle}>
           <span className={promptStyle}>$ </span>
           {command}
-          {/* {!outputStream && !output && <span>Loading...</span>} */}
-          {!displayedOutput && !isRunning && !!output && (
+          {!container ? (
+            <LoaderCircleIcon
+              size={20}
+              className={cx(playButtonStyle, spinStyle)}
+              aria-label="Loading..."
+            />
+          ) : !displayedOutput ? (
             <button onClick={handleRun} className={playButtonStyle} aria-label="Run output">
               <PlayIcon size={16} />
             </button>
-          )}
+          ) : !animationEnded ? (
+            <button
+              onClick={handleSkipAnimation}
+              className={playButtonStyle}
+              aria-label="Skip animation"
+            >
+              <FastForwardIcon size={16} />
+            </button>
+          ) : null}
         </div>
-        {finalOutput && (
+        {displayedOutput && (
           <div className={outputTextStyle}>
-            {<AnsiRenderer output={finalOutput ?? 'This is fallback output'} />}
+            {
+              <AnsiRenderer
+                output={displayedOutput}
+                animationSpeed={animationSpeed}
+                withoutAnimation={animationEnded}
+                onAnimationEnd={handleAnimationEnd}
+              />
+            }
           </div>
         )}
 
-        {/* {outputStream && (
-          <div className={outputTextStyle}>{<AnsiRenderer stream={outputStream} />}</div>
-        )} */}
-
-        {!isRunning && displayedOutput && (
+        {displayedOutput && (
           <button onClick={handleReset} className={controlButtonStyle} aria-label={'Reset output'}>
             {<RotateCcwIcon size={20} />}
           </button>
@@ -174,4 +152,8 @@ const controlButtonStyle = css({
   height: '5',
   cursor: 'pointer',
   color: 'amber.500',
+})
+
+const spinStyle = css({
+  animation: 'spin 1s linear infinite',
 })
