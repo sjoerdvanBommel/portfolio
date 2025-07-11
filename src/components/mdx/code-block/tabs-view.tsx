@@ -18,7 +18,7 @@ const containerStyle = (hideTabs: boolean) =>
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
-    ...(hideTabs ? {} : { py: '2' }),
+    ...(hideTabs ? { py: '2' } : {}),
   })
 
 const tabsContainerStyle = css({
