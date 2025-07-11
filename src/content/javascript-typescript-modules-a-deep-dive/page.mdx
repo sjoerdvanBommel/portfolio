@@ -13,7 +13,10 @@ In JavaScript and TypeScript, it is possible to write just a couple of lines of 
 
 Let's start with the TypeScript code itself, containing a total of 5 lines, spread over 3 files:
 
-<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/1-combining-cjs-and-esm" />
+<CodeBlock
+  example="javascript-typescript-modules-a-deep-dive/examples/1-combining-cjs-and-esm"
+  order={['index.ts', 'add.ts', 'constants.ts']}
+/>
 
 Can you spot the complexity? ☝️
 
@@ -38,7 +41,10 @@ _**Let's figure out in this blog if we can get this code to run.**_
 Apparently it is not able to find a file called `add`. That's correct: the file is called `add.ts`, not `add`.
 Importing with or without extension is a whole other topic on its own, but let's not get distracted ☁︎ Let's fix the issue instead!
 
-<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/3-correct-imports" />
+<CodeBlock
+  example="javascript-typescript-modules-a-deep-dive/examples/3-correct-imports"
+  order={['index.ts', 'add.ts', 'constants.ts']}
+/>
 
 <TerminalCommandRunner
   command="node index.ts"
@@ -58,7 +64,10 @@ The error we got in our last run was quite clear:
 
 So it should be quite straightforward to resolve it.
 
-<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/5-all-import" />
+<CodeBlock
+  example="javascript-typescript-modules-a-deep-dive/examples/5-all-import"
+  order={['index.ts', 'add.ts', 'constants.ts']}
+/>
 
 <TerminalCommandRunner
   command="node index.ts"
@@ -73,7 +82,10 @@ But let's challenge this error message anyways. It said we were "in ES module sc
 How does it know that? Is that the default scope for TypeScript?
 We can figure this out by changing all `import` statements to `require` statements:
 
-<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/7-all-require" />
+<CodeBlock
+  example="javascript-typescript-modules-a-deep-dive/examples/7-all-require"
+  order={['index.ts', 'add.ts', 'constants.ts']}
+/>
 
 <TerminalCommandRunner
   command="node index.ts"
@@ -107,7 +119,10 @@ This will throw a clear error:
 
 {/* TODO: Keep order of files but select 2nd file by default */}
 
-<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/9-top-level-await" />
+<CodeBlock
+  example="javascript-typescript-modules-a-deep-dive/examples/9-top-level-await"
+  order={['index.ts', 'add.ts', 'constants.ts']}
+/>
 
 <TerminalCommandRunner
   command="node index.ts"
@@ -117,7 +132,10 @@ This will throw a clear error:
 
 As the error suggests, using `import()` instead of `require()` will fix the issue.
 
-<CodeBlock example="javascript-typescript-modules-a-deep-dive/examples/11-import-fix" />
+<CodeBlock
+  example="javascript-typescript-modules-a-deep-dive/examples/11-import-fix"
+  order={['index.ts', 'add.ts', 'constants.ts']}
+/>
 
 <TerminalCommandRunner
   command="node index.ts"
@@ -143,7 +161,11 @@ Let's see how that works.
 
 <ColoredH2>TypeScript Compiler</ColoredH2>
 
-<TerminalCommandRunner command="tsc index.ts constants.ts add.ts" example="12-tsc" />
+<TerminalCommandRunner
+  command="tsc index.ts constants.ts add.ts"
+  example="12-tsc"
+  order={['index.ts', 'add.ts', 'constants.ts']}
+/>
 
 To be continued...
 

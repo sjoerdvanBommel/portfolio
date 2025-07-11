@@ -1,5 +1,9 @@
+export function getExtensionFromFilename(fileName: string): string {
+  return fileName.split('.').pop()?.toLowerCase() ?? ''
+}
+
 export function getLanguageFromFilename(fileName: string): string {
-  const extension = fileName.split('.').pop()?.toLowerCase()
+  const extension = getExtensionFromFilename(fileName)
 
   switch (extension) {
     case 'js':

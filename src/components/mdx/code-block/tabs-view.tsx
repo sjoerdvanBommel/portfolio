@@ -12,13 +12,13 @@ interface TabsViewProps {
   hideTabs?: boolean
 }
 
-const containerStyle = (showTabs: boolean) =>
+const containerStyle = (hideTabs: boolean) =>
   css({
     flex: '1',
     overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
-    ...(showTabs ? {} : { py: '2' }),
+    ...(hideTabs ? {} : { py: '2' }),
   })
 
 const tabsContainerStyle = css({
@@ -70,11 +70,10 @@ const tabButtonStyle = (isSelected: boolean) =>
         }),
   })
 
-export function TabsView({ files, selectedFile, onSelectFile, hideTabs = true }: TabsViewProps) {
+export function TabsView({ files, selectedFile, onSelectFile, hideTabs = false }: TabsViewProps) {
   return (
     <div className={containerStyle(hideTabs)}>
-      {/* File tabs */}
-      {hideTabs && (
+      {!hideTabs && (
         <div className={tabsContainerStyle}>
           <div className={tabsWrapperStyle}>
             {getAllFiles(files).map((file) => (
@@ -90,7 +89,6 @@ export function TabsView({ files, selectedFile, onSelectFile, hideTabs = true }:
         </div>
       )}
 
-      {/* Code display */}
       <CodeDisplay selectedFile={selectedFile} />
     </div>
   )

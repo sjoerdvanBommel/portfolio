@@ -1,35 +1,26 @@
-import { getLanguageFromFilename } from '@/lib/mdx/code-block/get-language-from-filename'
 import { FileStructure } from '@/lib/mdx/code-block/types'
 import { css } from '@/styled-system/css'
-import {
-  transformerNotationDiff,
-  transformerNotationFocus,
-  transformerNotationHighlight,
-  transformerNotationWordHighlight,
-} from '@shikijs/transformers'
-import ShikiCodeBlock from 'react-shiki'
 
 interface CodeDisplayProps {
   selectedFile: FileStructure | null
 }
 
+export function CodeDisplay({ selectedFile }: CodeDisplayProps) {
+  if (!selectedFile?.highlightedHtml) return null
+
+  return (
+    <div className={containerStyle}>
+      <div
+        className={shikiCodeBlockStyle}
+        dangerouslySetInnerHTML={{ __html: selectedFile.highlightedHtml }}
+      />
+    </div>
+  )
+}
+
 const containerStyle = css({
   flex: '1',
   overflow: 'auto',
-})
-
-const emptyStateStyle = css({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  height: 'full',
-  p: '4',
-  color: 'gray.400',
-})
-
-const directoryStateStyle = css({
-  p: '4',
-  color: 'gray.400',
 })
 
 const shikiCodeBlockStyle = css({
@@ -111,36 +102,3 @@ const shikiCodeBlockStyle = css({
     borderRadius: '0',
   },
 })
-
-export function CodeDisplay({ selectedFile }: CodeDisplayProps) {
-  const formattedContent =
-    typeof selectedFile?.content === 'string' ? selectedFile.content.replace(/\n$/, '') : ''
-  const language = getLanguageFromFilename(selectedFile?.name ?? '')
-
-  return (
-    <div className={containerStyle}>
-      {selectedFile ? (
-        typeof selectedFile.content === 'string' ? (
-          <ShikiCodeBlock
-            language={language}
-            theme="github-dark"
-            className={shikiCodeBlockStyle}
-            showLanguage={false}
-            transformers={[
-              transformerNotationHighlight(),
-              transformerNotationDiff(),
-              transformerNotationFocus(),
-              transformerNotationWordHighlight(),
-            ]}
-          >
-            {formattedContent}
-          </ShikiCodeBlock>
-        ) : (
-          <div className={directoryStateStyle}>This is a directory</div>
-        )
-      ) : (
-        <div className={emptyStateStyle}>Select a file to view its content</div>
-      )}
-    </div>
-  )
-}

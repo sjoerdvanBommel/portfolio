@@ -53,7 +53,7 @@ export function TerminalOutput({ example, command, output, animationSpeed }: Ter
         <div className={commandTextStyle}>
           <span className={promptStyle}>$ </span>
           {command}
-          {!container ? (
+          {!container && !output ? (
             <LoaderCircleIcon
               size={20}
               className={cx(playButtonStyle, spinStyle)}
