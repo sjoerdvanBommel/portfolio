@@ -1,5 +1,5 @@
 import { ColoredH2, H1, H2, H3 } from '../headings'
-import { Ol } from '../lists'
+import { Ol, Ul } from '../lists'
 import { P } from '../text'
 import { Error, Info, Note } from './banners'
 import { CodeBlock } from './code-block/index'
@@ -28,4 +28,5 @@ export const mdxComponents = {
   p: P,
   code: InlineCode,
   ol: Ol,
+  ul: Ul,
 }

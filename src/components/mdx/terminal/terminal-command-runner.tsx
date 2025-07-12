@@ -5,26 +5,18 @@ import { TerminalOutput } from './terminal-output'
 interface TerminalCommandRunnerProps {
   command: string
   example: string
-  mockedOutputExample?: string
+  post: string
   animationSpeed?: number
 }
 
 export function TerminalCommandRunner({
   command,
   example,
-  mockedOutputExample,
+  post,
   animationSpeed,
 }: TerminalCommandRunnerProps) {
-  let output: string | undefined
-  if (mockedOutputExample) {
-    const fileName = 'output.ansi'
-    output = readExampleFile(mockedOutputExample, fileName)?.content
-
-    if (!output) {
-      console.warn(`Output file ${mockedOutputExample}/${fileName} not found`)
-      return null
-    }
-  }
+  // Check if output.ansi exists in the example folder
+  const output = readExampleFile(post, example, 'output.ansi')?.content
 
   return (
     <div className={containerStyle}>

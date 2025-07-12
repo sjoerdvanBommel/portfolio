@@ -5,6 +5,7 @@ import { css } from '@/styled-system/css'
 import { CodeView, CodeViewProps } from './code-view'
 
 export interface CodeBlockProps {
+  post: string
   example: string
   initialFile?: string
   mode?: CodeViewProps['mode']
@@ -19,8 +20,14 @@ const containerStyle = css({
   overflow: 'hidden',
 })
 
-export async function CodeBlock({ example, initialFile, mode = 'tabs', order }: CodeBlockProps) {
-  const files = readExampleFiles(example)
+export async function CodeBlock({
+  post,
+  example,
+  initialFile,
+  mode = 'tabs',
+  order,
+}: CodeBlockProps) {
+  const files = readExampleFiles(post, example)
 
   if (order) {
     files.sort((a, b) => {

@@ -24,6 +24,8 @@ const containerStyle = css({
 })
 
 const shikiCodeBlockStyle = css({
+  minWidth: 'fit-content',
+
   '& .shiki': {
     bg: 'transparent !important',
     p: '4 !important',
@@ -73,6 +75,7 @@ const shikiCodeBlockStyle = css({
   },
   '& .remove': {
     bg: 'red.700/25',
+    opacity: '0.6',
     '&::before': {
       content: '"-"',
       color: 'red.500',

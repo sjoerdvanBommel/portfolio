@@ -23,6 +23,14 @@
       "@/styled-system/*": ["./styled-system/*"]
     }
   },
-  "include": ["**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next-env.d.ts", "dist/types/**/*.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "next-env.d.ts",
+    "dist/types/**/*.ts",
+    "src/content/javascript-typescript-modules-a-deep-dive/examples/8-import-commonjs/index.mts",
+    "src/content/javascript-typescript-modules-a-deep-dive/examples/8-import-commonjs/index.mts"
+  ],
   "exclude": ["node_modules", "src/content/**/examples/**"]
 }

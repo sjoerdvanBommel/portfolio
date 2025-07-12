@@ -7,19 +7,30 @@ export interface ExampleFile {
   content: string
 }
 
-export function readExampleFiles(example: string): ExampleFile[] {
-  const dirPath = path.join(process.cwd(), `/src/content/${example}`)
-  const files = fs.readdirSync(dirPath, 'utf-8').map((filename) => ({
-    name: filename.replace(/^\d+-/, ''),
-    content: toColoredString(fs.readFileSync(path.join(dirPath, filename), 'utf-8')),
-  }))
+export function readExampleFiles(post: string, example: string): ExampleFile[] {
+  const dirPath = path.join(process.cwd(), `/src/content/${post}/examples/${example}`)
+  const files = fs
+    .readdirSync(dirPath, 'utf-8')
+    .filter((filename) => filename !== 'output.ansi')
+    .map((filename) => readExampleFile(post, example, filename)!)
   return files
 }
 
-export function readExampleFile(example: string, filename: string): ExampleFile | undefined {
-  const files = readExampleFiles(example)
-  const file = files.find((file) => file.name === filename)
-  return file
+export function readExampleFile(
+  post: string,
+  example: string,
+  filename: string,
+): ExampleFile | undefined {
+  const dirPath = path.join(process.cwd(), `/src/content/${post}/examples/${example}`)
+  try {
+    const content = toColoredString(fs.readFileSync(path.join(dirPath, filename), 'utf-8'))
+    return {
+      name: filename.replace(/^\d+-/, ''),
+      content,
+    }
+  } catch {
+    return undefined
+  }
 }
 
 /**
@@ -84,6 +95,7 @@ export function readExampleFilesRecursively(example: string): FileSystemTree {
     const items = fs.readdirSync(dirPath)
 
     for (const item of items) {
+      if (item === 'output.ansi') continue
       const fullPath = path.join(dirPath, item)
       const relativePath = path.join(basePath, item)
       const stat = fs.statSync(fullPath)

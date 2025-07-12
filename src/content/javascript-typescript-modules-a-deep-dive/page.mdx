@@ -6,15 +6,17 @@ export const metadata = {
   date: new Date('2025-06-18'),
   tags: ['javascript', 'typescript', 'modules', 'history'],
 }
+export const post = 'javascript-typescript-modules-a-deep-dive'
 
 # {metadata.title}
 
 In JavaScript and TypeScript, it is possible to write just a couple of lines of "simple" code which is so complex under the hood, that I decided to write this entire blog post about it.
 
-Let's start with the TypeScript code itself, containing a total of 5 lines, spread over 3 files:
+Let's start with the code itself, containing a total of 5 lines, spread over 3 files:
 
 <CodeBlock
-  example="javascript-typescript-modules-a-deep-dive/examples/1-combining-cjs-and-esm"
+  post={post}
+  example="1-combining-cjs-and-esm"
   order={['index.ts', 'add.ts', 'constants.ts']}
 />
 
@@ -24,7 +26,7 @@ In the `index.ts` file, we are importing the `add` function from the `add.ts` fi
 But to access the `A` and `B` constants, a `require` statement is used.
 This means we are trying to combine two different module systems: CommonJS and ES modules.
 
-_**Let's figure out in this blog if we can get this code to run.**_
+_**Let's figure out in this blog why this code is so complex, how it works and if we can get it to run.**_
 
 <Info>
   Since node 24, it is possible to run TypeScript code directly without compiling it first. It does
@@ -33,28 +35,21 @@ _**Let's figure out in this blog if we can get this code to run.**_
 
 <TerminalCommandRunner
   command="node index.ts"
+  post={post}
   example="1-combining-cjs-and-esm"
-  mockedOutputExample="javascript-typescript-modules-a-deep-dive/examples/2-node-output"
   showLoadingAnimation={true}
 />
 
 Apparently it is not able to find a file called `add`. That's correct: the file is called `add.ts`, not `add`.
 Importing with or without extension is a whole other topic on its own, but let's not get distracted ☁︎ Let's fix the issue instead!
 
-<CodeBlock
-  example="javascript-typescript-modules-a-deep-dive/examples/3-correct-imports"
-  order={['index.ts', 'add.ts', 'constants.ts']}
-/>
+<CodeBlock post={post} example="2-correct-imports" order={['index.ts', 'add.ts', 'constants.ts']} />
 
-<TerminalCommandRunner
-  command="node index.ts"
-  example="3-correct-imports"
-  mockedOutputExample="javascript-typescript-modules-a-deep-dive/examples/4-node-output"
-/>
+<TerminalCommandRunner command="node index.ts" post={post} example="2-correct-imports" />
 
 Looks like we have our answer: It does _not_ seem possible to combine `require` and `import` statements in the same TypeScript file.
 
-...or is it? Let's continue our search.
+...or is it? Let's continue our search by first getting our code to run.
 
 <ColoredH2>Module Type Detection</ColoredH2>
 
@@ -64,45 +59,32 @@ The error we got in our last run was quite clear:
 
 So it should be quite straightforward to resolve it.
 
-<CodeBlock
-  example="javascript-typescript-modules-a-deep-dive/examples/5-all-import"
-  order={['index.ts', 'add.ts', 'constants.ts']}
-/>
+<CodeBlock post={post} example="3-all-import" order={['index.ts', 'add.ts', 'constants.ts']} />
 
-<TerminalCommandRunner
-  command="node index.ts"
-  example="5-all-import"
-  mockedOutputExample="javascript-typescript-modules-a-deep-dive/examples/6-node-output"
-/>
+<TerminalCommandRunner command="node index.ts" post={post} example="3-all-import" />
 
 That works! 🎉
 
 It makes sense to use `import` statements here, because the other files were ES Modules as well, using `export` statements.
-But let's challenge this error message anyways. It said we were "in ES module scope". What does that mean?
+But let's challenge that earlier error message anyways. It said we were "in ES module scope".
 How does it know that? Is that the default scope for TypeScript?
-We can figure this out by changing all `import` statements to `require` statements:
+If that's true, then changing all `import` statements to `require` statements should trigger the same error:
 
-<CodeBlock
-  example="javascript-typescript-modules-a-deep-dive/examples/7-all-require"
-  order={['index.ts', 'add.ts', 'constants.ts']}
-/>
+<CodeBlock post={post} example="4-all-require" order={['index.ts', 'add.ts', 'constants.ts']} />
 
-<TerminalCommandRunner
-  command="node index.ts"
-  example="7-all-require"
-  mockedOutputExample="javascript-typescript-modules-a-deep-dive/examples/6-node-output"
-/>
+<TerminalCommandRunner command="node index.ts" post={post} example="4-all-require" />
 
-Guess what, that works too! 🤯 Notice that we are not just requiring another CommonJS module here. We are actually requiring an _ES module_!
-Under the hood, Node.js is behaving very similar to using a dynamic `import()` statement here, but instead it loads synchronously.
+Well, apparently not! Our code runs, so ES modules are definitely not always the default scope.
 
-<Note>
-  `require()`'ing ES modules is only supported since Node.js 22.0 using the <br />
-  `--no-experimental-require-module` flag, or since Node.js 22.12 without the flag.
-</Note>
+<Info>
+  Notice that we are not just requiring another CommonJS module here. We are actually _requiring_ an
+  _ES module_, using both named and default exports! This is only supported since Node.js 22.0 using
+  the `--no-experimental-require-module` flag, or since Node.js 22.12 without the flag.
+</Info>
 
-Somehow, Node.js decided to treat the `index.ts` file as CommonJS module, and the `require`d modules as ES modules. This is the result of Node.js' _module type detection algorithm_.
-It is actually quite simple. It checks the following conditions in order:
+Node.js decided itself to treat the `index.ts` file as CommonJS module, and the `require`d modules as ES modules.
+This is the result of Node.js' _module type detection algorithm_.
+It is actually quite simple. It checks the following conditions in order for every file:
 
 {/* TODO: Visualize this */}
 
@@ -112,61 +94,77 @@ It is actually quite simple. It checks the following conditions in order:
 4. Does the closest `package.json` not contain `"type": "commonjs"` and does the module contain ES Module syntax (import/export)? -> **ES module**
 5. Otherwise -> **CommonJS module**
 
-{/* TODO: Create quiz or code editor to test knowledge */}
-
+As long as it knows the module type of each file, node is able to do its magic behind the scenes and load the files correctly.
 There is one caveat though: since the `require()` statement is synchronous, it is not possible to load ES Modules that use top-level `await` statements.
 This will throw a clear error:
 
 {/* TODO: Keep order of files but select 2nd file by default */}
 
-<CodeBlock
-  example="javascript-typescript-modules-a-deep-dive/examples/9-top-level-await"
-  order={['index.ts', 'add.ts', 'constants.ts']}
-/>
+<CodeBlock post={post} example="5-top-level-await" order={['index.ts', 'add.ts', 'constants.ts']} />
 
-<TerminalCommandRunner
-  command="node index.ts"
-  example="9-top-level-await"
-  mockedOutputExample="javascript-typescript-modules-a-deep-dive/examples/10-node-output"
-/>
+<TerminalCommandRunner command="node index.ts" post={post} example="5-top-level-await" />
 
 As the error suggests, using `import()` instead of `require()` will fix the issue.
 
-<CodeBlock
-  example="javascript-typescript-modules-a-deep-dive/examples/11-import-fix"
-  order={['index.ts', 'add.ts', 'constants.ts']}
-/>
+<CodeBlock post={post} example="6-import-fix" order={['index.ts', 'add.ts', 'constants.ts']} />
 
-<TerminalCommandRunner
-  command="node index.ts"
-  example="11-import-fix"
-  mockedOutputExample="javascript-typescript-modules-a-deep-dive/examples/6-node-output"
-/>
+<TerminalCommandRunner command="node index.ts" example="6-import-fix" post={post} />
 
-Remember that we were initially trying to combine two different module systems in a single file?
-The above code example showcases another capability in Node.js related to that question!
+Do you remember that we were initially trying to combine two different module systems in a single file?
+The above code showcases a capability in Node.js related to that question!
 In this file, we are combining a `require` statement with an `import` statement.
-Not a regular `import` statement, but a _dynamic_ one.
-The reason why this works is because `import()` is just another function call. It is valid JavaScript, no matter the module type.
-The difference is that `import()` is an _asynchronous_ function call that runs during _runtime_,
-while a regular `import` statement does not "run" at all.
+Not a regular `import` statement, but a _dynamic_ one: `import()`, which is supported in both CommonJS and ES Modules.
+The key difference is that `import()` is an _asynchronous_ operation that runs at _runtime_,
+whereas regular `import` statements are _static_ and resolved at `load time`, before any code executes.
+I'd love to dive deeper into this topic, maybe in another blog post.
 
-<Note>
-  The `import()` function is not available in the browser. It is only available in Node.js.
-</Note>
+But all this made me wonder: if it is possible to require ES modules, is it also possible to import CommonJS modules?
 
-It feels like we are getting closer to the answer, but unfortunately, this is all what's possible using plain Node.js.
-However! There is a tool that you get access to when you install TypeScript, that can help us with our problem.
-Let's see how that works.
+<CodeBlock post={post} example="7-import-commonjs" order={['index.ts', 'add.ts', 'constants.ts']} />
 
-<ColoredH2>TypeScript Compiler</ColoredH2>
+That works both with named and default exports as well! 🎉
 
-<TerminalCommandRunner
-  command="tsc index.ts constants.ts add.ts"
-  example="12-tsc"
-  order={['index.ts', 'add.ts', 'constants.ts']}
-/>
+The fact that this is possible in the last few node versions is **great** news, because it means TypeScript authors can now
+gradually migrate to the EcmaScript standard: ES modules. For example, even though a dependency might be an ESM-only package,
+it can still be used in CommonJS projects because it can be `require`d.
+But if it's possible to `import` CommonJS and ESM modules, ánd it is possible to `require` CommonJS and ESM modules,
+then we can basically mix and match ESM and CJS modules however we like.
+So why are developers still unhappy about the current module system situation?
+
+The biggest practical blockers might have been removed in latest node versions, but the strategic reasons to go ESM still apply:
+
+- It will work in both the browser and backend runtimes
+- Better TypeScript support: `require()`ing an ESM module will set the imported module's type to `any`.
+- CommonJS could be considered legacy, since it is not following the actual EcmaScript standard
+- Top-level `await` statements are now possible
+- Better tree-shaking
+- ...and more!
+
+But if the above reasons are not convincing you to move to ESM, then let's dive into some confusing scenarios caused by other tools.
+
+Usually a project is much more complex than what we've seen so far.
+So far, we have only used plain Node.js and TypeScript, without any compilation step.
+Real projects almost always use dependencies, a compilation step, a bundler, a testing framework, or a combination of all of these.
+
+<ColoredH2>Confusing ESM/CJS behavior</ColoredH2>
+
+<h2>TypeScript Compiler</h2>
 
 To be continued...
 
+<h2>ts-node/tsx</h2>
+
+To be continued...
+
+<h2>Vitest</h2>
+
+To be continued...
+
+{/* TODO: Create quiz or code editor to test knowledge */}
+
 {/* https://nodejs.org/api/modules.html#loading-ecmascript-modules-using-require */}
+{/* https://nodejs.org/docs/latest-v24.x/api/esm.html#esm_import_expressions */}
+{/* https://antfu.me/posts/move-on-to-esm-only */}
+
+{/* Dynamic import() is supported in both CommonJS and ES modules. In CommonJS modules it can be used to load ES modules. */}
+{/* An import statement can reference an ES module or a CommonJS module. import statements are permitted only in ES modules, but dynamic import() expressions are supported in CommonJS for loading ES modules. */}

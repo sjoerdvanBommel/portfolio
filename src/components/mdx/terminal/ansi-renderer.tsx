@@ -76,11 +76,12 @@ export function AnsiRenderer({
 
     if (withoutAnimation) {
       // Write all content at once for non-animation mode
+      // Wait until possibly 1 more character is written in case interval just started
       setTimeout(() => {
         instance.reset()
         instance.write(output.replace(/\n/g, '\n\r'))
         onAnimationEnd?.()
-      }, 10)
+      }, animationSpeed)
       return
     }
 

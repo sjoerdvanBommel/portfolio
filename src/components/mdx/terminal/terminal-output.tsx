@@ -17,15 +17,18 @@ type TerminalOutputProps = {
 export function TerminalOutput({ example, command, output, animationSpeed }: TerminalOutputProps) {
   const [displayedOutput, setDisplayedOutput] = useState('')
   const [animationEnded, setAnimationEnded] = useState(false)
+  const [isRunningCommand, setIsRunningCommand] = useState(false)
   const container = useWebContainer()
 
   const handleRun = () => {
-    if (displayedOutput || !container) return
     if (output) {
       setDisplayedOutput(output)
       return
     }
 
+    if (displayedOutput || !container) return
+
+    setIsRunningCommand(true)
     ;(async () => {
       const [mainCommand, ...args] = command.split(' ')
       const commandOutput = await runCommand(container, mainCommand, args, {
@@ -33,6 +36,7 @@ export function TerminalOutput({ example, command, output, animationSpeed }: Ter
       })
       const outputString = await streamToString(commandOutput)
       setDisplayedOutput(outputString)
+      setIsRunningCommand(false)
     })()
   }
 
@@ -53,7 +57,7 @@ export function TerminalOutput({ example, command, output, animationSpeed }: Ter
         <div className={commandTextStyle}>
           <span className={promptStyle}>$ </span>
           {command}
-          {!container && !output ? (
+          {(!container && !output) || isRunningCommand ? (
             <LoaderCircleIcon
               size={20}
               className={cx(playButtonStyle, spinStyle)}
