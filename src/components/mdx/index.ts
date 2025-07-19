@@ -1,7 +1,8 @@
 import { ColoredH2, H1, H2, H3 } from '../headings'
 import { Ol, Ul } from '../lists'
-import { P } from '../text'
+import { A, P } from '../text'
 import { Error, Info, Note } from './banners'
+import { CodeDisplayInlineMdx } from './code-block/code-display'
 import { CodeBlock } from './code-block/index'
 import { CodeQuiz } from './code-quiz/index'
 import { CurrentTime } from './current-time'
@@ -26,7 +27,9 @@ export const mdxComponents = {
   ColoredH2,
   h3: H3,
   p: P,
+  a: A,
   code: InlineCode,
+  pre: CodeDisplayInlineMdx,
   ol: Ol,
   ul: Ul,
 }

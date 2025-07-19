@@ -1,4 +1,5 @@
 import { FileSystemTree } from '@webcontainer/api'
+import { ADD_MARKER_PATTERN, OTHER_MARKER_PATTERN, REMOVE_MARKER_PATTERN } from './constants'
 
 /**
  * Strips markers from code and removes lines as specified by [!code --] markers
@@ -16,7 +17,7 @@ export function stripMarkers(code: string): string {
     const line = lines[i]
 
     // Check for [!code --] marker
-    const removeMatch = line.match(/\/\/\s*\[!code\s*--(?::(\d+))?\]/)
+    const removeMatch = line.match(REMOVE_MARKER_PATTERN)
 
     if (removeMatch) {
       // Get the number of additional lines to remove (default 1)
@@ -27,10 +28,10 @@ export function stripMarkers(code: string): string {
     }
 
     // Check for [!code ++] marker - just remove the marker, keep the line
-    const addMatch = line.match(/\/\/\s*\[!code\s*\+\+\]/)
+    const addMatch = line.match(ADD_MARKER_PATTERN)
     if (addMatch) {
       // Remove the marker but keep the rest of the line
-      const cleanLine = line.replace(/\/\/\s*\[!code\s*\+\+\]/, '').trim()
+      const cleanLine = line.replace(ADD_MARKER_PATTERN, '').trim()
       if (cleanLine) {
         result.push(cleanLine)
       }
@@ -38,10 +39,10 @@ export function stripMarkers(code: string): string {
     }
 
     // Check for other markers like [!code focus:1] - just remove them
-    const otherMarkerMatch = line.match(/\/\/\s*\[!code\s+\w+[^\]]*\]/)
+    const otherMarkerMatch = line.match(OTHER_MARKER_PATTERN)
     if (otherMarkerMatch) {
       // Remove the marker but keep the rest of the line
-      const cleanLine = line.replace(/\/\/\s*\[!code\s+\w+[^\]]*\]/, '').trim()
+      const cleanLine = line.replace(OTHER_MARKER_PATTERN, '').trim()
       if (cleanLine) {
         result.push(cleanLine)
       }

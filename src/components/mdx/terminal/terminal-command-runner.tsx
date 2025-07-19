@@ -9,14 +9,17 @@ interface TerminalCommandRunnerProps {
   animationSpeed?: number
 }
 
-export function TerminalCommandRunner({
+export async function TerminalCommandRunner({
   command,
   example,
   post,
   animationSpeed,
 }: TerminalCommandRunnerProps) {
   // Check if output.ansi exists in the example folder
-  const output = readExampleFile(post, example, 'output.ansi')?.content
+  let output = (await readExampleFile(post, example, 'output.ansi'))?.content
+  if (output === '') {
+    output = '[0;90m This command had no output [0m[0m'
+  }
 
   return (
     <div className={containerStyle}>

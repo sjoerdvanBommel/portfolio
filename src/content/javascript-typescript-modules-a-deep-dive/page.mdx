@@ -10,7 +10,8 @@ export const post = 'javascript-typescript-modules-a-deep-dive'
 
 # {metadata.title}
 
-In JavaScript and TypeScript, it is possible to write just a couple of lines of "simple" code which is so complex under the hood, that I decided to write this entire blog post about it.
+In JavaScript and TypeScript, it is possible to write just a couple of lines of "simple" code
+which is so complex under the hood, that I decided to write this entire blog post about it.
 
 Let's start with the code itself, containing a total of 5 lines, spread over 3 files:
 
@@ -30,7 +31,8 @@ _**Let's figure out in this blog why this code is so complex, how it works and i
 
 <Info>
   Since node 24, it is possible to run TypeScript code directly without compiling it first. It does
-  so by stripping the type annotations from the code.
+  so by stripping the type annotations from the code. Instead of simply removing the types, they get
+  replaced with whitespaces, so no source maps are required.
 </Info>
 
 <TerminalCommandRunner
@@ -115,7 +117,7 @@ The above code showcases a capability in Node.js related to that question!
 In this file, we are combining a `require` statement with an `import` statement.
 Not a regular `import` statement, but a _dynamic_ one: `import()`, which is supported in both CommonJS and ES Modules.
 The key difference is that `import()` is an _asynchronous_ operation that runs at _runtime_,
-whereas regular `import` statements are _static_ and resolved at `load time`, before any code executes.
+whereas regular `import` statements are _static_ and resolved at load time, before any code executes.
 I'd love to dive deeper into this topic, maybe in another blog post.
 
 But all this made me wonder: if it is possible to require ES modules, is it also possible to import CommonJS modules?
@@ -129,12 +131,14 @@ gradually migrate to the EcmaScript standard: ES modules. For example, even thou
 it can still be used in CommonJS projects because it can be `require`d.
 But if it's possible to `import` CommonJS and ESM modules, ánd it is possible to `require` CommonJS and ESM modules,
 then we can basically mix and match ESM and CJS modules however we like.
-So why are developers still unhappy about the current module system situation?
 
-The biggest practical blockers might have been removed in latest node versions, but the strategic reasons to go ESM still apply:
+So why are developers still unhappy about the current module system situation?
+Well, the biggest practical blockers might have been removed in latest node versions,
+so I expect most complaints to be resolved for projects that are using Node 22+.
+But several strategic reasons to go ESM still apply:
 
 - It will work in both the browser and backend runtimes
-- Better TypeScript support: `require()`ing an ESM module will set the imported module's type to `any`.
+- Better TypeScript support: `require`ing an ESM module will set the imported module's type to `any`.
 - CommonJS could be considered legacy, since it is not following the actual EcmaScript standard
 - Top-level `await` statements are now possible
 - Better tree-shaking
@@ -146,19 +150,93 @@ Usually a project is much more complex than what we've seen so far.
 So far, we have only used plain Node.js and TypeScript, without any compilation step.
 Real projects almost always use dependencies, a compilation step, a bundler, a testing framework, or a combination of all of these.
 
-<ColoredH2>Confusing ESM/CJS behavior</ColoredH2>
+<ColoredH2>TypeScript Compiler</ColoredH2>
 
-<h2>TypeScript Compiler</h2>
+Before we dive into the TypeScript Compiler, first a quick reminder of what the initial code that we tried to run looked like:
 
-To be continued...
+<CodeBlock post={post} example="8-tsc" order={['index.ts', 'add.ts', 'constants.ts']} />
 
-<h2>ts-node/tsx</h2>
+We know now that it is not possible to run files with both `require` and `import` statements using plain Node.js and TypeScript.
+Let's see what happens when we first compile using the TypeScript compiler, and then run the resulting JavaScript code via Node.js:
 
-To be continued...
+<TerminalCommandRunner
+  post={post}
+  command="tsc index.ts add.ts constants.ts && node index.js"
+  example="8-tsc"
+/>
 
-<h2>Vitest</h2>
+The TypeScript compiler does two things here:
 
-To be continued...
+1. It type-checks the code.
+2. It transpiles the code to JavaScript.
+
+In the first step, the compiler errored because it does not know about the `require`
+statement, since it is not part of the EcmaScript standard.
+
+<Info>
+  Even though the type checking step (step 1) errored, the transpilation from TypeScript to
+  JavaScript (step 2) will still happen. If you want to prevent this, you can use the
+  `--noEmitOnError` flag.
+</Info>
+
+The type-check error states that we need to install type definitions for node.
+We can do this by adding these to the `tsconfig.json` file. The compiler will then have access to
+extra type definitions that are available in a Node.js environment.
+In order for this to work, we also need to install the `@types/node` package and
+set which files the TypeScript compiler should include
+(note that we were previously specifying this in the `tsc` command itself).
+
+<CodeBlock
+  post={post}
+  example="9-tsconfig"
+  order={['tsconfig.json', 'package.json', 'index.ts', 'add.ts', 'constants.ts']}
+/>
+
+<TerminalCommandRunner post={post} command="tsc && node index.js" example="9-tsconfig" />
+
+What?? It just ran successfully, while we didn't change the TypeScript code at all 🤯
+
+<Info>
+  Besides running the code, we also ran the TypeScript compiler. There's no output from this, which
+  seems a bit odd, but this means it ran the TypeScript compiler successfully. No news = good news!
+  🎉
+</Info>
+
+The first time I noticed this behavior, I had no idea what was going on.
+But the knowledge we gained so far, will help us understand why it ran successfully.
+Let's check the output files created by the TypeScript compiler:
+
+<CodeBlock post={post} example="10-file-structure" mode="sidebar" />
+
+Do you notice what's happening in the `index.js` file? The TypeScript compiler transpiled the import
+statement to a `require` statement! We already know that works, we tested it earlier.
+
+If ES Modules are the EcmaScript standard, then you might expect TypeScript to
+use that as the default module system. However, because of historical and practical reasons,
+TypeScript uses old defaults, which means the output JavaScript code will be written
+in CommonJS syntax. If you want to know more about why this is the case,
+I recommend you to read about the [module](https://www.typescriptlang.org/docs/handbook/modules/reference.html#the-module-compiler-option)
+option (or let me know if you're interested in a deep-dive into that topic as well! 😉).
+
+You might be thinking now: this is great! TypeScript fixed the last remaining compatibility issue!
+However, this behavior is not following modern best practices and standards.
+Unfortunately, TypeScript does not offer a solution to transpile the other way around:
+giving it CommonJS syntax and get ES Modules in return.
+This is not possible, because a `require` statement is a runtime operation.
+A simple example to illustrate this is the following:
+
+```ts
+const x = condition ? require('a') : require('b')
+```
+
+This is not possible, because a `require` statement is a runtime operation.
+
+And next to that, TypeScript also has some limitations in the interoperability
+between the two module systems.
+
+<ColoredH2>TypeScript Interoperability rules</ColoredH2>
+
+{/* https://arc.net/l/quote/fddyhlye */}
 
 {/* TODO: Create quiz or code editor to test knowledge */}
 

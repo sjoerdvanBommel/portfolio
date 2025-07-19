@@ -1,7 +1,10 @@
 'use client'
 
 import { FileStructure } from '@/lib/mdx/code-block/types'
-import { ChevronDown, ChevronRight, File, Folder } from 'lucide-react'
+import { css } from '@/styled-system/css'
+import { ChevronDown, ChevronRight, Folder } from 'lucide-react'
+import { FileIcon } from './file-icon'
+import { ModifiedDot } from './modified-dot'
 
 interface FileTreeProps {
   fileList: FileStructure[]
@@ -11,6 +14,83 @@ interface FileTreeProps {
   onToggleFolder: (path: string) => void
   onSelectFile: (file: FileStructure) => void
 }
+
+const folderItemStyle = css({
+  userSelect: 'none',
+})
+
+const folderButtonStyle = css({
+  display: 'flex',
+  alignItems: 'center',
+  py: '1',
+  px: '2',
+  cursor: 'pointer',
+  _hover: {
+    bg: 'gray.100',
+  },
+  _dark: {
+    _hover: {
+      bg: 'gray.800',
+    },
+  },
+})
+
+const chevronStyle = css({
+  height: '4',
+  width: '4',
+  marginRight: '1',
+  color: 'gray.500',
+})
+
+const folderIconStyle = css({
+  height: '4',
+  width: '4',
+  marginRight: '2',
+  color: 'blue.500',
+})
+
+const folderNameStyle = css({
+  fontSize: 'sm',
+})
+
+const nestedFolderStyle = css({
+  paddingLeft: '4',
+})
+
+const fileItemStyle = (isSelected: boolean) =>
+  css({
+    display: 'flex',
+    alignItems: 'center',
+    py: '1',
+    px: '2',
+    m: '1',
+    cursor: 'pointer',
+    fontSize: 'sm',
+    borderRadius: 'xs',
+    ...(isSelected
+      ? {
+          bg: 'blue.100',
+          _dark: {
+            bg: 'blue.900',
+          },
+        }
+      : {
+          _hover: {
+            bg: 'gray.100',
+          },
+          _dark: {
+            _hover: {
+              bg: 'gray.800',
+            },
+          },
+        }),
+  })
+
+const fileIconStyle = css({
+  height: '4',
+  width: '4',
+  marginRight: '1',
+})
 
 export function FileTree({
   fileList,
@@ -27,22 +107,19 @@ export function FileTree({
       const isExpanded = expandedFolders.has(path)
 
       return (
-        <div key={path} className="select-none">
-          <div
-            className="flex items-center py-1 px-2 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
-            onClick={() => onToggleFolder(path)}
-          >
+        <div key={path} className={folderItemStyle}>
+          <div className={folderButtonStyle} onClick={() => onToggleFolder(path)}>
             {isExpanded ? (
-              <ChevronDown className="h-4 w-4 mr-1 text-gray-500" />
+              <ChevronDown className={chevronStyle} />
             ) : (
-              <ChevronRight className="h-4 w-4 mr-1 text-gray-500" />
+              <ChevronRight className={chevronStyle} />
             )}
-            <Folder className="h-4 w-4 mr-2 text-blue-500" />
-            <span className="text-sm">{file.name}</span>
+            <Folder className={folderIconStyle} />
+            <span className={folderNameStyle}>{file.name}</span>
           </div>
 
           {isExpanded && (
-            <div className="pl-4">
+            <div className={nestedFolderStyle}>
               <FileTree
                 fileList={file.content}
                 basePath={path}
@@ -60,15 +137,12 @@ export function FileTree({
     return (
       <div
         key={path}
-        className={`flex items-center py-1 px-2 cursor-pointer text-sm ${
-          selectedFile && selectedFile.name === file.name
-            ? 'bg-blue-100 dark:bg-blue-900'
-            : 'hover:bg-gray-100 dark:hover:bg-gray-800'
-        }`}
+        className={fileItemStyle(selectedFile?.name === file.name)}
         onClick={() => onSelectFile(file)}
       >
-        <File className="h-4 w-4 mr-2 text-gray-500" />
-        <span>{file.name}</span>
+        <FileIcon fileName={file.name} className={fileIconStyle} />
+        <span className={css({ flex: 1, mr: '4' })}>{file.name}</span>
+        {file.metadata.isModified && <ModifiedDot />}
       </div>
     )
   })

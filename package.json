@@ -33,6 +33,7 @@
     "radix-ui": "^1.4.2",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
+    "react-icons": "^5.5.0",
     "react-xtermjs": "^1.0.10",
     "shiki": "^3.7.0"
   },

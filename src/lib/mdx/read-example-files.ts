@@ -1,32 +1,42 @@
 import { DirectoryNode, FileSystemTree } from '@webcontainer/api'
 import fs from 'fs'
 import path from 'path'
+import { parseExampleFile } from '../parse-example-file'
+import { getExtensionFromFilename } from './code-block/get-language-from-filename'
+import { hasCodeMarkers } from './code-block/has-code-markers'
+import { highlightCode } from './code-block/shiki-server'
+import { FileStructure } from './code-block/types'
 
-export interface ExampleFile {
-  name: string
-  content: string
-}
-
-export function readExampleFiles(post: string, example: string): ExampleFile[] {
+export async function readExampleFiles(post: string, example: string): Promise<FileStructure[]> {
   const dirPath = path.join(process.cwd(), `/src/content/${post}/examples/${example}`)
-  const files = fs
+  const filesPromises = fs
     .readdirSync(dirPath, 'utf-8')
     .filter((filename) => filename !== 'output.ansi')
-    .map((filename) => readExampleFile(post, example, filename)!)
-  return files
+    .map((filename) => readExampleFile(post, example, filename))
+
+  const files = await Promise.all(filesPromises)
+
+  return files.filter((file) => file !== undefined)
 }
 
-export function readExampleFile(
-  post: string,
-  example: string,
-  filename: string,
-): ExampleFile | undefined {
+export async function readExampleFile(post: string, example: string, filename: string) {
   const dirPath = path.join(process.cwd(), `/src/content/${post}/examples/${example}`)
   try {
-    const content = toColoredString(fs.readFileSync(path.join(dirPath, filename), 'utf-8'))
+    const unmodifiedContent = toColoredString(
+      fs.readFileSync(path.join(dirPath, filename), 'utf-8'),
+    )
+    const { content, metadata } = parseExampleFile(unmodifiedContent)
+
+    metadata.isModified ??= hasCodeMarkers(content)
+
+    const language = getExtensionFromFilename(filename)
+    const highlightedHtml = await highlightCode(content, language)
+
     return {
-      name: filename.replace(/^\d+-/, ''),
+      name: filename,
       content,
+      highlightedHtml,
+      metadata,
     }
   } catch {
     return undefined

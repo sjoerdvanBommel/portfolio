@@ -1,22 +1,38 @@
-import { FileStructure } from '@/lib/mdx/code-block/types'
+import { highlightCode } from '@/lib/mdx/code-block/shiki-server'
 import { css } from '@/styled-system/css'
+import { PropsWithChildren } from 'react'
 
-interface CodeDisplayProps {
-  selectedFile: FileStructure | null
-}
-
-export function CodeDisplay({ selectedFile }: CodeDisplayProps) {
-  if (!selectedFile?.highlightedHtml) return null
+export function CodeDisplay({ children }: PropsWithChildren) {
+  if (!children || typeof children !== 'string') return null
 
   return (
     <div className={containerStyle}>
-      <div
-        className={shikiCodeBlockStyle}
-        dangerouslySetInnerHTML={{ __html: selectedFile.highlightedHtml }}
-      />
+      <div className={shikiCodeBlockStyle} dangerouslySetInnerHTML={{ __html: children }} />
     </div>
   )
 }
+
+export async function CodeDisplayInlineMdx({
+  children,
+}: {
+  children: { props: { children: string } }
+}) {
+  if (!children?.props?.children) return null
+
+  const highlightedHtml = await highlightCode(children.props.children.trim(), 'tsx')
+
+  return (
+    <div className={borderStyle}>
+      <CodeDisplay>{highlightedHtml}</CodeDisplay>
+    </div>
+  )
+}
+
+const borderStyle = css({
+  border: '1px solid',
+  borderColor: 'gray.800',
+  borderRadius: 'lg',
+})
 
 const containerStyle = css({
   flex: '1',

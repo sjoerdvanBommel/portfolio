@@ -1,5 +1,3 @@
-import { getExtensionFromFilename } from '@/lib/mdx/code-block/get-language-from-filename'
-import { highlightCode } from '@/lib/mdx/code-block/shiki-server'
 import { readExampleFiles } from '@/lib/mdx/read-example-files'
 import { css } from '@/styled-system/css'
 import { CodeView, CodeViewProps } from './code-view'
@@ -18,6 +16,9 @@ const containerStyle = css({
   borderColor: 'gray.800',
   borderRadius: 'lg',
   overflow: 'hidden',
+  minWidth: '100%',
+  maxWidth: 'calc(100vw - var(--global-margin) * 2)',
+  justifySelf: 'center',
 })
 
 export async function CodeBlock({
@@ -27,32 +28,24 @@ export async function CodeBlock({
   mode = 'tabs',
   order,
 }: CodeBlockProps) {
-  const files = readExampleFiles(post, example)
+  const files = await readExampleFiles(post, example)
 
   if (order) {
     files.sort((a, b) => {
+      if (order.indexOf(a.name) === -1) {
+        return 1
+      }
+      if (order.indexOf(b.name) === -1) {
+        return -1
+      }
+
       return order.indexOf(a.name) - order.indexOf(b.name)
     })
   }
 
-  // Pre-render syntax highlighting for all files
-  const filesWithHighlighting = await Promise.all(
-    files.map(async (file) => {
-      if (typeof file.content === 'string') {
-        const language = getExtensionFromFilename(file.name)
-        const highlightedHtml = await highlightCode(file.content, language)
-        return {
-          ...file,
-          highlightedHtml,
-        }
-      }
-      return file
-    }),
-  )
-
   return (
     <div className={containerStyle}>
-      <CodeView files={filesWithHighlighting} initialFile={initialFile} mode={mode} />
+      <CodeView files={files} initialFile={initialFile} mode={mode} />
     </div>
   )
 }

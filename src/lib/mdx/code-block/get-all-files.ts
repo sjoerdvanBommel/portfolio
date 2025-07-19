@@ -1,7 +1,4 @@
-interface FileStructure {
-  name: string
-  content: string | FileStructure[]
-}
+import { FileStructure } from './types'
 
 export function getAllFiles(
   fileList: FileStructure[],

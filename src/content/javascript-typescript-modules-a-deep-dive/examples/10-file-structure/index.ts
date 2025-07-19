@@ -1,8 +1,4 @@
-// [!code --:2]
 import { add } from './add'
 const { A, B } = require('./constants')
-// [!code ++:2]
-import { add } from './add.ts'
-const { A, B } = require('./constants.ts')
 
 console.log(`${A} + ${B} = ${add(A, B)}`)

@@ -4,6 +4,7 @@ import { getAllFiles } from '@/lib/mdx/code-block/get-all-files'
 import { FileStructure } from '@/lib/mdx/code-block/types'
 import { css } from '@/styled-system/css'
 import { CodeDisplay } from './code-display'
+import { ModifiedDot } from './modified-dot'
 
 interface TabsViewProps {
   files: FileStructure[]
@@ -56,6 +57,9 @@ const tabButtonStyle = (isSelected: boolean) =>
     fontWeight: 'medium',
     whiteSpace: 'nowrap',
     borderBottom: '2px solid',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '2',
     ...(isSelected
       ? {
           borderColor: 'blue.500',
@@ -83,13 +87,14 @@ export function TabsView({ files, selectedFile, onSelectFile, hideTabs = false }
                 onClick={() => onSelectFile(file)}
               >
                 {file.fullPath.replace(/^\//, '')}
+                {file.metadata.isModified && <ModifiedDot />}
               </button>
             ))}
           </div>
         </div>
       )}
 
-      <CodeDisplay selectedFile={selectedFile} />
+      <CodeDisplay>{selectedFile?.highlightedHtml}</CodeDisplay>
     </div>
   )
 }

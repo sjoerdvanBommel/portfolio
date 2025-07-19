@@ -1,5 +1,8 @@
+import { Metadata } from '@/lib/parse-example-file'
+
 export interface FileStructure {
   name: string
   content: string | FileStructure[]
-  highlightedHtml?: string
+  metadata: Metadata
+  highlightedHtml: string
 }

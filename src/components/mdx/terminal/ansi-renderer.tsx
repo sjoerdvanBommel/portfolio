@@ -36,7 +36,7 @@ export function AnsiRenderer({
       const lineLength = curr.length
       const lineCount = lineLength === 0 ? 1 : Math.ceil(lineLength / cols)
       return acc + lineCount
-    }, 0)
+    }, 1)
 
     return Math.min(terminalLines, 24)
   }, [output])

@@ -1,4 +1,4 @@
-import { getLanguageFromFilename } from '@/lib/mdx/code-block/get-language-from-filename'
+import { getFilenameBasedInfo } from '@/lib/mdx/code-block/get-language-from-filename'
 import { FileStructure } from '@/lib/mdx/code-block/types'
 import {
   FileCode2Icon,
@@ -9,6 +9,7 @@ import {
   SquareChevronRight,
 } from 'lucide-react'
 import { CodeDisplay } from './code-display'
+import { ModifiedDot } from './modified-dot'
 
 interface CodeColumnProps {
   file: FileStructure
@@ -36,19 +37,20 @@ function getFileIcon(language: string) {
 }
 
 function CodeColumn({ file, isLast }: CodeColumnProps) {
-  const language = getLanguageFromFilename(file.name)
+  const language = getFilenameBasedInfo(file.name)
   const borderStyle = isLast ? '' : 'border-r border-gray-800'
 
   return (
     <div className="flex flex-col">
       <div className={`border-b border-gray-800 bg-gray-900/50 ${borderStyle}`}>
         <div className="w-fit mx-2 px-2 py-2 text-sm font-medium text-blue-400 flex items-center gap-2 border-b-2 border-blue-500">
-          {getFileIcon(language)}
+          {getFileIcon(language.language)}
           {file.name}
+          {file.metadata.isModified && <ModifiedDot />}
         </div>
       </div>
       <div className={`flex-1 ${borderStyle}`}>
-        <CodeDisplay selectedFile={file} />
+        <CodeDisplay>{file.highlightedHtml}</CodeDisplay>
       </div>
     </div>
   )

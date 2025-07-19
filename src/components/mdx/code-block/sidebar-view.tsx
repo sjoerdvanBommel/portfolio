@@ -1,6 +1,7 @@
 'use client'
 
 import { FileStructure } from '@/lib/mdx/code-block/types'
+import { css } from '@/styled-system/css'
 import { useState } from 'react'
 import { CodeDisplay } from './code-display'
 import { FileTree } from './file-tree'
@@ -10,6 +11,29 @@ interface SidebarViewProps {
   selectedFile: FileStructure | null
   onSelectFile: (file: FileStructure) => void
 }
+
+const containerStyle = css({
+  display: 'flex',
+  minWidth: 'full',
+  height: 'full',
+})
+
+const sidebarStyle = css({
+  minWidth: 'fit-content',
+  borderRight: '1px solid',
+  borderColor: 'gray.200',
+  overflowY: 'auto',
+  _dark: {
+    borderColor: 'gray.800',
+  },
+})
+
+const codeContainerStyle = css({
+  flex: '1',
+  display: 'flex',
+  flexDirection: 'column',
+  minWidth: '0',
+})
 
 export function SidebarView({ files, selectedFile, onSelectFile }: SidebarViewProps) {
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set())
@@ -27,32 +51,22 @@ export function SidebarView({ files, selectedFile, onSelectFile }: SidebarViewPr
   }
 
   return (
-    <>
+    <div className={containerStyle}>
       {/* File sidebar */}
-      <div className="w-full md:w-64 border-r border-gray-200 dark:border-gray-800 overflow-y-auto max-h-[300px] md:max-h-[600px]">
-        <div className="p-2 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
-          <h3 className="font-medium text-sm">Files</h3>
-        </div>
-        <div className="p-1">
-          <FileTree
-            fileList={files}
-            expandedFolders={expandedFolders}
-            selectedFile={selectedFile}
-            onToggleFolder={toggleFolder}
-            onSelectFile={onSelectFile}
-          />
-        </div>
+      <div className={sidebarStyle}>
+        <FileTree
+          fileList={files}
+          expandedFolders={expandedFolders}
+          selectedFile={selectedFile}
+          onToggleFolder={toggleFolder}
+          onSelectFile={onSelectFile}
+        />
       </div>
 
       {/* Code display */}
-      <div className="flex-1 overflow-hidden flex flex-col">
-        {selectedFile && (
-          <div className="p-2 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
-            <h3 className="font-medium text-sm">{selectedFile.name}</h3>
-          </div>
-        )}
-        <CodeDisplay selectedFile={selectedFile} />
+      <div className={codeContainerStyle}>
+        <CodeDisplay>{selectedFile?.highlightedHtml}</CodeDisplay>
       </div>
-    </>
+    </div>
   )
 }
