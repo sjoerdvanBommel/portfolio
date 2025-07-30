@@ -1,4 +1,4 @@
-import { WebContainerProvider } from '@/components/providers/web-container-provider'
+// import { WebContainerProvider } from '@/components/providers/web-container-provider'
 import { stripMarkersRecursively } from '@/lib/mdx/code-block/strip-markers'
 import { readExampleFilesRecursively } from '@/lib/mdx/read-example-files'
 
@@ -11,9 +11,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   stripMarkersRecursively(files)
 
   return (
-    <WebContainerProvider files={files} initCommand={['npm', 'i', 'typescript']}>
-      <Post />
-    </WebContainerProvider>
+    // <WebContainerProvider files={files} initCommand={['npm', 'i', 'typescript']}>
+    <Post />
+    // </WebContainerProvider>
   )
 }
 

@@ -102,7 +102,8 @@ export function useWebContainer() {
   const context = useContext(WebContainerInitializerContext)
 
   if (!context) {
-    throw new Error('useWebContainer must be used within a WebContainerInitializerProvider')
+    console.warn('useWebContainer must be used within a WebContainerProvider')
+    return undefined
   }
 
   return context.container
