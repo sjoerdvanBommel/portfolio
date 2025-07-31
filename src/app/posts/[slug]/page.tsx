@@ -1,12 +1,12 @@
 // import { WebContainerProvider } from '@/components/providers/web-container-provider'
 import { stripMarkersRecursively } from '@/lib/mdx/code-block/strip-markers'
-import { readExampleFilesRecursively } from '@/lib/mdx/read-example-files'
+import { readAllPostExampleFiles } from '@/lib/mdx/read-example-files'
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const { default: Post } = await import(`@/content/${slug}/page.mdx`)
 
-  const files = readExampleFilesRecursively(slug)
+  const files = readAllPostExampleFiles(slug)
 
   stripMarkersRecursively(files)
 

@@ -9,11 +9,31 @@ import { FileStructure } from './code-block/types'
 
 export async function readExampleFiles(post: string, example: string): Promise<FileStructure[]> {
   const dirPath = path.join(process.cwd(), `/src/content/${post}/examples/${example}`)
-  const filesPromises = fs
-    .readdirSync(dirPath, 'utf-8')
-    .filter((filename) => filename !== 'output.ansi')
-    .map((filename) => readExampleFile(post, example, filename))
 
+  if (!fs.existsSync(dirPath)) {
+    return []
+  }
+
+  const filesPromises: Promise<FileStructure | undefined>[] = []
+
+  function readDirectory(dirPath: string, basePath: string = '') {
+    const items = fs.readdirSync(dirPath)
+
+    for (const item of items) {
+      if (item === 'output.ansi') continue
+      const fullPath = path.join(dirPath, item)
+      const relativePath = path.join(basePath, item)
+      const stat = fs.statSync(fullPath)
+
+      if (stat.isDirectory()) {
+        readDirectory(fullPath, relativePath)
+      } else {
+        filesPromises.push(readExampleFile(post, example, relativePath))
+      }
+    }
+  }
+
+  readDirectory(dirPath)
   const files = await Promise.all(filesPromises)
 
   return files.filter((file) => file !== undefined)
@@ -21,10 +41,9 @@ export async function readExampleFiles(post: string, example: string): Promise<F
 
 export async function readExampleFile(post: string, example: string, filename: string) {
   const dirPath = path.join(process.cwd(), `/src/content/${post}/examples/${example}`)
+  const filePath = path.join(dirPath, filename)
   try {
-    const unmodifiedContent = toColoredString(
-      fs.readFileSync(path.join(dirPath, filename), 'utf-8'),
-    )
+    const unmodifiedContent = toColoredString(fs.readFileSync(filePath, 'utf-8'))
     const { content, metadata } = parseExampleFile(unmodifiedContent)
 
     metadata.isModified ??= hasCodeMarkers(content)
@@ -92,8 +111,8 @@ function mergeFileSystemTrees(trees: FileSystemTree[]): FileSystemTree {
   return result
 }
 
-export function readExampleFilesRecursively(example: string): FileSystemTree {
-  const examplesDir = path.join(process.cwd(), `/src/content/${example}/examples`)
+export function readAllPostExampleFiles(post: string): FileSystemTree {
+  const examplesDir = path.join(process.cwd(), `/src/content/${post}/examples`)
 
   if (!fs.existsSync(examplesDir)) {
     return {}

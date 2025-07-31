@@ -1,0 +1,5 @@
+{
+    "dependencies": {
+        "external-package": "file:./external-package"
+    }
+}

@@ -1,0 +1,10 @@
+[0mfile:///Users/sjoerdvanbommel/workspace/personal/lab/1/examples/13-default-export-ts/index.ts:1[0m
+import { default as defaultExport, A, B } from './constants.ts';[0m
+                                   ^[0m
+SyntaxError: The requested module './constants.ts' does not provide an export named 'A'[0m
+[0;90m    at #_instantiate (node:internal/modules/esm/module_job:254:21)[0m[0m
+[0;90m    at async ModuleJob.run (node:internal/modules/esm/module_job:362:5)[0m[0m
+[0;90m    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)[0m[0m
+[0;90m    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:99:5)[0m[0m
+[0m
+Node.js v24.4.0[0m

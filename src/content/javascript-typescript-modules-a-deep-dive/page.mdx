@@ -149,6 +149,7 @@ But if the above reasons are not convincing you to move to ESM, then let's dive 
 Usually a project is much more complex than what we've seen so far.
 So far, we have only used plain Node.js and TypeScript, without any compilation step.
 Real projects almost always use dependencies, a compilation step, a bundler, a testing framework, or a combination of all of these.
+TypeScript brings a lot of benefits, but it also introduces some complexity. Let's explore further.
 
 <ColoredH2>TypeScript Compiler</ColoredH2>
 
@@ -214,7 +215,9 @@ statement to a `require` statement! We already know that works, we tested it ear
 If ES Modules are the EcmaScript standard, then you might expect TypeScript to
 use that as the default module system. However, because of historical and practical reasons,
 TypeScript uses old defaults, which means the output JavaScript code will be written
-in CommonJS syntax. If you want to know more about why this is the case,
+in CommonJS syntax. This can be confusing when people think they write ESM code, while
+in reality their output code is written in CommonJS syntax.
+If you want to know more about why this is the case,
 I recommend you to read about the [module](https://www.typescriptlang.org/docs/handbook/modules/reference.html#the-module-compiler-option)
 option (or let me know if you're interested in a deep-dive into that topic as well! 😉).
 
@@ -229,17 +232,141 @@ A simple example to illustrate this is the following:
 const x = condition ? require('a') : require('b')
 ```
 
-This is not possible, because a `require` statement is a runtime operation.
+It's not possible to only import one of the two modules using regular import statements.
+Dynamic `import()` statements cannot be used either because they are asynchronous.
 
-And next to that, TypeScript also has some limitations in the interoperability
-between the two module systems.
+So unfortunately, if you want your code to be ESM only, you will need to migrate it yourself.
+Of course, you can use tools like AI, IDE tooling, or packages like [ts2esm](https://github.com/bennycode/ts2esm)
+to help you migrate faster, but none of them are foolproof.
 
-<ColoredH2>TypeScript Interoperability rules</ColoredH2>
+<Info>
+  It is only not possible to compile *CJS* code to ESM. If your TypeScript code is written in ESM
+  already, you can use modern tsconfig options to compile it to JavaScript while keeping the ESM
+  syntax.
+</Info>
+
+<ColoredH2>Default exports vs module.exports</ColoredH2>
+
+In CommonJS, either the `module.exports` object is used to export the module, or
+`exports.property` is used to export a single property.
+This is very similar to ESM, where `export default` is used for default exports,
+and `export { property }` is used for named exports.
+
+However, there are some differences. One important one is that when importing a CommonJS module from an ESM module,
+any export other than the default export is **not available** while importing.
+Luckily, the error message is quite clear. Let's give it a try:
+
+<CodeBlock post={post} example="11-default-export" order={['index.js', 'constants.js']} />
+
+<TerminalCommandRunner command="node index.js" post={post} example="11-default-export" />
+
+The error also proposes a solution:
+
+<CodeBlock post={post} example="12-default-export-fix" order={['index.js', 'constants.js']} />
+
+<TerminalCommandRunner command="node index.js" post={post} example="12-default-export-fix" />
+
+To make things worse though, the error message becomes way more confusing when running
+TypeScript directly instead of JavaScript (the content stays the same!):
+
+<CodeBlock post={post} example="13-default-export-ts" order={['index.ts', 'constants.ts']} />
+
+<TerminalCommandRunner command="node index.ts" post={post} example="13-default-export-ts" />
+
+Let's park this knowledge for now, and get back to it later.
+
+<ColoredH2>Module Resolution</ColoredH2>
+
+Those with a sharp eye might have noticed that when we were transpiling code to CommonJS,
+we did not include file extensions in the `import` statements. Let me show you once again:
+
+<CodeBlock post={post} example="14-import-without-extension" order={['index.ts', 'constants.ts']} />
+
+This code will not run as ESM code:
+
+<TerminalCommandRunner command="node index.ts" post={post} example="14-import-without-extension" />
+
+However, as we have seen before, if we would first transpile it to CommonJS, it would run just fine:
+
+<TerminalCommandRunner
+  command="tsc index.ts constants.ts && node index.js"
+  post={post}
+  example="14-import-without-extension-tsc"
+/>
+
+What we are seeing here is the result of the **module resolution algorithms**.
+CommonJS is more flexible than ESM in this regard.
+If the specified file cannot be found, CommonJS will try to resolve the file
+anyways, simply by trying out different paths that you might have intended.
+This is possible, because `require()` is synchronous and runs in a backend environment,
+where checking a few files is relatively quick.
+
+<Info>
+  You might have seen projects that import from directories directly. This works because of the
+  CommonJS module resolution algorithm. It will try to find an `index.js` file in that directory.
+  The code might be written in ESM, but TypeScript will most likely transpile it to CommonJS later.
+</Info>
+
+I won't explain the exact CommonJS module resolution algorithm, but the 116 lines of pseudo code can be
+found [here](https://nodejs.org/api/modules.html#all-together).
+
+The reason why ESM is more strict can be explained with a simple example.
+
+ESM is the standard which is also used in the browser.
+Imagine import statements are allowed to be wrongly specified (for example, without extension),
+and the algorithm would have to make several calls to a server to find what the exact filename is.
+This would have a huge performance impact. So instead, ESM decided to be more strict,
+making sure only a single call was needed to get the correct file.
+
+The difference between the two module resolution algorithms can cause confusion.
+Let me show you an example where we depend on an external package.
+The code of the package is written in ESM:
+
+<CodeBlock
+  post={post}
+  mode="sidebar"
+  example="15-external-package"
+  order={['index.ts', 'constants.ts']}
+/>
+
+Because the `target` property in `tsconfig.json` is set to `ES2024`, the transpiled JavaScript code will be written in ESM syntax.
+
+<TerminalCommandRunner command="tsc" post={post} example="15-external-package" />
+
+No output = success! ✅
+
+<CodeBlock
+  post={post}
+  example="16-external-package-tsc"
+  mode="sidebar"
+  order={['index.ts', 'index.js', 'constants.ts', 'constants.js']}
+/>
+
+All looking good so far, right?
+
+Let's try to use the package in another project.
+
+<CodeBlock
+  post={post}
+  example="17-difference-mod-res"
+  mode="sidebar"
+  order={['index.ts', 'package.json']}
+/>
+
+There's much more to tell about module resolution, but I think we've covered enough for this blog post.
+If you're curious, the ESM module resolution algorithm is explained [here](https://nodejs.org/api/esm.html#resolution-algorithm-specification).
+
+{/* <CodeBlock post={post} example="14-default-export-ts-cjs" order={['index.ts', 'constants.ts']} /> */}
+
+{/* <TerminalCommandRunner command="node index.ts" post={post} example="14-default-export-ts-cjs" /> */}
 
 {/* https://arc.net/l/quote/fddyhlye */}
 
 {/* TODO: Create quiz or code editor to test knowledge */}
 
+{/* Bonus example: https://arc.net/l/quote/nhyafsdh */}
+
+{/* https://www.typescriptlang.org/docs/handbook/modules/appendices/esm-cjs-interop.html */}
 {/* https://nodejs.org/api/modules.html#loading-ecmascript-modules-using-require */}
 {/* https://nodejs.org/docs/latest-v24.x/api/esm.html#esm_import_expressions */}
 {/* https://antfu.me/posts/move-on-to-esm-only */}

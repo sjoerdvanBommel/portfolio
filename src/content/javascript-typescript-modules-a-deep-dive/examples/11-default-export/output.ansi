@@ -1,0 +1,15 @@
+[0mfile:///Users/sjoerdvanbommel/workspace/personal/lab/1/examples/11-default-export/index.js:1[0m
+import { default as defaultExport, A, B } from './constants.js';[0m
+                                   ^[0m
+SyntaxError: Named export 'A' not found. The requested module './constants.js' is a CommonJS module, which may not support all module.exports as named exports.[0m
+CommonJS modules can always be imported via the default export, for example using:[0m
+[0m
+import pkg from './constants.js';[0m
+const { default: defaultExport, A, B } = pkg;[0m
+[0m
+[0;90m    at #_instantiate (node:internal/modules/esm/module_job:254:21)[0m[0m
+[0;90m    at async ModuleJob.run (node:internal/modules/esm/module_job:362:5)[0m[0m
+[0;90m    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)[0m[0m
+[0;90m    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:99:5)[0m[0m
+[0m
+Node.js v24.4.0[0m

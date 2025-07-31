@@ -30,7 +30,9 @@
     "next-env.d.ts",
     "dist/types/**/*.ts",
     "src/content/javascript-typescript-modules-a-deep-dive/examples/5-import-commonjs/index.mts",
-    "src/content/javascript-typescript-modules-a-deep-dive/examples/5-import-commonjs/index.mts"
+    "src/content/javascript-typescript-modules-a-deep-dive/examples/5-import-commonjs/index.mts",
+    "src/content/javascript-typescript-modules-a-deep-dive/examples/11-default-export/module.js",
+    "src/content/javascript-typescript-modules-a-deep-dive/examples/11-default-export/index.js"
   ],
   "exclude": ["node_modules", "src/content/**/examples/**"]
 }
