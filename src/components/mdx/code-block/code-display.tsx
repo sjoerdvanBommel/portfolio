@@ -1,6 +1,6 @@
 import { highlightCode } from '@/lib/mdx/code-block/shiki-server'
 import { css } from '@/styled-system/css'
-import { PropsWithChildren } from 'react'
+import { DetailedHTMLProps, HTMLAttributes, PropsWithChildren } from 'react'
 
 export function CodeDisplay({ children }: PropsWithChildren) {
   if (!children || typeof children !== 'string') return null
@@ -24,6 +24,23 @@ export async function CodeDisplayInlineMdx({
   return (
     <div className={borderStyle}>
       <CodeDisplay>{highlightedHtml}</CodeDisplay>
+    </div>
+  )
+}
+
+// Synchronous version for MDX components
+export function CodeDisplayInlineMdxSync(
+  props: DetailedHTMLProps<HTMLAttributes<HTMLPreElement>, HTMLPreElement>,
+) {
+  const { children, ...rest } = props
+
+  if (!children || typeof children !== 'object' || !('props' in children)) return null
+
+  return (
+    <div className={borderStyle}>
+      <pre {...rest} className={css({ p: '4', overflow: 'auto' })}>
+        <code>{children.props.children}</code>
+      </pre>
     </div>
   )
 }

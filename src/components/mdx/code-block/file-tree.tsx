@@ -137,7 +137,9 @@ export function FileTree({
     return (
       <div
         key={path}
-        className={fileItemStyle(selectedFile?.name === file.name)}
+        className={fileItemStyle(
+          selectedFile?.name === file.name && selectedFile?.content === file.content,
+        )}
         onClick={() => onSelectFile(file)}
       >
         <FileIcon fileName={file.name} className={fileIconStyle} />

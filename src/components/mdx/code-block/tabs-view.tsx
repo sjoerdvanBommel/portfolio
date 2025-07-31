@@ -75,18 +75,22 @@ const tabButtonStyle = (isSelected: boolean) =>
   })
 
 export function TabsView({ files, selectedFile, onSelectFile, hideTabs = false }: TabsViewProps) {
+  const allFiles = getAllFiles(files)
+
   return (
     <div className={containerStyle(hideTabs)}>
       {!hideTabs && (
         <div className={tabsContainerStyle}>
           <div className={tabsWrapperStyle}>
-            {getAllFiles(files).map((file) => (
+            {allFiles.map((file) => (
               <button
                 key={file.fullPath}
-                className={tabButtonStyle(selectedFile?.name === file.name)}
+                className={tabButtonStyle(
+                  selectedFile?.name === file.name && selectedFile?.content === file.content,
+                )}
                 onClick={() => onSelectFile(file)}
               >
-                {file.fullPath.replace(/^\//, '')}
+                {file.name}
                 {file.metadata.isModified && <ModifiedDot />}
               </button>
             ))}

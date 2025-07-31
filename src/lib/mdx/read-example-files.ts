@@ -14,29 +14,45 @@ export async function readExampleFiles(post: string, example: string): Promise<F
     return []
   }
 
-  const filesPromises: Promise<FileStructure | undefined>[] = []
+  return await readDirectoryRecursive(dirPath, post, example)
+}
 
-  function readDirectory(dirPath: string, basePath: string = '') {
-    const items = fs.readdirSync(dirPath)
+async function readDirectoryRecursive(
+  dirPath: string,
+  post: string,
+  example: string,
+  basePath: string = '',
+): Promise<FileStructure[]> {
+  const items = fs.readdirSync(dirPath)
+  const result: FileStructure[] = []
 
-    for (const item of items) {
-      if (item === 'output.ansi') continue
-      const fullPath = path.join(dirPath, item)
-      const relativePath = path.join(basePath, item)
-      const stat = fs.statSync(fullPath)
+  for (const item of items) {
+    if (item === 'output.ansi') continue
 
-      if (stat.isDirectory()) {
-        readDirectory(fullPath, relativePath)
-      } else {
-        filesPromises.push(readExampleFile(post, example, relativePath))
+    const fullPath = path.join(dirPath, item)
+    const relativePath = path.join(basePath, item)
+    const stat = fs.statSync(fullPath)
+
+    if (stat.isDirectory()) {
+      // Recursively read directory contents
+      const children = await readDirectoryRecursive(fullPath, post, example, relativePath)
+
+      result.push({
+        name: item,
+        content: children,
+        metadata: { isModified: false },
+        isDirectory: true,
+      })
+    } else {
+      // Read file
+      const fileStructure = await readExampleFile(post, example, relativePath)
+      if (fileStructure) {
+        result.push(fileStructure)
       }
     }
   }
 
-  readDirectory(dirPath)
-  const files = await Promise.all(filesPromises)
-
-  return files.filter((file) => file !== undefined)
+  return result
 }
 
 export async function readExampleFile(post: string, example: string, filename: string) {
@@ -52,7 +68,7 @@ export async function readExampleFile(post: string, example: string, filename: s
     const highlightedHtml = await highlightCode(content, language)
 
     return {
-      name: filename,
+      name: filename.split('/').pop()!,
       content,
       highlightedHtml,
       metadata,

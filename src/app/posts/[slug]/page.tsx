@@ -1,5 +1,6 @@
 // import { WebContainerProvider } from '@/components/providers/web-container-provider'
 import { stripMarkersRecursively } from '@/lib/mdx/code-block/strip-markers'
+import { getRecentPosts } from '@/lib/mdx/posts/get-recent-posts'
 import { readAllPostExampleFiles } from '@/lib/mdx/read-example-files'
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
@@ -18,10 +19,10 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 }
 
 // TODO: can this be re-enabled?
-// export async function generateStaticParams() {
-//   const recentPosts = await getRecentPosts()
+export async function generateStaticParams() {
+  const recentPosts = await getRecentPosts()
 
-//   return recentPosts.map((post) => ({ slug: post.slug }))
-// }
+  return recentPosts.map((post) => ({ slug: post.slug }))
+}
 
-// export const dynamicParams = false
+export const dynamicParams = false

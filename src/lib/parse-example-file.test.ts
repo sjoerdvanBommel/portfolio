@@ -1,4 +1,4 @@
-import { getContent, getMetadata, hasMetadata, parseMetadataJson } from './parse-metadata-json'
+import { getContent, getMetadata, hasMetadata, parseMetadataJson } from './parse-example-file'
 
 // Test with the example format
 const testContent = `{ "isModified": true }

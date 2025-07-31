@@ -11,11 +11,13 @@ export type Answer = {
 
 export type CodeQuizProps = Omit<CodeBlockProps, 'files'> &
   QuizProps & {
+    post: string
     example: string
     question: React.ReactNode
   }
 
 export function CodeQuiz({
+  post,
   example,
   question,
   answers,
@@ -40,7 +42,7 @@ export function CodeQuiz({
   return (
     <div className={containerStyle}>
       <div className={questionStyle}>{question}</div>
-      <CodeBlock example={example} initialFile={initialFile} mode={mode} />
+      <CodeBlock post={post} example={example} initialFile={initialFile} mode={mode} />
       <Quiz answers={answers} explanation={explanation} />
     </div>
   )

@@ -4,5 +4,6 @@ export interface FileStructure {
   name: string
   content: string | FileStructure[]
   metadata: Metadata
-  highlightedHtml: string
+  highlightedHtml?: string
+  isDirectory?: boolean
 }

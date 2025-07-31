@@ -5,7 +5,6 @@ import { runCommand, streamToString } from '@/lib/web-container'
 import { css, cx } from '@/styled-system/css'
 import { FastForwardIcon, LoaderCircleIcon, PlayIcon, RotateCcwIcon } from 'lucide-react'
 import { useState } from 'react'
-import { AnsiRenderer } from './ansi-renderer'
 
 type TerminalOutputProps = {
   example: string
@@ -14,7 +13,7 @@ type TerminalOutputProps = {
   animationSpeed?: number
 }
 
-export function TerminalOutput({ example, command, output, animationSpeed }: TerminalOutputProps) {
+export function TerminalOutput({ example, command, output }: TerminalOutputProps) {
   const [displayedOutput, setDisplayedOutput] = useState('')
   const [animationEnded, setAnimationEnded] = useState(false)
   const [isRunningCommand, setIsRunningCommand] = useState(false)
@@ -79,14 +78,14 @@ export function TerminalOutput({ example, command, output, animationSpeed }: Ter
         </div>
         {displayedOutput && (
           <div className={outputTextStyle}>
-            {
+            {/* {
               <AnsiRenderer
                 output={displayedOutput}
                 animationSpeed={animationSpeed}
                 withoutAnimation={animationEnded}
                 onAnimationEnd={handleAnimationEnd}
               />
-            }
+            } */}
           </div>
         )}
 

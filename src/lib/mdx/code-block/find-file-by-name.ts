@@ -1,7 +1,4 @@
-interface FileStructure {
-  name: string
-  content: string | FileStructure[]
-}
+import { FileStructure } from './types'
 
 export function findFileByName(fileList: FileStructure[], name: string): FileStructure | null {
   for (const file of fileList) {
