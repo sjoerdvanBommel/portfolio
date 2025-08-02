@@ -1,7 +1,7 @@
 import { ColoredH2, H1, H2, H3 } from '../headings'
 import { Ol, Ul } from '../lists'
 import { A, P } from '../text'
-import { Error, Info, Note } from './banners'
+import { Blockquote, Error, Info, Note } from './banners'
 import { CodeDisplayInlineMdxSync } from './code-block/code-display'
 import { CodeBlock } from './code-block/index'
 import { CodeQuiz } from './code-quiz/index'
@@ -30,6 +30,7 @@ export const mdxComponents = {
   a: A,
   code: InlineCode,
   pre: CodeDisplayInlineMdxSync,
+  blockquote: Blockquote,
   ol: Ol,
   ul: Ul,
 }

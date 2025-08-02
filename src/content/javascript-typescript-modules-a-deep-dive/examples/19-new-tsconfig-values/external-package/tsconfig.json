@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "target": "ES2024",
+        // [!code ++:2]
+        "module": "nodenext",
+        "moduleResolution": "nodenext"
+    },
+    "include": ["**/*.ts"]
+}

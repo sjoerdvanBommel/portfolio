@@ -104,7 +104,7 @@ export function FileTree({
     const path = `${basePath}/${file.name}`
 
     if (Array.isArray(file.content)) {
-      const isExpanded = expandedFolders.has(path)
+      const isExpanded = expandedFolders.has(path) || expandedFolders.has(file.name)
 
       return (
         <div key={path} className={folderItemStyle}>

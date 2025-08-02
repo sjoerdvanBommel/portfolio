@@ -39,6 +39,7 @@ async function readDirectoryRecursive(
 
       result.push({
         name: item,
+        fullPath: relativePath,
         content: children,
         metadata: { isModified: false },
         isDirectory: true,
@@ -69,6 +70,7 @@ export async function readExampleFile(post: string, example: string, filename: s
 
     return {
       name: filename.split('/').pop()!,
+      fullPath: filename,
       content,
       highlightedHtml,
       metadata,

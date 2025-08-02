@@ -1,0 +1,7 @@
+[0;96mindex.ts[0m:[0;93m1[0m:[0;93m15[0m - [0;91merror[0;90m TS2835: [0mRelative import paths need explicit file extensions in ECMAScript imports when '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './constants.js'?[0m
+[0m
+[0;39;49;7m1[0m export * from './constants';[0m
+[0;39;49;7m [0m [0;91m              ~~~~~~~~~~~~~[0m[0m
+[0m
+[0m
+Found 1 error in index.ts[0;90m:1[0m

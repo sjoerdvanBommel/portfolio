@@ -1,6 +1,10 @@
 import { css, cx } from '@/styled-system/css'
 import React from 'react'
 
+export const Blockquote = ({ children }: { children?: React.ReactNode }) => (
+  <div className={cx(outerContainerStyle, blockquoteStyle)}>{children}</div>
+)
+
 export const Error = ({ children }: { children: React.ReactNode }) => (
   <div className={cx(outerContainerStyle, errorStyle)}>{children}</div>
 )
@@ -26,6 +30,11 @@ const infoStyle = css({
 const noteStyle = css({
   background: 'amber.800/20',
   borderColor: 'amber.900',
+})
+
+const blockquoteStyle = css({
+  background: 'gray.800/20',
+  borderColor: 'gray.500',
 })
 
 const outerContainerStyle = css({

@@ -2,7 +2,6 @@
     "compilerOptions": {
         // [!code highlight]
         "target": "ES2024",
-        "moduleResolution": "node"
     },
     "include": ["**/*.ts"]
 }

@@ -64,11 +64,12 @@ const shikiCodeBlockStyle = css({
     p: '4 !important',
   },
   '& code': {
-    display: 'block',
+    display: 'grid',
     width: '100%',
   },
   '& .line': {
     width: 'calc(100% + 2rem)',
+    minHeight: '1.5rem',
     display: 'inline-block',
     mx: '-4',
     px: '4',

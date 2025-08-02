@@ -81,7 +81,8 @@ Well, apparently not! Our code runs, so ES modules are definitely not always the
 <Info>
   Notice that we are not just requiring another CommonJS module here. We are actually _requiring_ an
   _ES module_, using both named and default exports! This is only supported since Node.js 22.0 using
-  the `--no-experimental-require-module` flag, or since Node.js 22.12 without the flag.
+  the `--no-experimental-require-module` flag, or since Node.js 22.12 without the flag. Because of
+  the impact of this change, it has also been backported without flag from Node.js 20.19.0.
 </Info>
 
 Node.js decided itself to treat the `index.ts` file as CommonJS module, and the `require`d modules as ES modules.
@@ -308,7 +309,7 @@ where checking a few files is relatively quick.
 </Info>
 
 I won't explain the exact CommonJS module resolution algorithm, but the 116 lines of pseudo code can be
-found [here](https://nodejs.org/api/modules.html#all-together).
+found [here](https://nodejs.org/api/modules.html#all-together) (and the ESM version can be found [here](https://nodejs.org/api/esm.html#resolution-algorithm-specification)).
 
 The reason why ESM is more strict can be explained with a simple example.
 
@@ -342,19 +343,134 @@ No output = success! ✅
   order={['index.ts', 'index.js', 'constants.ts', 'constants.js']}
 />
 
-All looking good so far, right?
-
-Let's try to use the package in another project.
+Let's assume everything works as expected, since the TypeScript type-checking ánd the compiler succeeded.
+Now if we would try to use the package in another project, we would run into a problem.
 
 <CodeBlock
   post={post}
   example="17-difference-mod-res"
   mode="sidebar"
-  order={['external-package', 'index.ts', 'package.json']}
+  order={['index.ts', 'package.json', 'external-package']}
 />
 
-There's much more to tell about module resolution, but I think we've covered enough for this blog post.
-If you're curious, the ESM module resolution algorithm is explained [here](https://nodejs.org/api/esm.html#resolution-algorithm-specification).
+Now when developing locally, you will most likely be using a tool like `ts-node` or `tsx` to run your code.
+Let's try it out:
+
+<TerminalCommandRunner command="npx tsx index.ts" post={post} example="17-difference-mod-res" />
+
+Looking good, exactly as expected!
+We're not working on a real project here, but let's assume you have just finished building a new feature.
+You push this code, and your pipeline builds your app using the TypeScript compiler:
+
+<TerminalCommandRunner command="tsc index.ts" post={post} example="17-difference-mod-res-tsc" />
+
+Once again, no output = success! ✅ Next step in the pipeline: deployment to production.
+As soon as this is finished, your production environment is down! 🚨
+
+What went wrong?
+
+In scenarios where your production and local environments disalign, I'd recommend to try to locally run the app the same way as in production.
+In this case, this would for example be using plain `node` instead of `tsx`:
+
+<TerminalCommandRunner command="node index.js" post={post} example="18-difference-mod-res-run" />
+
+The error indicates that the `constants` file is not found. As we've learned before,
+the module resolution of ES Modules is more strict than that of CommonJS.
+Since we are in ESM world in this case, the module resolution algorithm will not be able to find the `constants` file, because it's missing the extension.
+
+But why did the TypeScript compiler transpile the external package successfully in the first place?
+Well, remember that we set the `target` property in `tsconfig.json` to `ES2024`? This property decides which JS features need to be downleveled.
+But it also impacts other tsconfig settings. For example, the `module` property uses this default:
+
+> CommonJS if target is ES5; **ES6/ES2015** otherwise.
+
+I'll not dive into the meaning of this property now, as its not relevant for this blog post.
+What's important is that, based on the above default, `module` will be set to `ES6`.
+This then again affects another tsconfig setting: `moduleResolution`. Let's see its default:
+
+> Node10 if module is CommonJS;<br/>
+> Node16 if module is Node16 or Node18;<br/>
+> NodeNext if module is NodeNext;<br/>
+> Bundler if module is Preserve;<br/>
+> Or **classic** otherwise.
+
+Alright, so apparently `moduleResolution` gets set to `classic` when we set `target` to `ES2024`.
+You would expect this value to work properly together with our `target`, since it's the _default_ value.
+But unfortunately, this is not the case. In fact, TypeScript states the following:
+
+> 'classic' was used in TypeScript before the release of 1.6. classic should not be used.
+
+Great default.. 🤦‍♂️ Let's assume this is the case because of historical reasons.
+But defaults exist to be changed! According to the description of `moduleResolution`, we should use `node16` or `nodenext` instead:
+
+> `node16` or `nodenext` for modern versions of Node.js. Node.js v12 and later supports both ECMAScript imports and CommonJS require,
+> which resolve using different algorithms. These moduleResolution values, when combined with the corresponding module values,
+> picks the right algorithm for each resolution based on whether Node.js will see an import or require in the output JavaScript code.
+
+Alright, so using this value, TypeScript will figure out whether the file is an ESM or CommonJS module.
+Based on that, it will use the correct module resolution algorithm.
+
+Also please note it says: `when combined with the corresponding module values`.
+So when we change `moduleResolution`, we'll need to change `module` to the same value.
+Let's change both of them to `nodenext` in that case:
+
+<CodeBlock
+  post={post}
+  mode="sidebar"
+  example="19-new-tsconfig-values"
+  order={['index.ts', 'package.json', 'external-package']}
+  initialFile="external-package/tsconfig.json"
+/>
+
+Now we'll get an immediate TypeScript error in our IDE when trying to import without `.js` extension:
+
+<Error>
+  Relative import paths need explicit file extensions in ECMAScript imports when
+  '--moduleResolution' is 'node16' or 'nodenext'. Did you mean './constants.js'?ts(2835)
+</Error>
+
+Running the TypeScript compiler will give us the same error:
+
+<TerminalCommandRunner
+  command="cd external-package && tsc"
+  post={post}
+  example="19-new-tsconfig-values"
+/>
+
+Changing the import (and re-running `tsc`) fixes the error and will make our code run again:
+
+<CodeBlock
+  post={post}
+  mode="sidebar"
+  example="20-add-extension"
+  order={['index.ts', 'package.json', 'external-package']}
+  initialFile="external-package/index.ts"
+/>
+
+<TerminalCommandRunner command="node index.js" post={post} example="20-add-extension" />
+
+**Issue resolved! 🎉**
+
+<Info>
+  Because of reasons like the example above, it is always a good practice to health check your app
+  before replacing it with the current production version. You could run your app in your pipeline,
+  or deploy the new environment side-by-side with the current production environment, and wait with
+  swapping environments until the health check is successful. This would have prevented the
+  deployment to production in this case.
+</Info>
+
+<ColoredH2>Conclusion</ColoredH2>
+
+Let's be honest, issues like these are hard to notice, and are unfortunately not resolved by Node.js having better ESM/CJS compatibility.
+So I don't expect the complaints about the different module systems to be gone anytime soon.
+
+The best and only solution is _migrating all code to native ESM_.
+Since ES Modules can be `require()`d now in all supported Node.js versions, there are no excuses not to migrate anymore!
+
+There are many more examples and edge cases that could be discussed, but I think we've covered enough for this blog post.
+
+Thanks for sticking around all the way to the end!
+If you learned something new, sharing this blog post with your friends is the best way to support me 🙏
 
 {/* <CodeBlock post={post} example="14-default-export-ts-cjs" order={['index.ts', 'constants.ts']} /> */}
 

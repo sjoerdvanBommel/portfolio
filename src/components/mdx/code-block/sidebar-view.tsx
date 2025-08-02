@@ -2,7 +2,7 @@
 
 import { FileStructure } from '@/lib/mdx/code-block/types'
 import { css } from '@/styled-system/css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { CodeDisplay } from './code-display'
 import { FileTree } from './file-tree'
 
@@ -37,6 +37,19 @@ const codeContainerStyle = css({
 
 export function SidebarView({ files, selectedFile, onSelectFile }: SidebarViewProps) {
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set())
+
+  // Auto-expand folders that are part of the selected file's path
+  useEffect(() => {
+    if (selectedFile?.fullPath) {
+      const pathParts = selectedFile.fullPath.split('/')
+      if (pathParts.length > 1) {
+        const parentFolderPath = `/${pathParts.slice(0, -1).join('/')}`
+        const newSet = new Set([...expandedFolders, parentFolderPath])
+
+        setExpandedFolders(newSet)
+      }
+    }
+  }, [selectedFile?.fullPath])
 
   function toggleFolder(path: string) {
     setExpandedFolders((prev) => {

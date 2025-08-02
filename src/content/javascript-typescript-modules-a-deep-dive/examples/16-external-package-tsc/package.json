@@ -1,4 +1,5 @@
 {
     "name": "external-package",
+    "type": "module",
     "main": "index.js"
 }

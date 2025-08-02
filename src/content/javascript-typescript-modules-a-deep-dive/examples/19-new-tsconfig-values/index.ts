@@ -1,4 +1,3 @@
-// [!code ++:3]
 import { A, B } from 'external-package';
 
 console.log(A, B);
