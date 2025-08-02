@@ -52,7 +52,5 @@ const readMoreStyle = css({
 
 const readMoreTextStyle = css({
   ...gradientText,
-  '--from': 'var(--accent-12)',
-  '--to': 'var(--accent-11)',
   pointerEvents: 'auto',
 })

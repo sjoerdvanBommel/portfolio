@@ -4,6 +4,6 @@ export function P(props: React.HTMLAttributes<HTMLParagraphElement>) {
   return <p {...props} className={css({ my: '2' })} />
 }
 
-export function A(props: React.HTMLAttributes<HTMLAnchorElement>) {
+export function A(props: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   return <a {...props} className={css({ color: 'orange.500' })} />
 }

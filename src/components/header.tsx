@@ -159,6 +159,7 @@ const headerStyle = css({
   borderBottom: '1px solid var(--gray-3)',
   display: 'grid',
   gridTemplateColumns: '1fr min(42rem, 100%) 1fr',
+  marginBottom: 'var(--global-margin)',
 })
 
 const headerContentStyle = css({
