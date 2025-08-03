@@ -1,3 +1,4 @@
-// [!code ++:2]
+{ "modifiedType": "added" }
+-----
 export const A = 2;
 export const B = 3;

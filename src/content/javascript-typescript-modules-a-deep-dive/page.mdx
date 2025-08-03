@@ -101,8 +101,6 @@ As long as it knows the module type of each file, node is able to do its magic b
 There is one caveat though: since the `require()` statement is synchronous, it is not possible to load ES Modules that use top-level `await` statements.
 This will throw a clear error:
 
-{/* TODO: Keep order of files but select 2nd file by default */}
-
 <CodeBlock
   post={post}
   example="5-top-level-await"
@@ -472,12 +470,12 @@ Let's be honest, issues like these are hard to notice, and are unfortunately not
 So I don't expect the complaints about the different module systems to be gone anytime soon.
 
 The best and only solution is _migrating all code to native ESM_.
-Since ES Modules can be `require()`d now in all supported Node.js versions, there are no excuses not to migrate anymore!
+Since ES Modules can be `require()`d now in all supported Node.js versions, there are less excuses than ever not to migrate anymore!
 
 There are many more examples and edge cases that could be discussed, but I think we've covered enough for this blog post.
 
 Thanks for sticking around all the way to the end!
-If you learned something new, sharing this blog post with your friends is the best way to support me 🙏
+If you learned something new, sending me a message or sharing this blog post with your friends is the best way to support me 🙏
 
 {/* <CodeBlock post={post} example="14-default-export-ts-cjs" order={['index.ts', 'constants.ts']} /> */}
 
@@ -486,6 +484,8 @@ If you learned something new, sharing this blog post with your friends is the be
 {/* https://arc.net/l/quote/fddyhlye */}
 
 {/* TODO: Create quiz or code editor to test knowledge */}
+{/* TODO: fix folder tab layout in sidebar view */}
+{/* TODO: check accessibility */}
 
 {/* Bonus example: https://arc.net/l/quote/nhyafsdh */}
 

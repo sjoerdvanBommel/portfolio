@@ -1,4 +1,7 @@
-// [!code ++:5]
+{
+    "modifiedType": "added"
+}
+-----
 {
     "dependencies": {
         "external-package": "file:./external-package"

@@ -1,2 +1,3 @@
-// [!code ++]
+{ "modifiedType": "added" }
+-----
 export * from './constants';

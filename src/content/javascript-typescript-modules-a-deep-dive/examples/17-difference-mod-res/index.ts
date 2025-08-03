@@ -1,4 +1,5 @@
-// [!code ++:3]
+{ "modifiedType": "added" }
+-----
 import { A, B } from 'external-package';
 
 console.log(A, B);
