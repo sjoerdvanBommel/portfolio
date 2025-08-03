@@ -46,7 +46,9 @@ function CodeColumn({ file, isLast }: CodeColumnProps) {
         <div className="w-fit mx-2 px-2 py-2 text-sm font-medium text-blue-400 flex items-center gap-2 border-b-2 border-blue-500">
           {getFileIcon(language.language)}
           {file.name}
-          {file.metadata.modifiedType && <ModifiedDot type={file.metadata.modifiedType} />}
+          {file.metadata.modifiedType !== 'unmodified' && (
+            <ModifiedDot type={file.metadata.modifiedType} />
+          )}
         </div>
       </div>
       <div className={`flex-1 ${borderStyle}`}>

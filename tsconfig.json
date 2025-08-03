@@ -23,16 +23,6 @@
       "@/styled-system/*": ["./styled-system/*"]
     }
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "next-env.d.ts",
-    "dist/types/**/*.ts",
-    "src/content/javascript-typescript-modules-a-deep-dive/examples/5-import-commonjs/index.mts",
-    "src/content/javascript-typescript-modules-a-deep-dive/examples/5-import-commonjs/index.mts",
-    "src/content/javascript-typescript-modules-a-deep-dive/examples/11-default-export/module.js",
-    "src/content/javascript-typescript-modules-a-deep-dive/examples/11-default-export/index.js"
-  ],
+  "include": ["**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "next-env.d.ts"],
   "exclude": ["node_modules", "src/content/**/examples/**"]
 }

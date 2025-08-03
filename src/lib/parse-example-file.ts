@@ -1,5 +1,5 @@
 export type Metadata = {
-  modifiedType?: 'added' | 'modified'
+  modifiedType: 'added' | 'modified' | 'unmodified'
 }
 
 export interface MetadataInfo {
@@ -60,7 +60,7 @@ export function getContent(content: string): string {
 export function getMetadata(content: string): Metadata {
   const parsed = parseMetadataJson(content)
   if (!parsed.metadata) {
-    return {}
+    return { modifiedType: 'unmodified' }
   }
 
   return JSON.parse(parsed.metadata)

@@ -41,7 +41,7 @@ async function readDirectoryRecursive(
         name: item,
         fullPath: relativePath,
         content: children,
-        metadata: { modifiedType: undefined },
+        metadata: { modifiedType: 'unmodified' },
         isDirectory: true,
       })
     } else {
@@ -63,7 +63,7 @@ export async function readExampleFile(post: string, example: string, filename: s
     const unmodifiedContent = toColoredString(fs.readFileSync(filePath, 'utf-8'))
     const { content, metadata } = parseExampleFile(unmodifiedContent)
 
-    metadata.modifiedType ??= hasCodeMarkers(content) ? 'modified' : undefined
+    metadata.modifiedType ??= hasCodeMarkers(content) ? 'modified' : 'unmodified'
 
     const language = getExtensionFromFilename(filename)
     const highlightedHtml = await highlightCode(content, language)
