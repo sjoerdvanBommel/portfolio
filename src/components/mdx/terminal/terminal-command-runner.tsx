@@ -1,5 +1,6 @@
 import { readExampleFile } from '@/lib/mdx/read-example-files'
 import { css } from '@/styled-system/css'
+import stripAnsi from 'strip-ansi'
 import { TerminalOutput } from './terminal-output'
 
 interface TerminalCommandRunnerProps {
@@ -18,10 +19,11 @@ export async function TerminalCommandRunner({
   if (output === '') {
     output = '[0;90m This command had no output [0m[0m'
   }
+  const outputRaw = output ? stripAnsi(output) : undefined
 
   return (
     <div className={containerStyle}>
-      <TerminalOutput command={command} example={example} output={output} />
+      <TerminalOutput command={command} example={example} output={output} outputRaw={outputRaw} />
     </div>
   )
 }

@@ -7,6 +7,7 @@ import { useEffect, useMemo, useRef } from 'react'
 
 type AnsiRendererProps = {
   output: string
+  outputRaw: string
   animationSpeed?: number // milliseconds per character
   withoutAnimation?: boolean
   onAnimationEnd?: () => void
@@ -17,6 +18,7 @@ const cols = 72
 
 export function AnsiRenderer({
   output,
+  outputRaw,
   animationSpeed = 3,
   withoutAnimation = false,
   onAnimationEnd,
@@ -24,7 +26,7 @@ export function AnsiRenderer({
   const ref = useRef<HTMLDivElement>(null)
 
   const totalTerminalLines = useMemo(() => {
-    const lines = output.split('\n')
+    const lines = outputRaw?.split('\n') ?? []
 
     // Long lines do not fit in the terminal and occupy multiple lines
     const terminalLines = lines.reduce((acc, curr) => {
@@ -34,7 +36,7 @@ export function AnsiRenderer({
     }, 1)
 
     return Math.min(terminalLines, 24)
-  }, [output])
+  }, [outputRaw])
 
   const instance = useMemo(() => createTerminalInstance(totalTerminalLines), [totalTerminalLines])
 

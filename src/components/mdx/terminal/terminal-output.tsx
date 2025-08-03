@@ -11,9 +11,10 @@ type TerminalOutputProps = {
   example: string
   command: string
   output?: string
+  outputRaw?: string
 }
 
-export function TerminalOutput({ example, command, output }: TerminalOutputProps) {
+export function TerminalOutput({ example, command, output, outputRaw }: TerminalOutputProps) {
   const [displayedOutput, setDisplayedOutput] = useState('')
   const [animationEnded, setAnimationEnded] = useState(false)
   const [isRunningCommand, setIsRunningCommand] = useState(false)
@@ -76,10 +77,11 @@ export function TerminalOutput({ example, command, output }: TerminalOutputProps
             </button>
           ) : null}
         </div>
-        {displayedOutput && (
+        {displayedOutput && outputRaw && (
           <div className={outputTextStyle}>
             <AnsiRenderer
               output={displayedOutput}
+              outputRaw={outputRaw}
               withoutAnimation={animationEnded}
               onAnimationEnd={handleAnimationEnd}
             />

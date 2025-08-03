@@ -33,7 +33,8 @@
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "react-icons": "^5.5.0",
-    "shiki": "^3.7.0"
+    "shiki": "^3.7.0",
+    "strip-ansi": "^7.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

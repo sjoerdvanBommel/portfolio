@@ -67,6 +67,9 @@ importers:
       shiki:
         specifier: ^3.7.0
         version: 3.7.0
+      strip-ansi:
+        specifier: ^7.1.0
+        version: 7.1.0
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3
