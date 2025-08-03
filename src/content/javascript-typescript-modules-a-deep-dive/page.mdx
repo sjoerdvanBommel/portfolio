@@ -103,7 +103,12 @@ This will throw a clear error:
 
 {/* TODO: Keep order of files but select 2nd file by default */}
 
-<CodeBlock post={post} example="5-top-level-await" order={['index.ts', 'add.ts', 'constants.ts']} />
+<CodeBlock
+  post={post}
+  example="5-top-level-await"
+  initialFile="add.ts"
+  order={['index.ts', 'add.ts', 'constants.ts']}
+/>
 
 <TerminalCommandRunner command="node index.ts" post={post} example="5-top-level-await" />
 
@@ -480,6 +485,7 @@ If you learned something new, sharing this blog post with your friends is the be
 
 {/* https://arc.net/l/quote/fddyhlye */}
 
+{/* TODO: fix invisible characters impacting amount of rows */}
 {/* TODO: Create quiz or code editor to test knowledge */}
 
 {/* Bonus example: https://arc.net/l/quote/nhyafsdh */}

@@ -144,7 +144,7 @@ export function FileTree({
       >
         <FileIcon fileName={file.name} className={fileIconStyle} />
         <span className={css({ flex: 1, mr: '4' })}>{file.name}</span>
-        {file.metadata.isModified && <ModifiedDot />}
+        {file.metadata.modifiedType && <ModifiedDot type={file.metadata.modifiedType} />}
       </div>
     )
   })

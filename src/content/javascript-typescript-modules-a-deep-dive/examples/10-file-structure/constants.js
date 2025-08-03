@@ -1,5 +1,5 @@
 {
-    "isModified": true
+    "modifiedType": "added"
 }
 -----
 "use strict";

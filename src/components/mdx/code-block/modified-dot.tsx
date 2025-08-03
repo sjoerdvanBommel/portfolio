@@ -1,8 +1,14 @@
-import { css } from '@/styled-system/css'
+import { css, cx } from '@/styled-system/css'
 
 interface ModifiedDotProps {
   className?: string
+  type: 'added' | 'modified'
 }
+
+const dotColorStyle = (type: 'added' | 'modified') =>
+  css({
+    bg: type === 'added' ? 'green.500' : 'orange.500',
+  })
 
 const modifiedDotStyle = css({
   width: '2',
@@ -14,6 +20,6 @@ const modifiedDotStyle = css({
   flexShrink: '0',
 })
 
-export function ModifiedDot({ className }: ModifiedDotProps) {
-  return <div className={`${modifiedDotStyle} ${className || ''}`} />
+export function ModifiedDot({ type, className }: ModifiedDotProps) {
+  return <div className={cx(modifiedDotStyle, dotColorStyle(type), className)} />
 }

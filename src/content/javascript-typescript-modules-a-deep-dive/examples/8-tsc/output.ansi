@@ -1,0 +1,7 @@
+[0;96mindex.ts[0m:[0;93m2[0m:[0;93m18[0m - [0;91merror[0;90m TS2580: [0mCannot find name 'require'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.[0m
+[0m
+[0;39;49;7m2[0m const { A, B } = require('./constants')[0m
+[0;39;49;7m [0m [0;91m                 ~~~~~~~[0m[0m
+[0m
+[0m
+Found 1 error in index.ts[0;90m:2[0m

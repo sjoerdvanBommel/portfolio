@@ -1,5 +1,5 @@
 export type Metadata = {
-  isModified?: boolean
+  modifiedType?: 'added' | 'modified'
 }
 
 export interface MetadataInfo {

@@ -1,19 +1,8 @@
-'use client'
+import dynamic from 'next/dynamic'
+import { FunctionComponent, PropsWithChildren } from 'react'
 
-/**
- * Hack to work around next.js hydration
- * @see https://github.com/uidotdev/usehooks/issues/218
- */
-import { useIsClient } from '@uidotdev/usehooks'
-import React from 'react'
+const ClientOnlyComponent: FunctionComponent<PropsWithChildren> = ({ children }) => children
 
-type ClientOnlyProps = {
-  children: React.ReactNode
-}
-
-export const ClientOnly: React.FC<ClientOnlyProps> = ({ children }) => {
-  const isClient = useIsClient()
-
-  // Render children if on client side, otherwise return null
-  return isClient ? <>{children}</> : null
-}
+export const ClientOnly = dynamic(() => Promise.resolve(ClientOnlyComponent), {
+  ssr: false,
+})

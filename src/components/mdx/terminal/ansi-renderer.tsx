@@ -1,9 +1,9 @@
 'use client'
 
 import { css } from '@/styled-system/css'
-import { FitAddon } from '@xterm/addon-fit'
+import { Terminal } from '@xterm/xterm'
+import '@xterm/xterm/css/xterm.css'
 import { useEffect, useMemo, useRef } from 'react'
-import { useXTerm } from 'react-xtermjs'
 
 type AnsiRendererProps = {
   output: string
@@ -12,9 +12,8 @@ type AnsiRendererProps = {
   onAnimationEnd?: () => void
 }
 
-const fitAddon = new FitAddon()
-// TODO: make responsive
-const cols = 75
+// Amount of columns that fit in current default width of content. Overflown content is scrollable.
+const cols = 72
 
 export function AnsiRenderer({
   output,
@@ -22,11 +21,7 @@ export function AnsiRenderer({
   withoutAnimation = false,
   onAnimationEnd,
 }: AnsiRendererProps) {
-  const { instance, ref } = useXTerm()
-
-  const hasInitialized = useRef(false)
-  const currentDisplayedLength = useRef(0)
-  const animationIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const ref = useRef<HTMLDivElement>(null)
 
   const totalTerminalLines = useMemo(() => {
     const lines = output.split('\n')
@@ -41,45 +36,26 @@ export function AnsiRenderer({
     return Math.min(terminalLines, 24)
   }, [output])
 
-  // Initialize terminal
-  useEffect(() => {
-    if (!instance || !ref.current || hasInitialized.current) return
+  const instance = useMemo(() => createTerminalInstance(totalTerminalLines), [totalTerminalLines])
 
-    instance.loadAddon(fitAddon)
-
-    // Passing options directly to the hook seems to contain a bug where it keeps rerendering
-    instance.options.theme = {
-      cursor: 'rgba(0,0,0,0)',
-    }
-
-    const handleResize = () => fitAddon.fit()
-
-    // Handle resize event
-    handleResize()
-    window.addEventListener('resize', handleResize)
-
-    hasInitialized.current = true
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [ref, instance])
+  const hasInitialized = useRef(false)
+  const currentDisplayedLength = useRef(0)
+  const animationIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
-    if (!instance || !hasInitialized.current) return
+    if (!ref.current) return
 
-    // Clear any existing timers
-    if (animationIntervalRef.current) {
-      clearInterval(animationIntervalRef.current)
-      animationIntervalRef.current = null
+    if (!hasInitialized.current) {
+      instance.open(ref.current)
+      hasInitialized.current = true
     }
 
     if (withoutAnimation) {
-      // Write all content at once for non-animation mode
+      // Write all content at once for non-animation mode, or when animation is skipped
       // Wait until possibly 1 more character is written in case interval just started
       setTimeout(() => {
         instance.reset()
-        instance.write(output.replace(/\n/g, '\n\r'))
+        instance.write(output)
         onAnimationEnd?.()
       }, animationSpeed)
       return
@@ -102,12 +78,7 @@ export function AnsiRenderer({
 
       const nextChar = output[currentDisplayedLength.current]
 
-      if (nextChar === '\n') {
-        // Handle newline properly
-        instance.writeln('')
-      } else {
-        instance.write(nextChar)
-      }
+      instance.write(nextChar)
 
       currentDisplayedLength.current++
     }, animationSpeed)
@@ -120,21 +91,30 @@ export function AnsiRenderer({
     }
   }, [output, withoutAnimation, animationSpeed, instance, onAnimationEnd])
 
-  return (
-    <>
-      <div style={{ height: `${totalTerminalLines * 16}px` }} className={containerStyle}>
-        <div ref={ref as React.RefObject<HTMLDivElement>} className={terminalStyle} />
-      </div>
-    </>
-  )
+  return <div ref={ref as React.RefObject<HTMLDivElement>} className={terminalStyle} />
 }
-
-const containerStyle = css({
-  paddingLeft: '16px',
-})
 
 const terminalStyle = css({
   '& .xterm-viewport': {
     backgroundColor: 'transparent !important',
+    overflowY: 'auto !important',
+    scrollbarWidth: 'none',
+  },
+
+  '& .terminal': {
+    overflowX: 'auto',
+    paddingInline: '2',
   },
 })
+
+function createTerminalInstance(rows: number) {
+  return new Terminal({
+    convertEol: true,
+    cols,
+    rows,
+    disableStdin: true,
+    theme: {
+      cursor: 'rgba(0,0,0,0)',
+    },
+  })
+}

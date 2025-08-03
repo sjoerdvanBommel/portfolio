@@ -6,14 +6,12 @@ interface TerminalCommandRunnerProps {
   command: string
   example: string
   post: string
-  animationSpeed?: number
 }
 
 export async function TerminalCommandRunner({
   command,
   example,
   post,
-  animationSpeed,
 }: TerminalCommandRunnerProps) {
   // Check if output.ansi exists in the example folder
   let output = (await readExampleFile(post, example, 'output.ansi'))?.content
@@ -23,12 +21,7 @@ export async function TerminalCommandRunner({
 
   return (
     <div className={containerStyle}>
-      <TerminalOutput
-        command={command}
-        example={example}
-        output={output}
-        animationSpeed={animationSpeed}
-      />
+      <TerminalOutput command={command} example={example} output={output} />
     </div>
   )
 }

@@ -91,7 +91,7 @@ export function TabsView({ files, selectedFile, onSelectFile, hideTabs = false }
                 onClick={() => onSelectFile(file)}
               >
                 {file.name}
-                {file.metadata.isModified && <ModifiedDot />}
+                {file.metadata.modifiedType && <ModifiedDot type={file.metadata.modifiedType} />}
               </button>
             ))}
           </div>
