@@ -1,7 +1,7 @@
 'use client'
 
 import { FileStructure } from '@/lib/mdx/code-block/types'
-import { css } from '@/styled-system/css'
+import { css, cx } from '@/styled-system/css'
 import { ChevronDown, ChevronRight, Folder } from 'lucide-react'
 import { FileIcon } from './file-icon'
 import { ModifiedDot } from './modified-dot'
@@ -19,21 +19,24 @@ const folderItemStyle = css({
   userSelect: 'none',
 })
 
-const folderButtonStyle = css({
-  display: 'flex',
-  alignItems: 'center',
-  py: '1',
-  px: '2',
-  cursor: 'pointer',
-  _hover: {
-    bg: 'gray.100',
-  },
-  _dark: {
-    _hover: {
-      bg: 'gray.800',
-    },
-  },
-})
+const folderButtonStyle = (isSelected: boolean) =>
+  css({
+    _hover: { background: 'gray.800' },
+    ...(isSelected ? { background: 'gray.900' } : {}),
+  })
+
+const fileButtonStyle = (isSelected: boolean) =>
+  css({
+    ...(isSelected
+      ? {
+          bg: 'blue.900',
+        }
+      : {
+          _hover: {
+            bg: 'gray.800',
+          },
+        }),
+  })
 
 const chevronStyle = css({
   height: '4',
@@ -57,34 +60,16 @@ const nestedFolderStyle = css({
   paddingLeft: '4',
 })
 
-const fileItemStyle = (isSelected: boolean) =>
-  css({
-    display: 'flex',
-    alignItems: 'center',
-    py: '1',
-    px: '2',
-    m: '1',
-    cursor: 'pointer',
-    fontSize: 'sm',
-    borderRadius: 'xs',
-    ...(isSelected
-      ? {
-          bg: 'blue.100',
-          _dark: {
-            bg: 'blue.900',
-          },
-        }
-      : {
-          _hover: {
-            bg: 'gray.100',
-          },
-          _dark: {
-            _hover: {
-              bg: 'gray.800',
-            },
-          },
-        }),
-  })
+const buttonStyle = css({
+  display: 'flex',
+  alignItems: 'center',
+  py: '1',
+  px: '2',
+  m: '1',
+  cursor: 'pointer',
+  fontSize: 'sm',
+  borderRadius: 'xs',
+})
 
 const fileIconStyle = css({
   height: '4',
@@ -108,7 +93,13 @@ export function FileTree({
 
       return (
         <div key={path} className={folderItemStyle}>
-          <div className={folderButtonStyle} onClick={() => onToggleFolder(path)}>
+          <div
+            className={cx(
+              buttonStyle,
+              folderButtonStyle(!!selectedFile?.fullPath.includes(file.name)),
+            )}
+            onClick={() => onToggleFolder(path)}
+          >
             {isExpanded ? (
               <ChevronDown className={chevronStyle} />
             ) : (
@@ -137,9 +128,7 @@ export function FileTree({
     return (
       <div
         key={path}
-        className={fileItemStyle(
-          selectedFile?.name === file.name && selectedFile?.content === file.content,
-        )}
+        className={cx(buttonStyle, fileButtonStyle(selectedFile?.fullPath === file.fullPath))}
         onClick={() => onSelectFile(file)}
       >
         <FileIcon fileName={file.name} className={fileIconStyle} />
