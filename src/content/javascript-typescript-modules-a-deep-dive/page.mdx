@@ -49,9 +49,7 @@ Importing with or without extension (and whether it should be `.js` or `.ts`) is
 
 <TerminalCommandRunner command="node index.ts" post={post} example="2-correct-imports" />
 
-Looks like we have our answer: It does _not_ seem possible to combine `require` and `import` statements in the same TypeScript file.
-
-...or is it? Let's continue our search by first getting our code to run.
+The error is clear: it is _not_ possible to combine `require` and `import` statements in the same TypeScript file.
 
 <ColoredH2>Module Type Detection</ColoredH2>
 
