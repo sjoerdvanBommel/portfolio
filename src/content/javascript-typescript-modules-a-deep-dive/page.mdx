@@ -27,12 +27,12 @@ In the `index.ts` file, we are importing the `add` function from the `add.ts` fi
 But to access the `A` and `B` constants, a `require` statement is used.
 This means we are trying to combine two different module systems: CommonJS and ES modules.
 
-_**Let's figure out in this blog why this code is so complex, how it works and if we can get it to run.**_
+_**Let's figure out in this blog why this code is so complex and what happens under the hood.**_
 
 <Info>
-  Since node 24, it is possible to run TypeScript code directly without compiling it first. It does
-  so by stripping the type annotations from the code. Instead of simply removing the types, they get
-  replaced with whitespaces, so no source maps are required.
+  Since Node.js 24, it is possible to run TypeScript code directly without compiling it first. It
+  does so by stripping the type annotations from the code. Instead of simply removing the types,
+  they get replaced with whitespaces, so no source maps are required.
 </Info>
 
 <TerminalCommandRunner
@@ -97,7 +97,7 @@ It is actually quite simple. It checks the following conditions in order for eve
 4. Does the closest `package.json` not contain `"type": "commonjs"` and does the module contain ES Module syntax (import/export)? -> **ES module**
 5. Otherwise -> **CommonJS module**
 
-As long as it knows the module type of each file, node is able to do its magic behind the scenes and load the files correctly.
+As long as it knows the module type of each file, Node.js is able to do its magic behind the scenes and load the files correctly.
 There is one caveat though: since the `require()` statement is synchronous, it is not possible to load ES Modules that use top-level `await` statements.
 This will throw a clear error:
 
@@ -130,20 +130,20 @@ But all this made me wonder: if it is possible to require ES modules, is it also
 
 That works both with named and default exports as well! 🎉
 
-The fact that this is possible in the last few node versions is **great** news, because it means TypeScript authors can now
+The fact that this is possible in the last few Node.js versions is **great** news, because it means TypeScript authors can now
 gradually migrate to the EcmaScript standard: ES modules. For example, even though a dependency might be an ESM-only dependency,
 it can still be used in CommonJS projects because it can be `require`d.
 
-Since it's possible to `import` CommonJS and ESM modules, ánd it is possible to `require` CommonJS and ESM modules,
-we can now basically mix and match ESM and CJS modules however we like.
+Since it's possible to `import` CommonJS and ES Modules, ánd it is possible to `require` CommonJS and ES Modules,
+we can now basically mix and match ESM and CommonJS modules however we like.
 So why are developers still unhappy about the current module system situation?
 
-Well, the biggest practical blockers might have been removed in latest node versions,
-so I expect most complaints to be resolved for projects that are using Node 22+.
+Well, the biggest practical blockers might have been removed in latest Node.js versions,
+so I expect most complaints to be resolved for projects that are using Node.js 22+.
 But several strategic reasons to go ESM still apply:
 
 - It will work in both the browser and backend runtimes
-- Better TypeScript support: `require`ing an ESM module will set the imported module's type to `any`.
+- Better TypeScript support: `require`ing an ES Module will set the imported module's type to `any`.
 - CommonJS could be considered legacy, since it is not following the actual EcmaScript standard
 - Top-level `await` statements are now possible
 - Better tree-shaking
@@ -257,7 +257,7 @@ In CommonJS, either the `module.exports` object is used to export the module, or
 This is very similar to ESM, where `export default` is used for default exports,
 and `export { property }` is used for named exports.
 
-However, there are some differences. One important one is that when importing a CommonJS module from an ESM module,
+However, there are some differences. One important one is that when importing a CommonJS module from an ESM Module,
 any export other than the default export is **not available** while importing.
 Luckily, the error message is quite clear. Let's give it a try:
 
@@ -501,53 +501,40 @@ Changing the import (and re-running `tsc`) fixes the error and will make our cod
   deployment to production in this case.
 </Info>
 
-{/* TODO: add work example with errors in IDE about named exports */}
-
 <ColoredH2>Conclusion</ColoredH2>
 
-Let me first answer the initial question:
+And before I wrap up, let me first answer the initial question:
 
 > Is it possible to use both `import` and `require` in the same file?
 
-Yes! There are actually several ways to do this:
+Yes! Whether you're using `createRequire`, TypeScript compilation, or tools like bundlers,
+it is possible to use both `import` and `require` in the same file.
 
-1. **Using `createRequire`**: As we discovered, you can use `createRequire` from the 'module' package to create a `require` function within an ES module context. This allows you to use both `import` statements and `require()` calls in the same file.
-
-2. **Using dynamic `import()`**: As we saw earlier, you can use dynamic `import()` expressions in CommonJS modules to load ES modules asynchronously.
-
-3. **Using TypeScript compilation**: The TypeScript compiler can transpile ES module syntax to CommonJS, allowing you to write ESM code that gets converted to CJS.
-
-4. **Using tools**: Various bundlers and tools can handle mixed module systems.
-
-The `createRequire` approach is particularly interesting because it allows you to stay in the ES module world while still being able to load CommonJS modules synchronously.
-
-Let's be honest, issues like these are hard to notice, and are unfortunately not resolved by Node.js having better ESM/CJS compatibility.
+But it is definitely recommended to migrate all your code to native ESM instead.
+Because let's be honest, issues like the ones we discussed are hard to prevent/notice,
+and are unfortunately not resolved by Node.js having much better ESM/CJS compatibility nowadays.
 So I don't expect the complaints about the different module systems to be gone anytime soon.
 
-The best and only solution is _migrating all code to native ESM_.
-Since ES Modules can be `require()`d now in all supported Node.js versions, there are less excuses than ever not to migrate anymore!
+But hey, since ES Modules can be `require`d now in all supported Node.js versions,
+there are less excuses than ever not to migrate!
 
-There are many more examples and edge cases that could be discussed, but I think we've covered enough for this blog post.
+I think we've covered enough for this blog post.
+By the way, this is also my very first blog post, so hopefully you enjoyed it.
+And if you learned something new, sending me a message or sharing this blog post
+with your friends is the best way to support me 🙏
 
 Thanks for sticking around all the way to the end!
-If you learned something new, sending me a message or sharing this blog post with your friends is the best way to support me 🙏
 
-{/* <CodeBlock post={post} example="14-default-export-ts-cjs" order={['index.ts', 'constants.ts']} /> */}
+<ColoredH2>References</ColoredH2>
 
-{/* <TerminalCommandRunner command="node index.ts" post={post} example="14-default-export-ts-cjs" /> */}
+[The module compiler option](https://www.typescriptlang.org/docs/handbook/modules/reference.html#the-module-compiler-option)
 
-{/* https://arc.net/l/quote/fddyhlye */}
+[Modules - ESM/CJS Interoperability](https://www.typescriptlang.org/docs/handbook/modules/appendices/esm-cjs-interop.html)
 
-{/* TODO: Create quiz or code editor to test knowledge */}
-{/* TODO: fix folder tab layout in sidebar view */}
+[Loading ECMAScript modules using require](https://nodejs.org/api/modules.html#loading-ecmascript-modules-using-require)
+
+[import() expressions](https://nodejs.org/docs/latest-v24.x/api/esm.html#esm_import_expressions)
+
+[Move on to ESM only](https://antfu.me/posts/move-on-to-esm-only)
+
 {/* TODO: check accessibility */}
-
-{/* Bonus example: https://arc.net/l/quote/nhyafsdh */}
-
-{/* https://www.typescriptlang.org/docs/handbook/modules/appendices/esm-cjs-interop.html */}
-{/* https://nodejs.org/api/modules.html#loading-ecmascript-modules-using-require */}
-{/* https://nodejs.org/docs/latest-v24.x/api/esm.html#esm_import_expressions */}
-{/* https://antfu.me/posts/move-on-to-esm-only */}
-
-{/* Dynamic import() is supported in both CommonJS and ES modules. In CommonJS modules it can be used to load ES modules. */}
-{/* An import statement can reference an ES module or a CommonJS module. import statements are permitted only in ES modules, but dynamic import() expressions are supported in CommonJS for loading ES modules. */}
