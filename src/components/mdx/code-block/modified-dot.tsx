@@ -16,7 +16,6 @@ const modifiedDotStyle = css({
   position: 'relative',
   top: '1px',
   borderRadius: 'full',
-  bg: 'orange.500',
   flexShrink: '0',
 })
 

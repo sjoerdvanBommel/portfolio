@@ -60,7 +60,7 @@ export function getContent(content: string): string {
 export function getMetadata(content: string): Metadata {
   const parsed = parseMetadataJson(content)
   if (!parsed.metadata) {
-    return { modifiedType: 'unmodified' }
+    return {} as Metadata
   }
 
   return JSON.parse(parsed.metadata)

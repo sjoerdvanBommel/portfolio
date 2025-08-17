@@ -5,10 +5,11 @@ import {
   transformerNotationWordHighlight,
 } from '@shikijs/transformers'
 import { CodeToHastOptions, codeToHtml } from 'shiki'
+import { mapToShikiLanguage } from './map-to-shiki-language'
 
 export async function highlightCode(code: string, language: string): Promise<string> {
   const options: CodeToHastOptions = {
-    lang: language || 'text',
+    lang: mapToShikiLanguage(language) || 'text',
     theme: 'github-dark',
     transformers: [
       transformerNotationHighlight(),

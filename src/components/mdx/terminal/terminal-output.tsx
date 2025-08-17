@@ -12,9 +12,10 @@ type TerminalOutputProps = {
   command: string
   output?: string
   outputRaw?: string
+  cols?: number
 }
 
-export function TerminalOutput({ example, command, output, outputRaw }: TerminalOutputProps) {
+export function TerminalOutput({ example, command, output, outputRaw, cols }: TerminalOutputProps) {
   const [displayedOutput, setDisplayedOutput] = useState('')
   const [animationEnded, setAnimationEnded] = useState(false)
   const [isRunningCommand, setIsRunningCommand] = useState(false)
@@ -84,6 +85,7 @@ export function TerminalOutput({ example, command, output, outputRaw }: Terminal
               outputRaw={outputRaw}
               withoutAnimation={animationEnded}
               onAnimationEnd={handleAnimationEnd}
+              cols={cols}
             />
           </div>
         )}
@@ -122,7 +124,7 @@ const outputContainerStyle = css({
 const outputStyle = css({
   position: 'relative',
   minHeight: '6',
-  bg: 'gray.950/10',
+  background: 'var(--color-background)',
 })
 
 const outputTextStyle = css({

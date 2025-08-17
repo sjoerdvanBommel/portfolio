@@ -7,12 +7,14 @@ interface TerminalCommandRunnerProps {
   command: string
   example: string
   post: string
+  cols?: number
 }
 
 export async function TerminalCommandRunner({
   command,
   example,
   post,
+  cols,
 }: TerminalCommandRunnerProps) {
   // Check if output.ansi exists in the example folder
   let output = (await readExampleFile(post, example, 'output.ansi'))?.content
@@ -23,7 +25,13 @@ export async function TerminalCommandRunner({
 
   return (
     <div className={containerStyle}>
-      <TerminalOutput command={command} example={example} output={output} outputRaw={outputRaw} />
+      <TerminalOutput
+        command={command}
+        example={example}
+        output={output}
+        outputRaw={outputRaw}
+        cols={cols}
+      />
     </div>
   )
 }

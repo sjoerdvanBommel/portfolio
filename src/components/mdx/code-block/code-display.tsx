@@ -1,4 +1,3 @@
-import { highlightCode } from '@/lib/mdx/code-block/shiki-server'
 import { css } from '@/styled-system/css'
 import { DetailedHTMLProps, HTMLAttributes, PropsWithChildren } from 'react'
 
@@ -8,22 +7,6 @@ export function CodeDisplay({ children }: PropsWithChildren) {
   return (
     <div className={containerStyle}>
       <div className={shikiCodeBlockStyle} dangerouslySetInnerHTML={{ __html: children }} />
-    </div>
-  )
-}
-
-export async function CodeDisplayInlineMdx({
-  children,
-}: {
-  children: { props: { children: string } }
-}) {
-  if (!children?.props?.children) return null
-
-  const highlightedHtml = await highlightCode(children.props.children.trim(), 'tsx')
-
-  return (
-    <div className={borderStyle}>
-      <CodeDisplay>{highlightedHtml}</CodeDisplay>
     </div>
   )
 }
@@ -60,7 +43,7 @@ const shikiCodeBlockStyle = css({
   minWidth: 'fit-content',
 
   '& .shiki': {
-    bg: 'transparent !important',
+    bg: 'var(--color-background) !important',
     p: '4 !important',
   },
   '& code': {

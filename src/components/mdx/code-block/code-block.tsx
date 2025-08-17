@@ -1,5 +1,5 @@
 import { readExampleFiles } from '@/lib/mdx/read-example-files'
-import { css } from '@/styled-system/css'
+import { css, cx } from '@/styled-system/css'
 import { CodeView, CodeViewProps } from './code-view'
 
 export interface CodeBlockProps {
@@ -44,7 +44,7 @@ export async function CodeBlock({
   }
 
   return (
-    <div className={containerStyle}>
+    <div className={cx(containerStyle, 'code-block')}>
       <CodeView files={files} initialFile={initialFile} mode={mode} />
     </div>
   )

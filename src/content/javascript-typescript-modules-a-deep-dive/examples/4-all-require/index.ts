@@ -3,7 +3,7 @@ import { add } from './add.ts'
 import { A, B } from './constants.ts'
 // [!code ++:2]
 const { add } = require('./add.ts')
-const constants = require('./constants.ts')
+const { default: constants } = require('./constants.ts')
 
 // [!code --]
 console.log(`${A} + ${B} = ${add(A, B)}`)

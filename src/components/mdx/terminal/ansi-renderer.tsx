@@ -11,10 +11,11 @@ type AnsiRendererProps = {
   animationSpeed?: number // milliseconds per character
   withoutAnimation?: boolean
   onAnimationEnd?: () => void
+  cols?: number
 }
 
 // Amount of columns that fit in current default width of content. Overflown content is scrollable.
-const cols = 72
+const defaultCols = 72
 
 export function AnsiRenderer({
   output,
@@ -22,6 +23,7 @@ export function AnsiRenderer({
   animationSpeed = 3,
   withoutAnimation = false,
   onAnimationEnd,
+  cols = defaultCols,
 }: AnsiRendererProps) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -36,9 +38,12 @@ export function AnsiRenderer({
     }, 1)
 
     return Math.min(terminalLines, 24)
-  }, [outputRaw])
+  }, [outputRaw, cols])
 
-  const instance = useMemo(() => createTerminalInstance(totalTerminalLines), [totalTerminalLines])
+  const instance = useMemo(
+    () => createTerminalInstance(totalTerminalLines, cols),
+    [totalTerminalLines, cols],
+  )
 
   const hasInitialized = useRef(false)
   const currentDisplayedLength = useRef(0)
@@ -109,7 +114,7 @@ const terminalStyle = css({
   },
 })
 
-function createTerminalInstance(rows: number) {
+function createTerminalInstance(rows: number, cols: number) {
   return new Terminal({
     convertEol: true,
     cols,

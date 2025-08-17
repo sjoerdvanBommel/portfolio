@@ -22,9 +22,16 @@ const errorStyle = css({
   borderColor: 'red.900',
 })
 
-const infoStyle = css({
+export const infoStyle = css({
   background: 'blue.800/20',
   borderColor: 'blue.900',
+
+  // TODO: how to reference the code-block constant instead of hardcoding it?
+  // Preferably from the code-block component.
+  // This would make it easier to understand why certain style is applied to that component.
+  [`& .code-block`]: {
+    justifySelf: 'auto',
+  },
 })
 
 const noteStyle = css({

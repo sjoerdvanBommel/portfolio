@@ -28,11 +28,15 @@ export function getFilenameBasedInfo(fileName: string): {
 
   switch (extension) {
     case 'js':
+    case 'cjs':
+    case 'mjs':
       return {
         language: 'javascript',
         icon: (props) => <TbBrandJavascript {...props} color="#e8d44e" />,
       }
     case 'ts':
+    case 'cts':
+    case 'mts':
       return {
         language: 'typescript',
         icon: (props) => <TbBrandTypescript {...props} color="#2f74c0" />,

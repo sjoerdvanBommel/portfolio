@@ -27,13 +27,9 @@ In the `index.ts` file, we are importing the `add` function from the `add.ts` fi
 But to access the `A` and `B` constants, a `require` statement is used.
 This means we are trying to combine two different module systems: CommonJS and ES modules.
 
-_**Let's figure out in this blog why this code is so complex and what happens under the hood.**_
-
-<Info>
-  Since Node.js 24, it is possible to run TypeScript code directly without compiling it first. It
-  does so by stripping the type annotations from the code. Instead of simply removing the types,
-  they get replaced with whitespaces, so no source maps are required.
-</Info>
+Let's figure out in this blog why this code is so complex and what happens under the hood.
+This blog will be full of code examples and integrated terminals.
+Try it out yourself!
 
 <TerminalCommandRunner
   command="node index.ts"
@@ -41,6 +37,12 @@ _**Let's figure out in this blog why this code is so complex and what happens un
   example="1-combining-cjs-and-esm"
   showLoadingAnimation={true}
 />
+
+<Info>
+  Since Node.js 24, it is possible to run TypeScript code directly without compiling it first. It
+  does so by stripping the type annotations from the code. Instead of simply removing the types,
+  they get replaced with whitespaces, so no source maps are required.
+</Info>
 
 Apparently it is not able to find a file called `add`. That's correct: the file is called `add.ts`, not `add`.
 Importing with or without extension (and whether it should be `.js` or `.ts`) is a whole topic on its own, but let's not get distracted ☁︎ Let's fix the issue instead!
@@ -65,29 +67,45 @@ So it should be quite straightforward to resolve it.
 
 That works! 🎉
 
-It makes sense to use `import` statements here, because the other files were ES Modules as well, using `export` statements.
-But let's challenge that earlier error message anyways. It said we were "in ES module scope".
+It makes sense to use `import` statements here, because the other files were ES Modules as well, because they're using `export` statements.
+But what if you don't have a choice? Maybe the other file is written in CommonJS, and you can't change it because it's a dependency.
+
+Let's therefore challenge that earlier error message. It said we were "in ES module scope".
 How does it know that? Is that the default scope for TypeScript?
-If that's true, then changing all `import` statements to `require` statements should trigger the same error:
+If that's true, then we should not be able to use `require` statements at all.
+Let's try it out!
 
 <CodeBlock post={post} example="4-all-require" order={['index.ts', 'add.ts', 'constants.ts']} />
 
 <TerminalCommandRunner command="node index.ts" post={post} example="4-all-require" />
 
-Well, apparently not! Our code runs, so ES modules are definitely not always the default scope.
+This worked as well 🤔 So now we cannot be in "ES module scope".
 
 <Info>
-  Notice that we are not just requiring another CommonJS module here. We are actually _requiring_ an
-  _ES module_, using both named and default exports! This is only supported since Node.js 22.0 using
-  the `--no-experimental-require-module` flag, or since Node.js 22.12 without the flag. Because of
-  the impact of this change, it has also been backported without flag from Node.js 20.19.0.
+Note that requiring an ES module will return `default` as named export.
+This is why we are using `const { default: constants } = require('./constants.ts')` here.
+If we'd instead use the default export instead, it would have a different shape.
+
+<CodeBlock
+  post={post}
+  example="4-all-require-default-export"
+  order={['index.ts', 'add.ts', 'constants.ts']}
+/>
+
+<TerminalCommandRunner command="node index.ts" post={post} example="4-all-require-default-export" />
 </Info>
 
-Node.js decided itself to treat the `index.ts` file as CommonJS module, and the `require`d modules as ES modules.
-This is the result of Node.js' _module type detection algorithm_.
-It is actually quite simple. It checks the following conditions in order for every file:
+<Info>
+  Also note that we are not just requiring another CommonJS module here. We are actually _requiring_
+  an _ES module_, using both named and default exports! This is only supported since Node.js 22.0
+  using the `--no-experimental-require-module` flag, or since Node.js 22.12 without the flag.
+  Because of the impact of this change, it has also been backported without flag from Node.js
+  20.19.0.
+</Info>
 
-{/* TODO: Visualize this */}
+Node.js decided itself to treat the `index.ts` file as CommonJS module, and the required modules as ES modules.
+This is the result of what I call Node.js' _module type detection algorithm_.
+It is actually quite simple. It checks the following conditions in order for every file:
 
 1. Does the file have a `.mjs` (or `.mts`) extension? -> **ES module**
 2. Does the file have a `.cjs` (or `.cts`) extension? -> **CommonJS module**
@@ -96,23 +114,25 @@ It is actually quite simple. It checks the following conditions in order for eve
 5. Otherwise -> **CommonJS module**
 
 As long as it knows the module type of each file, Node.js is able to do its magic behind the scenes and load the files correctly.
+So we can chain both module types as deep as we want: ESM -> CJS -> ESM -> CJS -> ...
+
+<CodeBlock post={post} example="5-chaining-module-types" />
+
+<TerminalCommandRunner command="node file1.mjs" post={post} example="5-chaining-module-types" />
+
 There is one caveat though: since the `require()` statement is synchronous, it is not possible to load ES Modules that use top-level `await` statements.
 This will throw a clear error:
 
-<CodeBlock
-  post={post}
-  example="5-top-level-await"
-  initialFile="add.ts"
-  order={['index.ts', 'add.ts', 'constants.ts']}
-/>
+<CodeBlock post={post} example="5-top-level-await" />
 
-<TerminalCommandRunner command="node index.ts" post={post} example="5-top-level-await" />
+<TerminalCommandRunner command="node file1.cjs" post={post} example="5-top-level-await" />
 
 As the error suggests, using `import()` instead of `require()` will fix the issue.
+Since `import()` is an asynchronous operation, we have to wait until the promise is resolved.
 
-<CodeBlock post={post} example="6-import-fix" order={['index.ts', 'add.ts', 'constants.ts']} />
+<CodeBlock post={post} example="6-import-fix" />
 
-<TerminalCommandRunner command="node index.ts" example="6-import-fix" post={post} />
+<TerminalCommandRunner command="node file1.cjs" example="6-import-fix" post={post} />
 
 Do you remember that we were initially trying to combine two different module systems in a single file?
 The above code showcases a capability in Node.js related to that question!
@@ -122,26 +142,33 @@ The key difference is that `import()` is an _asynchronous_ operation that runs a
 whereas regular `import` statements are _static_ and resolved at load time, before any code executes.
 I'd love to dive deeper into this topic, maybe in another blog post.
 
-But all this made me wonder: if it is possible to require ES modules, is it also possible to import CommonJS modules?
+But let's get back to our code example.
+Since it is now possible to require ES modules,
+is it also possible to import CommonJS modules?
 
 <CodeBlock post={post} example="7-import-commonjs" order={['index.ts', 'add.ts', 'constants.ts']} />
 
-That works both with named and default exports as well! 🎉
+<TerminalCommandRunner command="node index.ts" post={post} example="7-import-commonjs" />
 
-The fact that this is possible in the last few Node.js versions is **great** news, because it means TypeScript authors can now
-gradually migrate to the EcmaScript standard: ES modules. For example, even though a dependency might be an ESM-only dependency,
-it can still be used in CommonJS projects because it can be `require`d.
+That works using both `module.exports` and `exports.property`! 🎉
+
+The fact that this is possible in the last few Node.js versions is **great** news,
+because it means TypeScript authors can now
+gradually migrate to the EcmaScript standard: ES modules.
+For example, even though a dependency might be an ESM-only dependency,
+it can still be used in CommonJS projects because it can be required now.
+Library authors therefore don't need to support both module systems anymore.
 
 Since it's possible to `import` CommonJS and ES Modules, ánd it is possible to `require` CommonJS and ES Modules,
 we can now basically mix and match ESM and CommonJS modules however we like.
 So why are developers still unhappy about the current module system situation?
 
 Well, the biggest practical blockers might have been removed in latest Node.js versions,
-so I expect most complaints to be resolved for projects that are using Node.js 22+.
+so I expect there will be less complaints for projects that are using Node.js 22+.
 But several strategic reasons to go ESM still apply:
 
 - It will work in both the browser and backend runtimes
-- Better TypeScript support: `require`ing an ES Module will set the imported module's type to `any`.
+- Better TypeScript support: requiring an ES Module will set the imported module's type to `any`
 - CommonJS could be considered legacy, since it is not following the actual EcmaScript standard
 - Top-level `await` statements are now possible
 - Better tree-shaking
@@ -149,14 +176,14 @@ But several strategic reasons to go ESM still apply:
 
 But if the above reasons are not convincing you to move to ESM, then let's dive into some confusing scenarios caused by other tools.
 
+<ColoredH2>TypeScript Compiler</ColoredH2>
+
 Usually a project is much more complex than what we've seen so far.
 So far, we have only used plain Node.js and TypeScript, without any compilation step.
 Real projects almost always use dependencies, a compilation step, a bundler, a testing framework, or a combination of all of these.
 TypeScript brings a lot of benefits, but it also introduces some complexity. Let's explore further.
 
-<ColoredH2>TypeScript Compiler</ColoredH2>
-
-Before we dive into the TypeScript Compiler, first a quick reminder of what the initial code that we tried to run looked like:
+Before we dive into the TypeScript Compiler, first a quick reminder of the initial code that we tried to run:
 
 <CodeBlock post={post} example="8-tsc" order={['index.ts', 'add.ts', 'constants.ts']} />
 
@@ -212,8 +239,11 @@ Let's check the output files created by the TypeScript compiler:
 
 <CodeBlock post={post} example="10-file-structure" mode="sidebar" />
 
-Do you notice what's happening in the `index.js` file? The TypeScript compiler transpiled the import
-statement to a `require` statement! We already know that works, we tested it earlier.
+Do you notice what's happening in the `index.js` file?
+The TypeScript compiler transpiled the import
+statement to a `require` statement!
+And we already know that using only `require` statements works fine,
+we tested it earlier.
 
 If ES Modules are the EcmaScript standard, then you might expect TypeScript to
 use that as the default module system. However, because of historical and practical reasons,
@@ -243,9 +273,8 @@ Of course, you can use tools like AI, IDE tooling, or packages like [ts2esm](htt
 to help you migrate faster, but none of them are foolproof.
 
 <Info>
-  It is only not possible to compile *CJS* code to ESM. If your TypeScript code is written in ESM
-  already, you can use modern tsconfig options to compile it to JavaScript while keeping the ESM
-  syntax.
+  The only restriction is compiling *CJS* code to ESM. Of course, if your TypeScript code is written
+  in ESM already, you can use modern tsconfig options to compile it to ESM JavaScript.
 </Info>
 
 <ColoredH2>Default exports vs module.exports</ColoredH2>
@@ -255,7 +284,7 @@ In CommonJS, either the `module.exports` object is used to export the module, or
 This is very similar to ESM, where `export default` is used for default exports,
 and `export { property }` is used for named exports.
 
-However, there are some differences. One important one is that when importing a CommonJS module from an ESM Module,
+However, there are some differences. One important one is that when importing a CommonJS module from an ES Module,
 any export other than the default export is **not available** while importing.
 Luckily, the error message is quite clear. Let's give it a try:
 
@@ -263,18 +292,26 @@ Luckily, the error message is quite clear. Let's give it a try:
 
 <TerminalCommandRunner command="node index.js" post={post} example="11-default-export" />
 
-The error also proposes a solution:
+Note that `defaultExport` is available. It only started erroring on the named export `A`.
+The error also proposes a solution.
 
 <CodeBlock post={post} example="12-default-export-fix" order={['index.js', 'constants.js']} />
 
 <TerminalCommandRunner command="node index.js" post={post} example="12-default-export-fix" />
 
-To make things worse though, the error message becomes way more confusing when running
-TypeScript directly instead of JavaScript (the content stays the same!):
+<Info>
+  The error message becomes way more confusing when running
+  TypeScript directly instead of JavaScript (the content stays the same!):
 
 <CodeBlock post={post} example="13-default-export-ts" order={['index.ts', 'constants.ts']} />
 
-<TerminalCommandRunner command="node index.ts" post={post} example="13-default-export-ts" />
+  <TerminalCommandRunner
+    command="node index.ts"
+    post={post}
+    example="13-default-export-ts"
+    cols={68}
+  />
+</Info>
 
 Let's park this knowledge for now, and get back to it later.
 
@@ -319,7 +356,7 @@ ESM is the standard which is also used in the browser.
 Imagine import statements are allowed to be wrongly specified (for example, without extension),
 and the algorithm would have to make several calls to a server to find what the exact filename is.
 This would have a huge performance impact. So instead, ESM decided to be more strict,
-making sure only a single call was needed to get the correct file.
+making sure only a single call is needed to get the correct file.
 
 <ColoredH2>Importing require</ColoredH2>
 
@@ -404,10 +441,13 @@ You push this code, and your pipeline builds your app using the TypeScript compi
 
 <TerminalCommandRunner command="tsc index.ts" post={post} example="17-difference-mod-res-tsc" />
 
-Once again, no output = success! ✅ Next step in the pipeline: deployment to production.
-As soon as this is finished, your production environment is down! 🚨
+Once again, no output = success! ✅
 
-What went wrong?
+Next step in the pipeline: deployment to production. This succeeds as well! ✅
+
+But as soon as the deployment finishes, your production environment is down.. 🚨
+
+_What went wrong?_
 
 In scenarios where your production and local environments disalign, I'd recommend to try to locally run the app the same way as in production.
 In this case, this would for example be using plain `node` instead of `tsx`:
@@ -492,28 +532,30 @@ Changing the import (and re-running `tsc`) fixes the error and will make our cod
 **Issue resolved! 🎉**
 
 <Info>
-  Because of reasons like the example above, it is always a good practice to health check your app
-  before replacing it with the current production version. You could run your app in your pipeline,
-  or deploy the new environment side-by-side with the current production environment, and wait with
+  Because of reasons like these, it is always a good practice to health check your app before
+  replacing it with the current production version. You could run your app in your pipeline, or
+  deploy the new environment side-by-side with the current production environment, and wait with
   swapping environments until the health check is successful. This would have prevented the
   deployment to production in this case.
 </Info>
 
 <ColoredH2>Conclusion</ColoredH2>
 
-And before I wrap up, let me first answer the initial question:
+Before we wrap up, let's answer the initial question:
 
 > Is it possible to use both `import` and `require` in the same file?
 
 Yes! Whether you're using `createRequire`, TypeScript compilation, or tools like bundlers,
 it is possible to use both `import` and `require` in the same file.
 
-But it is definitely recommended to migrate all your code to native ESM instead.
+But this is not the most important lesson we've learned today.
+You now understand the differences between the two module systems, and how they work.
+I hope you now agree that it is a good idea to migrate all your code to native ESM.
 Because let's be honest, issues like the ones we discussed are hard to prevent/notice,
 and are unfortunately not resolved by Node.js having much better ESM/CJS compatibility nowadays.
 So I don't expect the complaints about the different module systems to be gone anytime soon.
 
-But hey, since ES Modules can be `require`d now in all supported Node.js versions,
+But hey, since ES Modules can be required now in all supported Node.js versions,
 there are less excuses than ever not to migrate!
 
 I think we've covered enough for this blog post.
