@@ -1,3 +1,4 @@
+import Footer from '@/components/footer'
 import Header from '@/components/header'
 import { WebContainerPromiseProvider } from '@/components/providers/web-container-provider'
 import { css } from '@/styled-system/css'
@@ -23,12 +24,18 @@ export const metadata: Metadata = {
 }
 
 // Main layout based on https://www.joshwcomeau.com/css/full-bleed/
-const mainStyle = css({
+const pageStyle = css({
   backgroundColor: 'var(--background)',
+  minHeight: '100dvh',
+  display: 'flex',
+  flexDirection: 'column',
+})
+
+const mainStyle = css({
   display: 'grid',
   alignContent: 'flex-start',
   gridTemplateColumns: '1fr min(42rem, 100%) 1fr',
-  minHeight: 'calc(100dvh - var(--global-margin))',
+  flex: '1',
   marginInline: 'var(--global-margin)',
   paddingBottom: 'var(--global-margin)',
   '& > *': {
@@ -48,13 +55,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <Theme appearance="dark" accentColor="orange">
+      <body className={`${geistSans.variable} ${geistMono.variable} ${pageStyle}`}>
+        <Theme appearance="dark" accentColor="orange" className={themeStyle}>
           <WebContainerPromiseProvider>
             <main className={mainStyle}>
               <Header />
               {children}
             </main>
+            <Footer />
             {/* <ThemePanel /> */}
           </WebContainerPromiseProvider>
         </Theme>
@@ -62,3 +70,7 @@ export default function RootLayout({
     </html>
   )
 }
+
+const themeStyle = css({
+  display: 'contents',
+})

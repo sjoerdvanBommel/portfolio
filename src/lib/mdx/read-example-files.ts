@@ -63,9 +63,6 @@ export async function readExampleFile(post: string, example: string, filename: s
   try {
     const unmodifiedContent = toColoredString(fs.readFileSync(filePath, 'utf-8'))
     const { content, metadata } = parseExampleFile(unmodifiedContent)
-    if (example === '16-external-package-tsc') {
-      console.log(content, metadata)
-    }
 
     metadata.modifiedType ??= hasCodeMarkers(content) ? 'modified' : 'unmodified'
 
