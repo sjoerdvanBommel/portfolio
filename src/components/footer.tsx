@@ -3,13 +3,8 @@
 import { css } from '@/styled-system/css'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { EmailIcon } from './icons/social-media/email-icon'
-import { GitHubIcon } from './icons/social-media/github-icon'
-import { LinkedInIcon } from './icons/social-media/linkedin-icon'
-import { XIcon } from './icons/social-media/x-icon'
-import { YouTubeIcon } from './icons/social-media/youtube-icon'
+import { EmailIcon, GitHubIcon, InstagramIcon, LinkedInIcon, XIcon, YouTubeIcon } from './icons'
 
-// Navigation items
 const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Posts', href: '/posts' },
@@ -17,17 +12,11 @@ const navItems = [
   { label: 'About', href: '/about' },
 ]
 
-// Social Media Links Data
-const socialLinks = [
+export const socialLinks = [
   {
     name: 'LinkedIn',
     url: 'https://www.linkedin.com/in/sjoerd-van-bommel-8a232914a',
     icon: LinkedInIcon,
-  },
-  {
-    name: 'X',
-    url: 'https://x.com/threeveloper',
-    icon: XIcon,
   },
   {
     name: 'GitHub',
@@ -38,6 +27,16 @@ const socialLinks = [
     name: 'YouTube',
     url: 'https://www.youtube.com/@threeveloper',
     icon: YouTubeIcon,
+  },
+  {
+    name: 'Instagram',
+    url: 'https://www.instagram.com/sjoerdvanbommel',
+    icon: InstagramIcon,
+  },
+  {
+    name: 'X',
+    url: 'https://x.com/threeveloper',
+    icon: XIcon,
   },
   {
     name: 'Email',
@@ -128,7 +127,9 @@ export default function Footer() {
             © {currentYear} Sjoerd van Bommel. All rights reserved.
           </div>
           <div className={builtWithStyle}>
-            Statically built with Next.js, TypeScript & Panda CSS
+            Statically built with <a href="https://nextjs.org">Next.js</a>,{' '}
+            <a href="https://www.typescriptlang.org">TypeScript</a> &{' '}
+            <a href="https://panda-css.com">Panda CSS</a>
           </div>
         </div>
       </div>

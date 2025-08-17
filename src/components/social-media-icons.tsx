@@ -1,40 +1,7 @@
 'use client'
 
 import { css } from '@/styled-system/css'
-import { EmailIcon } from './icons/social-media/email-icon'
-import { GitHubIcon } from './icons/social-media/github-icon'
-import { LinkedInIcon } from './icons/social-media/linkedin-icon'
-import { XIcon } from './icons/social-media/x-icon'
-import { YouTubeIcon } from './icons/social-media/youtube-icon'
-
-// Social Media Links Data
-const socialLinks = [
-  {
-    name: 'LinkedIn',
-    url: 'https://www.linkedin.com/in/sjoerd-van-bommel-8a232914a',
-    icon: LinkedInIcon,
-  },
-  {
-    name: 'X',
-    url: 'https://x.com/threeveloper',
-    icon: XIcon,
-  },
-  {
-    name: 'GitHub',
-    url: 'https://github.com/sjoerdvanbommel',
-    icon: GitHubIcon,
-  },
-  {
-    name: 'YouTube',
-    url: 'https://www.youtube.com/@threeveloper',
-    icon: YouTubeIcon,
-  },
-  {
-    name: 'Email',
-    url: 'mailto:sjoerd@sjoerdvanbommel.com',
-    icon: EmailIcon,
-  },
-]
+import { socialLinks } from './footer'
 
 export function SocialMediaIcons() {
   return (
@@ -77,7 +44,11 @@ const containerStyle = css({
 
 const iconLinkStyle = css({
   fill: 'var(--slate-11)',
-  padding: '2',
+  padding: '1',
+
+  sm: {
+    padding: '2',
+  },
 
   '&:hover': {
     '& svg': {

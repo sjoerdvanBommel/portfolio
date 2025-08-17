@@ -1,6 +1,7 @@
 export { SocialMediaIcons } from '../social-media-icons'
 export { EmailIcon } from './social-media/email-icon'
 export { GitHubIcon } from './social-media/github-icon'
+export { InstagramIcon } from './social-media/instagram-icon'
 export { LinkedInIcon } from './social-media/linkedin-icon'
 export { XIcon } from './social-media/x-icon'
 export { YouTubeIcon } from './social-media/youtube-icon'
