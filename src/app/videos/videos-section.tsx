@@ -1,4 +1,4 @@
-import { H2 } from '@/components/headings'
+import { H2 } from '@/components/headings/headings'
 import { YouTubeVideoSection } from '@/components/youtube-video-section'
 import { getYouTubeVideoByIds } from '@/lib/youtube/get-videos'
 import { css } from '@/styled-system/css'

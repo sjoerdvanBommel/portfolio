@@ -3,7 +3,7 @@ import { Post } from '@/lib/mdx/posts/get-recent-posts'
 import { css } from '@/styled-system/css'
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
-import { H2 } from './headings'
+import { H2 } from './headings/headings'
 
 export function PostSection({ post }: { post: Post }) {
   const { slug, metadata } = post

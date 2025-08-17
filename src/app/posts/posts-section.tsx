@@ -1,4 +1,4 @@
-import { H2 } from '@/components/headings'
+import { H2 } from '@/components/headings/headings'
 import { PostSection } from '@/components/post-section'
 import { getRecentPosts } from '@/lib/mdx/posts/get-recent-posts'
 import { css } from '@/styled-system/css'

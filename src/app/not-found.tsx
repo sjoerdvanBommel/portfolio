@@ -1,4 +1,4 @@
-import { H1 } from '@/components/headings'
+import { H1 } from '@/components/headings/headings'
 
 export default function NotFound() {
   return (

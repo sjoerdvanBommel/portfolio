@@ -1,0 +1,10 @@
+import { IconGradient } from './icon-gradient'
+
+export function EmailIcon() {
+  return (
+    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <IconGradient />
+      <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-.904.732-1.636 1.636-1.636h.726L12 10.724l9.638-6.903h.726c.904 0 1.636.732 1.636 1.636z" />
+    </svg>
+  )
+}

@@ -155,7 +155,7 @@ const headerStyle = css({
   height: 'var(--header-height)',
   paddingInline: 'var(--global-margin)',
   zIndex: 2,
-  backdropFilter: 'blur(4px)',
+  backdropFilter: 'blur(8px)',
   borderBottom: '1px solid var(--gray-3)',
   display: 'grid',
   gridTemplateColumns: '1fr min(42rem, 100%) 1fr',

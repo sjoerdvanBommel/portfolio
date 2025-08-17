@@ -1,7 +1,7 @@
 import { YouTubeVideo } from '@/lib/youtube/get-videos'
 import { css } from '@/styled-system/css'
 import Link from 'next/link'
-import { H3 } from './headings'
+import { H3 } from './headings/headings'
 
 export interface YouTubeVideoSectionProps {
   video: YouTubeVideo

@@ -1,4 +1,4 @@
-import { ColoredH2, H1, H2, H3 } from '../headings'
+import { ColoredH2, H1, H2, H3 } from '../headings/headings'
 import { Ol, Ul } from '../lists'
 import { A, P } from '../text'
 import { Blockquote, Error, Info, Note } from './banners'
