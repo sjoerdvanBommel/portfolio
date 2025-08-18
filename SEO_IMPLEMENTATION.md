@@ -102,7 +102,7 @@ NEXT_PUBLIC_GOOGLE_VERIFICATION=your-google-verification-code
 
 ### 2. Update Domain References
 
-Replace `https://sjoerdvanbommel.com` with your actual domain in:
+Replace `https://sjoerdvanbommel.nl` with your actual domain in:
 
 - `src/app/layout.tsx` (metadataBase)
 - `src/app/sitemap.ts` (baseUrl)

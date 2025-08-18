@@ -45,11 +45,11 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://sjoerdvanbommel.com'),
+  metadataBase: new URL('https://sjoerdvanbommel.nl'),
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://sjoerdvanbommel.com',
+    url: 'https://sjoerdvanbommel.nl',
     title: 'Sjoerd van Bommel - Senior Software Engineer & TypeScript Expert',
     description:
       'Senior Software Engineer at Cimpress Technology specializing in TypeScript, React, and web development. Learn advanced TypeScript concepts through blog posts and YouTube videos.',

@@ -40,7 +40,7 @@ export const socialLinks = [
   },
   {
     name: 'Email',
-    url: 'mailto:sjoerd@sjoerdvanbommel.com',
+    url: 'mailto:sjoerd@sjoerdvanbommel.nl',
     icon: EmailIcon,
   },
 ]

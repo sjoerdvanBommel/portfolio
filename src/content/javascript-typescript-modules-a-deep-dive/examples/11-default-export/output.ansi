@@ -1,4 +1,4 @@
-[0mfile:///Users/sjoerdvanbommel/workspace/personal/lab/1/examples/11-default-export/index.js:1[0m
+[0mfile:///Users/example/index.js:1[0m
 import { default as defaultExport, A, B } from './constants.js';[0m
                                    ^[0m
 SyntaxError: Named export 'A' not found. The requested module './constants.js' is a CommonJS module, which may not support all module.exports as named exports.[0m

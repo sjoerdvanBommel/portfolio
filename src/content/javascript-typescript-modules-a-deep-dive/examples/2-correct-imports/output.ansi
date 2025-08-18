@@ -1,9 +1,9 @@
-[0mfile:///Users/sjoerdvanbommel/workspace/personal/lab/1/examples/2-correct-imports/index.ts:2[0m
+[0mfile:///Users/example/index.ts:2[0m
 const { A, B } = require('./constants.ts')[0m
                  ^[0m
 [0m
 ReferenceError: require is not defined in ES module scope, you can use import instead[0m
-    at [0;90mfile:///Users/sjoerdvanbommel/workspace/personal/lab/1/examples/2-correct-imports/[0mindex.ts:2:18[0m
+    at [0;90mfile:///Users/example/[0mindex.ts:2:18[0m
 [0;90m    at ModuleJob.run (node:internal/modules/esm/module_job:370:25)[0m[0m
 [0;90m    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:665:26)[0m[0m
 [0;90m    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:99:5)[0m[0m

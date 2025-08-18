@@ -19,7 +19,7 @@ export function PersonJsonLd() {
       '@type': 'Organization',
       name: 'Cimpress Technology',
     },
-    url: 'https://sjoerdvanbommel.com',
+    url: 'https://sjoerdvanbommel.nl',
     sameAs: [
       'https://www.linkedin.com/in/sjoerdvanbommel',
       'https://github.com/sjoerdvanbommel',
@@ -49,7 +49,7 @@ export function WebsiteJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Sjoerd van Bommel Portfolio',
-    url: 'https://sjoerdvanbommel.com',
+    url: 'https://sjoerdvanbommel.nl',
     description:
       'Portfolio website of Sjoerd van Bommel, Senior Software Engineer specializing in TypeScript and web development',
     author: {

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     title: 'About Sjoerd van Bommel',
     description:
       'Learn more about Sjoerd van Bommel - Senior Software Engineer at Cimpress Technology, TypeScript expert, and creator of educational content about web development.',
-    url: 'https://sjoerdvanbommel.com/about',
+    url: 'https://sjoerdvanbommel.nl/about',
   },
   twitter: {
     title: 'About Sjoerd van Bommel',

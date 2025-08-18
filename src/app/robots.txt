@@ -6,5 +6,5 @@ Allow: /
 # Disallow: /private/
 
 # Allow all crawlers to access sitemap
-Sitemap: https://sjoerdvanbommel.com/sitemap.xml
+Sitemap: https://sjoerdvanbommel.nl/sitemap.xml
 

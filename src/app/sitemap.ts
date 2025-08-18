@@ -3,7 +3,7 @@ import fs from 'fs/promises'
 import { MetadataRoute } from 'next'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://sjoerdvanbommel.com'
+  const baseUrl = 'https://sjoerdvanbommel.nl'
 
   const routes = [
     {

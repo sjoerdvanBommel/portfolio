@@ -4,7 +4,7 @@
 [0m
 Error: Cannot find module './folder/constants'[0m
 Require stack:[0m
-- /Users/sjoerdvanbommel/workspace/personal/lab/1/examples/22-create-require-module-resolution/index.ts[0m
+- /Users/example/index.ts[0m
 [0;90m    at Module._resolveFilename (node:internal/modules/cjs/loader:1369:15)[0m[0m
 [0;90m    at defaultResolveImpl (node:internal/modules/cjs/loader:1025:19)[0m[0m
 [0;90m    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1030:22)[0m[0m
@@ -13,11 +13,11 @@ Require stack:[0m
 [0;90m    at wrapModuleLoad (node:internal/modules/cjs/loader:235:24)[0m[0m
 [0;90m    at Module.require (node:internal/modules/cjs/loader:1449:12)[0m[0m
 [0;90m    at require (node:internal/modules/helpers:135:16)[0m[0m
-    at [0;90mfile:///Users/sjoerdvanbommel/workspace/personal/lab/1/examples/22-create-require-module-resolution/[0mindex.ts:5:18[0m
+    at [0;90mfile:///Users/example/[0mindex.ts:5:18[0m
 [0;90m    at ModuleJob.run (node:internal/modules/esm/module_job:370:25)[0m {[0m
   code: [0;32m'MODULE_NOT_FOUND'[0m,[0m
   requireStack: [[0m
-    [0;32m'/Users/sjoerdvanbommel/workspace/personal/lab/1/examples/22-create-require-module-resolution/index.ts'[0m[0m
+    [0;32m'/Users/example/index.ts'[0m[0m
   ][0m
 }[0m
 [0m

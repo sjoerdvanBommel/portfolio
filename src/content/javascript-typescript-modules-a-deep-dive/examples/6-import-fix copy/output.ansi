@@ -3,8 +3,8 @@
       ^[0m
 [0m
 Error [ERR_REQUIRE_ASYNC_MODULE]: require() cannot be used on an ESM graph with top-level await. Use import() instead. To see where the top-level await comes from, use --experimental-print-required-tla.[0m
-  From /Users/sjoerdvanbommel/workspace/personal/lab/1/examples/5-top-level-await/file1.cjs [0m
-  Requiring /Users/sjoerdvanbommel/workspace/personal/lab/1/examples/5-top-level-await/file2.mjs [0m
+  From /Users/example/file1.cjs [0m
+  Requiring /Users/example/file2.mjs [0m
 [0;90m    at ModuleJobSync.runSync (node:internal/modules/esm/module_job:497:13)[0m[0m
 [0;90m    at ModuleLoader.importSyncForRequire (node:internal/modules/esm/loader:437:47)[0m[0m
 [0;90m    at loadESMFromCJS (node:internal/modules/cjs/loader:1523:24)[0m[0m

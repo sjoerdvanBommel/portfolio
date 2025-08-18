@@ -2,7 +2,7 @@
     throw new ERR_MODULE_NOT_FOUND([0m
           ^[0m
 [0m
-Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/sjoerdvanbommel/workspace/personal/lab/1/examples/14-import-without-extension/constants' imported from /Users/sjoerdvanbommel/workspace/personal/lab/1/examples/14-import-without-extension/index.ts[0m
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/example/index.ts[0m
 [0;90m    at finalizeResolution (node:internal/modules/esm/resolve:274:11)[0m[0m
 [0;90m    at moduleResolve (node:internal/modules/esm/resolve:859:10)[0m[0m
 [0;90m    at defaultResolve (node:internal/modules/esm/resolve:983:11)[0m[0m
@@ -12,7 +12,7 @@ Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/sjoerdvanbommel/workspa
 [0;90m    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:309:38)[0m[0m
 [0;90m    at #link (node:internal/modules/esm/module_job:208:49)[0m {[0m
   code: [0;32m'ERR_MODULE_NOT_FOUND'[0m,[0m
-  url: [0;32m'file:///Users/sjoerdvanbommel/workspace/personal/lab/1/examples/14-import-without-extension/constants'[0m[0m
+  url: [0;32m'file:///Users/example/constants'[0m[0m
 }[0m
 [0m
 Node.js v24.4.0[0m

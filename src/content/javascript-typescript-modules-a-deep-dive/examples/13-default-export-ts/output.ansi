@@ -1,4 +1,4 @@
-[0mfile:///Users/sjoerdvanbommel/workspace/personal/lab/1/examples/13-default-export-ts/index.ts:1[0m
+[0mfile:///Users/example/index.ts:1[0m
 import { default as defaultExport, A, B } from './constants.ts';[0m
                                    ^[0m
 SyntaxError: The requested module './constants.ts' does not provide an export named 'A'[0m
