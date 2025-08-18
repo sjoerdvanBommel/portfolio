@@ -82,9 +82,9 @@ Let's try it out!
 This worked as well 🤔 So now we cannot be in "ES module scope".
 
 <Info>
-Note that requiring an ES module will return `default` as named export.
+Note that, when you `require()` an ES module, it will return `default` as named export.
 This is why we are using `const { default: constants } = require('./constants.ts')` here.
-If we'd instead use the default export instead, it would have a different shape.
+If we'd use the default export instead, it would have a different shape.
 
 <CodeBlock
   post={post}
@@ -103,7 +103,7 @@ If we'd instead use the default export instead, it would have a different shape.
   20.19.0.
 </Info>
 
-Node.js decided itself to treat the `index.ts` file as CommonJS module, and the required modules as ES modules.
+Node.js decided itself to treat the `index.ts` file as CommonJS module, and the `require()`ed modules as ES modules.
 This is the result of what I call Node.js' _module type detection algorithm_.
 It is actually quite simple. It checks the following conditions in order for every file:
 
@@ -156,7 +156,7 @@ The fact that this is possible in the last few Node.js versions is **great** new
 because it means TypeScript authors can now
 gradually migrate to the EcmaScript standard: ES modules.
 For example, even though a dependency might be an ESM-only dependency,
-it can still be used in CommonJS projects because it can be required now.
+it can still be used in CommonJS projects because you can `require()` it now.
 Library authors therefore don't need to support both module systems anymore.
 
 Since it's possible to `import` CommonJS and ES Modules, ánd it is possible to `require` CommonJS and ES Modules,
@@ -548,7 +548,7 @@ Before we wrap up, let's answer the initial question:
 Yes! Whether you're using `createRequire`, TypeScript compilation, or tools like bundlers,
 it is possible to use both `import` and `require` in the same file.
 
-But this is not the most important lesson we've learned today.
+But there are more important lessons we've learned today.
 
 You now understand the differences between the two module systems.
 I hope you now agree that it is a good idea to migrate all your code to native ESM.
@@ -556,7 +556,7 @@ Because let's be honest, issues like the ones we discussed are hard to prevent/n
 and are unfortunately not resolved by Node.js having much better ESM/CJS compatibility nowadays.
 So I don't expect the complaints about the different module systems to be gone anytime soon.
 
-But hey, since ES Modules can be required now in all supported Node.js versions,
+But hey, since you can now `require()` ES Modules in all supported Node.js versions,
 there are less excuses than ever not to migrate!
 
 I think we've covered enough for this blog post.
