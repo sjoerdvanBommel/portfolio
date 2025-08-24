@@ -5,6 +5,7 @@ import { PersonJsonLd, ProfessionalServiceJsonLd, WebsiteJsonLd } from '@/compon
 import { css } from '@/styled-system/css'
 import { Theme } from '@radix-ui/themes'
 import '@radix-ui/themes/styles.css'
+import { Analytics } from '@vercel/analytics/next'
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './styles/globals.css'
@@ -126,6 +127,7 @@ export default function RootLayout({
             {/* <ThemePanel /> */}
           </WebContainerPromiseProvider>
         </Theme>
+        <Analytics />
       </body>
     </html>
   )
